@@ -1,0 +1,4 @@
+﻿# copy this to config.properties (git-ignored) and fill in your real creds:
+db.url=jdbc:sqlserver://eventplanner-srv.database.windows.net:1433;databaseName=EventPlannerDB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net
+db.user=sqladmin@eventplanner-srv
+db.password=Topshop3?
