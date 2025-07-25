@@ -12,8 +12,13 @@ public class WelcomeController {
     @FXML
     public void initialize() {
         // load logo.png from resources/images/
-        Image logo = new Image(getClass().getResourceAsStream("/images/logo.png"));
-        logoView.setImage(logo);
+        try {
+            Image logo = new Image(getClass().getResourceAsStream("/images/logo.png.png"));
+            logoView.setImage(logo);
+        } catch (Exception e) {
+            System.err.println("Warning: Could not load logo image: " + e.getMessage());
+            // Continue without the logo
+        }
     }
 
     @FXML

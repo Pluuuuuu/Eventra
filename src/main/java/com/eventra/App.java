@@ -8,11 +8,17 @@ import javafx.stage.Stage;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Welcome.fxml"));
-        Scene scene = new Scene(loader.load());
-        stage.setTitle("Eventra");
-        stage.setScene(scene);
-        stage.show();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Welcome.fxml"));
+            Scene scene = new Scene(loader.load());
+            stage.setTitle("Eventra");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Error starting application: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override
