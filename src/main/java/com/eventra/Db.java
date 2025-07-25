@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.Properties;
 
 public class Db {
-    private static final HikariDataSource ds;
+    private static HikariDataSource ds;
     static {
         try (InputStream in = Db.class.getResourceAsStream("/config.properties")) {
             Properties p = new Properties();
@@ -17,17 +17,24 @@ public class Db {
             cfg.setPassword(p.getProperty("db.password"));
             ds = new HikariDataSource(cfg);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize DB pool", e);
+            System.err.println("Warning: Failed to initialize DB pool. Database features will be disabled.");
+            System.err.println("Error: " + e.getMessage());
+            ds = null;
         }
     }
 
     /** Get a pooled connection */
     public static Connection get() throws SQLException {
+        if (ds == null) {
+            throw new SQLException("Database connection pool not initialized");
+        }
         return ds.getConnection();
     }
 
     /** Clean up on app exit */
     public static void close() {
-        ds.close();
+        if (ds != null) {
+            ds.close();
+        }
     }
 }
