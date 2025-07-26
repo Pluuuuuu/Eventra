@@ -14,8 +14,10 @@
                preserveRatio="true"
                pickOnBounds="true" />
 
+
     <Button text="Welcome"
             fx:id="welcomeBtn"
             onAction="#onWelcome"
             style="-fx-font-size: 16px; -fx-background-color: #5C4DAA; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;" />
 </VBox>
+
