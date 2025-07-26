@@ -9,6 +9,9 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
+            // Initialize database
+            DatabaseInitializer.initializeDatabase();
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Welcome.fxml"));
             Scene scene = new Scene(loader.load());
             stage.setTitle("Eventra");

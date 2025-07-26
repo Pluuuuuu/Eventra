@@ -1,4 +1,12 @@
-﻿# copy this to config.properties (git-ignored) and fill in your real creds:
-db.url=jdbc:sqlserver://eventplanner-srv.database.windows.net:1433;databaseName=EventPlannerDB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net
-db.user=sqladmin@eventplanner-srv
-db.password=Topshop3?
+﻿# Database Configuration
+# Copy this file to config.properties and update with your database details
+
+# SQL Server connection
+db.url=jdbc:sqlserver://localhost:1433;databaseName=EventPlannerDB;encrypt=true;trustServerCertificate=true
+db.user=your_username
+db.password=your_password
+
+# Connection pool settings (optional - defaults are used if not specified)
+# db.connectionTimeout=30000
+# db.maximumPoolSize=10
+# db.minimumIdle=5

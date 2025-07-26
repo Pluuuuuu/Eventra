@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventra.controller.LoginController"
+      alignment="CENTER" spacing="20"
+      stylesheets="@../css/styles.css"
+      styleClass="login-container">
+
+    <!-- Header -->
+    <VBox alignment="CENTER" spacing="10" styleClass="login-header">
+        <Text text="Welcome Back!" styleClass="login-title"/>
+        <Text text="Sign in to your account" styleClass="login-subtitle"/>
+    </VBox>
+
+    <!-- Login Form -->
+    <VBox alignment="CENTER" spacing="15" styleClass="login-form">
+        
+        <!-- Email Field -->
+        <VBox spacing="5" styleClass="form-field">
+            <Label text="Email" styleClass="form-label"/>
+            <TextField fx:id="emailField" 
+                      promptText="Enter your email"
+                      styleClass="form-input"/>
+        </VBox>
+
+        <!-- Password Field -->
+        <VBox spacing="5" styleClass="form-field">
+            <Label text="Password" styleClass="form-label"/>
+            <PasswordField fx:id="passwordField" 
+                          promptText="Enter your password"
+                          styleClass="form-input"/>
+        </VBox>
+
+        <!-- Error Message -->
+        <Label fx:id="errorLabel" 
+               styleClass="error-message"
+               visible="false"
+               managed="false"/>
+
+        <!-- Sign In Button -->
+        <Button fx:id="signInButton"
+                text="Sign In"
+                onAction="#handleSignIn"
+                styleClass="primary-button"/>
+
+        <!-- Sign Up Link -->
+        <HBox alignment="CENTER" spacing="5">
+            <Text text="Don't have an account? " styleClass="form-text"/>
+            <Hyperlink fx:id="signUpLink"
+                       text="Sign Up"
+                       onAction="#handleSignUp"
+                       styleClass="link-button"/>
+        </HBox>
+    </VBox>
+
+</VBox>
