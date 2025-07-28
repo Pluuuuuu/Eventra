@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 
 import java.util.Optional;
 
-public class LoginController {
+public class  LoginController {
     
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
@@ -93,7 +93,8 @@ public class LoginController {
         ViewUtil.switchTo("SignUp", emailField.getScene().getWindow());
     }
     
-    private boolean validateInput(String email, String password) {
+    private boolean validateInput(S
+                                          tring email, String password) {
         if (email.isEmpty()) {
             showError("Please enter your email address.");
             emailField.requestFocus();
