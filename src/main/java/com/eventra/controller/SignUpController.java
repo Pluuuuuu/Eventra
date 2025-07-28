@@ -3,32 +3,49 @@ package com.eventra.controller;
 import com.eventra.dao.UserDAO;
 import com.eventra.model.User;
 import com.eventra.util.ViewUtil;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class SignUpController {
     
-    @FXML private TextField usernameField;
     @FXML private TextField firstNameField;
+    @FXML private TextField middleNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmPasswordField;
+    @FXML private ComboBox<String> organizationComboBox;
     @FXML private Button signUpButton;
     @FXML private Label errorLabel;
     @FXML private Hyperlink signInLink;
     
+    private Timeline emailCheckTimeline;
+    
     @FXML
     public void initialize() {
+        // Populate organization options
+        organizationComboBox.getItems().addAll(
+            "Acme Corporation",
+            "Tech Solutions Inc.",
+            "Global Events Ltd.",
+            "Creative Studio",
+            "Business Partners LLC",
+            "Innovation Labs",
+            "Other"
+        );
+        
         // Set up enter key handling
         confirmPasswordField.setOnAction(event -> handleSignUp());
         
         // Clear error when user starts typing
-        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
+        firstNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (errorLabel.isVisible()) hideError();
         });
         
-        firstNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+        middleNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (errorLabel.isVisible()) hideError();
         });
         
@@ -36,8 +53,18 @@ public class SignUpController {
             if (errorLabel.isVisible()) hideError();
         });
         
+        // Special email field listener with real-time validation
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (errorLabel.isVisible()) hideError();
+            
+            // Cancel any pending email check
+            if (emailCheckTimeline != null) {
+                emailCheckTimeline.stop();
+            }
+            
+            // Start a new timeline to check email after user stops typing (500ms delay)
+            emailCheckTimeline = new Timeline(new KeyFrame(Duration.millis(500), e -> checkEmailExists()));
+            emailCheckTimeline.play();
         });
         
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -47,19 +74,44 @@ public class SignUpController {
         confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (errorLabel.isVisible()) hideError();
         });
+        
+        organizationComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (errorLabel.isVisible()) hideError();
+        });
+    }
+    
+    private void checkEmailExists() {
+        String email = emailField.getText().trim();
+        
+        // Only check if email is not empty and has valid format
+        if (!email.isEmpty() && isValidEmail(email)) {
+            try {
+                if (UserDAO.emailExists(email)) {
+                    showError("This email already exists");
+                    emailField.requestFocus();
+                }
+            } catch (Exception e) {
+                System.err.println("Error checking email existence: " + e.getMessage());
+                // Don't show error to user for database connectivity issues during typing
+            }
+        }
     }
     
     @FXML
     private void handleSignUp() {
-        String username = usernameField.getText().trim();
         String firstName = firstNameField.getText().trim();
+        String middleName = middleNameField.getText().trim();
         String lastName = lastNameField.getText().trim();
         String email = emailField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
+        String organization = organizationComboBox.getValue();
+        
+        // Generate username from email (part before @)
+        String username = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
         
         // Validate input
-        if (!validateInput(username, firstName, lastName, email, password, confirmPassword)) {
+        if (!validateInput(firstName, middleName, lastName, email, password, confirmPassword, organization)) {
             return;
         }
         
@@ -68,22 +120,27 @@ public class SignUpController {
         signUpButton.setText("Creating Account...");
         
         try {
-            // Check if username already exists
+            // Check if username already exists (generated from email)
             if (UserDAO.usernameExists(username)) {
-                showError("Username already exists. Please choose a different username.");
-                usernameField.requestFocus();
-                return;
+                // If username exists, append a number to make it unique
+                int counter = 1;
+                String originalUsername = username;
+                while (UserDAO.usernameExists(username)) {
+                    username = originalUsername + counter;
+                    counter++;
+                }
             }
             
-            // Check if email already exists
+            // Double-check if email already exists during submission
             if (UserDAO.emailExists(email)) {
-                showError("Email already registered. Please use a different email or sign in.");
+                showError("This email already exists. Please use a different email or sign in.");
                 emailField.requestFocus();
                 return;
             }
             
             // Create new user
             User newUser = new User(username, firstName, lastName, email, UserDAO.hashPassword(password));
+            newUser.setMiddleName(middleName.isEmpty() ? null : middleName);
             
             if (UserDAO.createUser(newUser)) {
                 // Registration successful
@@ -97,7 +154,7 @@ public class SignUpController {
                     try {
                         Thread.sleep(2000);
                         javafx.application.Platform.runLater(() -> 
-                            ViewUtil.switchTo("Login", usernameField.getScene().getWindow())
+                            ViewUtil.switchTo("Login", firstNameField.getScene().getWindow())
                         );
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
@@ -121,23 +178,11 @@ public class SignUpController {
     @FXML
     private void handleSignIn() {
         // Navigate to login page
-        ViewUtil.switchTo("Login", usernameField.getScene().getWindow());
+        ViewUtil.switchTo("Login", firstNameField.getScene().getWindow());
     }
     
-    private boolean validateInput(String username, String firstName, String lastName, 
-                                String email, String password, String confirmPassword) {
-        
-        if (username.isEmpty()) {
-            showError("Please enter a username.");
-            usernameField.requestFocus();
-            return false;
-        }
-        
-        if (username.length() < 3) {
-            showError("Username must be at least 3 characters long.");
-            usernameField.requestFocus();
-            return false;
-        }
+    private boolean validateInput(String firstName, String middleName, String lastName, 
+                                String email, String password, String confirmPassword, String organization) {
         
         if (firstName.isEmpty()) {
             showError("Please enter your first name.");
@@ -158,7 +203,7 @@ public class SignUpController {
         }
         
         if (!isValidEmail(email)) {
-            showError("Please enter a valid email address.");
+            showError("Please enter a valid email address (e.g., user@example.com).");
             emailField.requestFocus();
             return false;
         }
@@ -169,8 +214,8 @@ public class SignUpController {
             return false;
         }
         
-        if (password.length() < 6) {
-            showError("Password must be at least 6 characters long.");
+        if (password.length() < 8) {
+            showError("Password must be at least 8 characters long.");
             passwordField.requestFocus();
             return false;
         }
@@ -181,12 +226,49 @@ public class SignUpController {
             return false;
         }
         
+        if (organization == null || organization.isEmpty()) {
+            showError("Please select your organization.");
+            organizationComboBox.requestFocus();
+            return false;
+        }
+        
         return true;
     }
     
     private boolean isValidEmail(String email) {
-        // Simple email validation
-        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+        // More comprehensive email validation
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        
+        // Check for basic email structure
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        
+        if (!email.matches(emailRegex)) {
+            return false;
+        }
+        
+        // Additional checks for common email format issues
+        if (email.startsWith(".") || email.endsWith(".") || 
+            email.contains("..") || email.startsWith("@") || 
+            email.endsWith("@") || email.indexOf("@") != email.lastIndexOf("@")) {
+            return false;
+        }
+        
+        // Check domain part
+        String[] parts = email.split("@");
+        if (parts.length != 2) {
+            return false;
+        }
+        
+        String domain = parts[1];
+        if (domain.startsWith(".") || domain.endsWith(".") || 
+            domain.startsWith("-") || domain.endsWith("-") ||
+            domain.contains("..") || domain.length() < 3) {
+            return false;
+        }
+        
+        return true;
     }
     
     private void showError(String message) {
@@ -209,11 +291,12 @@ public class SignUpController {
     }
     
     private void clearForm() {
-        usernameField.clear();
         firstNameField.clear();
+        middleNameField.clear();
         lastNameField.clear();
         emailField.clear();
         passwordField.clear();
         confirmPasswordField.clear();
+        organizationComboBox.setValue(null);
     }
 } 

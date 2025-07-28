@@ -10,8 +10,8 @@
 
     <properties>
         <!-- your Java version -->
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <!-- JavaFX version -->
         <javafx.version>21.0.2</javafx.version>
     </properties>
@@ -78,6 +78,10 @@
                         <option>--add-modules</option>
                         <option>javafx.controls,javafx.fxml</option>
                     </options>
+                    <jlinkZipName>eventra-app</jlinkZipName>
+                    <jlinkImageName>eventra-app</jlinkImageName>
+                    <launcher>launcher</launcher>
+                    <mainClass>com.eventra.App</mainClass>
                 </configuration>
             </plugin>
             
@@ -87,8 +91,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
         </plugins>
