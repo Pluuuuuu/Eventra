@@ -4,34 +4,147 @@
     -fx-background-color: #f5f5f5;
 }
 
-/* Login Container */
-.login-container {
-    -fx-background-color: linear-gradient(to bottom right, #667eea 0%, #764ba2 100%);
-    -fx-padding: 40px;
-    -fx-min-width: 400px;
-    -fx-max-width: 500px;
+/* New Login Page Layout - Two Column Design */
+.login-page-container {
+    -fx-background-color: #f5f5f5;
+    -fx-min-width: 1000px;
+    -fx-min-height: 600px;
 }
 
-.login-header {
+/* Left Section - Branding */
+.branding-section {
+    -fx-background-color: #fafafa;
+    -fx-padding: 60px 40px;
+    -fx-pref-width: 600px;
+    -fx-alignment: top-left;
+}
+
+.branding-content {
+    -fx-padding: 20px;
+}
+
+.logo-image {
+    -fx-effect: none;
+}
+
+.branding-subtitle {
+    -fx-font-size: 18px;
+    -fx-font-weight: normal;
+    -fx-fill: #6b7280;
+}
+
+.branding-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-fill: #4f46e5;
+}
+
+.branding-tagline {
+    -fx-font-size: 16px;
+    -fx-fill: #6b7280;
+    -fx-line-spacing: 1.5;
+}
+
+/* Right Section - Form */
+.form-section {
+    -fx-background-color: #ffffff;
+    -fx-padding: 40px;
     -fx-alignment: center;
 }
 
-.login-title {
+.signin-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 40px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-min-width: 400px;
+    -fx-max-width: 450px;
+}
+
+.signin-title {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-fill: white;
+    -fx-fill: #374151;
 }
 
-.login-subtitle {
+.signin-subtitle {
+    -fx-font-size: 14px;
+    -fx-fill: #9ca3af;
+    -fx-text-alignment: center;
+    -fx-wrapping-width: 350;
+}
+
+.signin-form {
+    -fx-spacing: 20;
+}
+
+.signin-button {
     -fx-font-size: 16px;
-    -fx-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-weight: bold;
+    -fx-background-color: #4f46e5;
+    -fx-text-fill: white;
+    -fx-padding: 12px 30px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 100%;
+    -fx-min-height: 45px;
 }
 
-.login-form {
+.signin-button:hover {
+    -fx-background-color: #4338ca;
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.3), 5, 0, 0, 2);
+}
+
+.signin-button:pressed {
+    -fx-background-color: #3730a3;
+}
+
+.signup-text {
+    -fx-font-size: 14px;
+    -fx-fill: #9ca3af;
+}
+
+.signup-link {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8b5cf6;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-underline: false;
+}
+
+.signup-link:hover {
+    -fx-text-fill: #7c3aed;
+    -fx-underline: true;
+}
+
+/* Updated Form Elements for New Design */
+.form-field {
+    -fx-spacing: 8;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+}
+
+.form-input {
+    -fx-font-size: 14px;
+    -fx-padding: 12px 16px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-min-height: 45px;
+}
+
+.form-input:focused {
+    -fx-border-color: #4f46e5;
     -fx-background-color: white;
-    -fx-padding: 30px;
-    -fx-background-radius: 10px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.1), 3, 0, 0, 1);
 }
 
 /* Sign Up Container */
@@ -97,33 +210,6 @@
 .dashboard-text {
     -fx-font-size: 16px;
     -fx-fill: #333;
-}
-
-/* Form Elements */
-.form-field {
-    -fx-spacing: 5;
-}
-
-.form-label {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333;
-}
-
-.form-input {
-    -fx-font-size: 14px;
-    -fx-padding: 12px;
-    -fx-background-color: #f8f9fa;
-    -fx-border-color: #e9ecef;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-border-width: 1px;
-}
-
-.form-input:focused {
-    -fx-border-color: #667eea;
-    -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 5, 0, 0, 2);
 }
 
 .form-text {
