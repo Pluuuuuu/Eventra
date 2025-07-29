@@ -4,91 +4,114 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
-
-<VBox xmlns="http://javafx.com/javafx"
+<?import javafx.scene.image.*?>
+<HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.SignUpController"
-      alignment="CENTER" spacing="20"
+      alignment="CENTER" spacing="50"
       stylesheets="@../css/styles.css"
       styleClass="signup-container">
 
-    <!-- Header -->
-    <VBox alignment="CENTER" spacing="10" styleClass="signup-header">
-        <Text text="Create Account" styleClass="signup-title"/>
-        <Text text="Join Eventra today" styleClass="signup-subtitle"/>
+    <!-- Left Side - Logo -->
+    <VBox alignment="CENTER" spacing="10" styleClass="logo-section">
+        <ImageView fx:id="logoImageView" fitHeight="200" fitWidth="200" preserveRatio="true">
+            <image>
+                <Image url="@../images/logo.png.png"/>
+            </image>
+        </ImageView>
+        <Text text="EVENTRA" styleClass="logo-text"/>
     </VBox>
 
-    <!-- Sign Up Form -->
-    <VBox alignment="CENTER" spacing="15" styleClass="signup-form">
+    <!-- Right Side - Form -->
+    <VBox alignment="CENTER" spacing="20" styleClass="form-section" prefWidth="400">
         
-        <!-- Username Field -->
-        <VBox spacing="5" styleClass="form-field">
-            <Label text="Username" styleClass="form-label"/>
-            <TextField fx:id="usernameField" 
-                      promptText="Choose a username"
-                      styleClass="form-input"/>
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="5" styleClass="signup-header">
+            <Text text="Create Your Account" styleClass="signup-title"/>
         </VBox>
 
-        <!-- First Name Field -->
-        <VBox spacing="5" styleClass="form-field">
-            <Label text="First Name" styleClass="form-label"/>
-            <TextField fx:id="firstNameField" 
-                      promptText="Enter your first name"
-                      styleClass="form-input"/>
-        </VBox>
+        <!-- Sign Up Form -->
+        <VBox alignment="CENTER" spacing="15" styleClass="signup-form">
+            
+            <!-- First Name and Middle Name Row -->
+            <HBox spacing="10" styleClass="form-row">
+                <VBox spacing="5" styleClass="form-field" HBox.hgrow="ALWAYS">
+                    <Label text="First Name" styleClass="form-label"/>
+                    <TextField fx:id="firstNameField" 
+                              promptText="John"
+                              styleClass="form-input"/>
+                </VBox>
+                <VBox spacing="5" styleClass="form-field" HBox.hgrow="ALWAYS">
+                    <Label text="Middle Name" styleClass="form-label"/>
+                    <TextField fx:id="middleNameField" 
+                              promptText="Mark"
+                              styleClass="form-input"/>
+                </VBox>
+            </HBox>
 
-        <!-- Last Name Field -->
-        <VBox spacing="5" styleClass="form-field">
-            <Label text="Last Name" styleClass="form-label"/>
-            <TextField fx:id="lastNameField" 
-                      promptText="Enter your last name"
-                      styleClass="form-input"/>
-        </VBox>
-
-        <!-- Email Field -->
-        <VBox spacing="5" styleClass="form-field">
-            <Label text="Email" styleClass="form-label"/>
-            <TextField fx:id="emailField" 
-                      promptText="Enter your email"
-                      styleClass="form-input"/>
-        </VBox>
-
-        <!-- Password Field -->
-        <VBox spacing="5" styleClass="form-field">
-            <Label text="Password" styleClass="form-label"/>
-            <PasswordField fx:id="passwordField" 
-                          promptText="Create a password"
+            <!-- Last Name Field -->
+            <VBox spacing="5" styleClass="form-field">
+                <Label text="Last Name" styleClass="form-label"/>
+                <TextField fx:id="lastNameField" 
+                          promptText="Doe"
                           styleClass="form-input"/>
-        </VBox>
+            </VBox>
 
-        <!-- Confirm Password Field -->
-        <VBox spacing="5" styleClass="form-field">
-            <Label text="Confirm Password" styleClass="form-label"/>
-            <PasswordField fx:id="confirmPasswordField" 
-                          promptText="Confirm your password"
+            <!-- Email Field -->
+            <VBox spacing="5" styleClass="form-field">
+                <Label text="Email" styleClass="form-label"/>
+                <TextField fx:id="emailField" 
+                          promptText="john.doe@example.com"
                           styleClass="form-input"/>
+            </VBox>
+
+            <!-- Password and Confirm Password Row -->
+            <HBox spacing="10" styleClass="form-row">
+                <VBox spacing="5" styleClass="form-field" HBox.hgrow="ALWAYS">
+                    <Label text="Password" styleClass="form-label"/>
+                    <PasswordField fx:id="passwordField" 
+                                  promptText="Enter your password"
+                                  styleClass="form-input"/>
+                </VBox>
+                <VBox spacing="5" styleClass="form-field" HBox.hgrow="ALWAYS">
+                    <Label text="Confirm Password" styleClass="form-label"/>
+                    <PasswordField fx:id="confirmPasswordField" 
+                                  promptText="Confirm your password"
+                                  styleClass="form-input"/>
+                </VBox>
+            </HBox>
+
+            <!-- Organization Field -->
+            <VBox spacing="5" styleClass="form-field">
+                <Label text="Organization" styleClass="form-label"/>
+                <ComboBox fx:id="organizationComboBox" 
+                         promptText="Select your organization"
+                         styleClass="form-input"
+                         prefWidth="Double.MAX_VALUE"/>
+            </VBox>
+
+            <!-- Error Message -->
+            <Label fx:id="errorLabel" 
+                   styleClass="error-message"
+                   visible="false"
+                   managed="false"/>
+
+            <!-- Sign Up Button -->
+            <Button fx:id="signUpButton"
+                    text="Create Account"
+                    onAction="#handleSignUp"
+                    styleClass="primary-button"
+                    prefWidth="Double.MAX_VALUE"/>
+
+            <!-- Sign In Link -->
+            <HBox alignment="CENTER" spacing="5">
+                <Text text="Already have an account? " styleClass="form-text"/>
+                <Hyperlink fx:id="signInLink"
+                           text="Sign In"
+                           onAction="#handleSignIn"
+                           styleClass="link-button"/>
+            </HBox>
         </VBox>
-
-        <!-- Error Message -->
-        <Label fx:id="errorLabel" 
-               styleClass="error-message"
-               visible="false"
-               managed="false"/>
-
-        <!-- Sign Up Button -->
-        <Button fx:id="signUpButton"
-                text="Create Account"
-                onAction="#handleSignUp"
-                styleClass="primary-button"/>
-
-        <!-- Sign In Link -->
-        <HBox alignment="CENTER" spacing="5">
-            <Text text="Already have an account? " styleClass="form-text"/>
-            <Hyperlink fx:id="signInLink"
-                       text="Sign In"
-                       onAction="#handleSignIn"
-                       styleClass="link-button"/>
-        </HBox>
     </VBox>
 
-</VBox> 
+</HBox> 
