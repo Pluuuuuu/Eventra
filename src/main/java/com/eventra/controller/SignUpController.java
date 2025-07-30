@@ -26,7 +26,6 @@ public class SignUpController {
     
     @FXML
     public void initialize() {
-        // Organization field is now a text field - no initialization needed
         
         // Set up enter key handling
         confirmPasswordField.setOnAction(event -> handleSignUp());
@@ -90,13 +89,23 @@ public class SignUpController {
     
     @FXML
     private void handleSignUp() {
-        String firstName = firstNameField.getText().trim();
-        String middleName = middleNameField.getText().trim();
-        String lastName = lastNameField.getText().trim();
-        String email = emailField.getText().trim();
-        String password = passwordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
-        String organization = organizationField.getText().trim();
+        System.out.println("=== DEBUG: handleSignUp method called ===");
+        
+        try {
+            String firstName = firstNameField.getText() != null ? firstNameField.getText().trim() : "";
+            String middleName = middleNameField.getText() != null ? middleNameField.getText().trim() : "";
+            String lastName = lastNameField.getText() != null ? lastNameField.getText().trim() : "";
+            String email = emailField.getText() != null ? emailField.getText().trim() : "";
+            String password = passwordField.getText() != null ? passwordField.getText() : "";
+            String confirmPassword = confirmPasswordField.getText() != null ? confirmPasswordField.getText() : "";
+            String organization = organizationField.getText() != null ? organizationField.getText().trim() : "";
+            
+            System.out.println("DEBUG: Form data collected:");
+            System.out.println("  First Name: '" + firstName + "'");
+            System.out.println("  Last Name: '" + lastName + "'");
+            System.out.println("  Email: '" + email + "'");
+            System.out.println("  Organization: '" + organization + "'");
+            System.out.println("  Password length: " + (password != null ? password.length() : 0));
         
         // Generate username from email (part before @)
         String username = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
@@ -158,11 +167,17 @@ public class SignUpController {
             
         } catch (Exception e) {
             System.err.println("Registration error: " + e.getMessage());
+            e.printStackTrace();
             showError("An error occurred during registration. Please try again.");
         } finally {
             // Re-enable button
             signUpButton.setDisable(false);
             signUpButton.setText("Create Account");
+        }
+        } catch (Exception e) {
+            System.err.println("CRITICAL ERROR in handleSignUp: " + e.getMessage());
+            e.printStackTrace();
+            showError("A critical error occurred. Please try again.");
         }
     }
     

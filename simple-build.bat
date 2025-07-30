@@ -32,6 +32,9 @@ powershell -Command "try { Invoke-WebRequest -Uri 'https://repo1.maven.org/maven
 echo Downloading SLF4J Simple...
 powershell -Command "try { Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar' -OutFile 'target\lib\slf4j-simple-1.7.36.jar' } catch { Write-Host 'Failed to download SLF4J Simple' }"
 
+echo Downloading SQL Server JDBC Driver...
+powershell -Command "try { Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.2.jre11/mssql-jdbc-12.4.2.jre11.jar' -OutFile 'target\lib\mssql-jdbc-12.4.2.jre11.jar' } catch { Write-Host 'Failed to download SQL Server JDBC' }"
+
 echo Compiling Java files...
 javac -cp "target\lib\*" -d target\classes src\main\java\com\eventra\*.java src\main\java\com\eventra\controller\*.java src\main\java\com\eventra\dao\*.java src\main\java\com\eventra\model\*.java src\main\java\com\eventra\util\*.java
 
