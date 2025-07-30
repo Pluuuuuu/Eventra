@@ -101,7 +101,14 @@ public class  LoginController {
     @FXML
     private void handleSignUp() {
         // Navigate to sign up page
-        ViewUtil.switchTo("SignUp", emailField.getScene().getWindow());
+        System.out.println("Sign Up button clicked! Attempting to navigate to SignUp page...");
+        try {
+            ViewUtil.switchTo("SignUp", emailField.getScene().getWindow());
+            System.out.println("Successfully navigated to SignUp page");
+        } catch (Exception e) {
+            System.err.println("Error navigating to SignUp page: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private boolean validateInput(String email, String password) {

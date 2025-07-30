@@ -29,7 +29,8 @@ public class DatabaseInitializer {
     private static void createLookupTables(Statement stmt) throws Exception {
         // Status Type table
         stmt.execute(
-            "CREATE TABLE IF NOT EXISTS StatusType (" +
+            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StatusType' AND xtype='U') " +
+            "CREATE TABLE StatusType (" +
             "StatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -37,7 +38,8 @@ public class DatabaseInitializer {
         
         // Role Type table
         stmt.execute(
-            "CREATE TABLE IF NOT EXISTS RoleType (" +
+            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RoleType' AND xtype='U') " +
+            "CREATE TABLE RoleType (" +
             "RoleTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -45,7 +47,8 @@ public class DatabaseInitializer {
         
         // Event Status Type table
         stmt.execute(
-            "CREATE TABLE IF NOT EXISTS EventStatusType (" +
+            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='EventStatusType' AND xtype='U') " +
+            "CREATE TABLE EventStatusType (" +
             "EventStatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -53,7 +56,8 @@ public class DatabaseInitializer {
         
         // Session Status Type table
         stmt.execute(
-            "CREATE TABLE IF NOT EXISTS SessionStatusType (" +
+            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='SessionStatusType' AND xtype='U') " +
+            "CREATE TABLE SessionStatusType (" +
             "SessionStatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -61,7 +65,8 @@ public class DatabaseInitializer {
         
         // Registration Status Type table
         stmt.execute(
-            "CREATE TABLE IF NOT EXISTS RegistrationStatusType (" +
+            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RegistrationStatusType' AND xtype='U') " +
+            "CREATE TABLE RegistrationStatusType (" +
             "RegistrationStatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -71,8 +76,9 @@ public class DatabaseInitializer {
     private static void createMainTables(Statement stmt) throws Exception {
         // UserM table
         stmt.execute(
-            "CREATE TABLE IF NOT EXISTS UserM (" +
-            "UserID INT AUTO_INCREMENT PRIMARY KEY," +
+            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='UserM' AND xtype='U') " +
+            "CREATE TABLE UserM (" +
+            "UserID INT IDENTITY(1,1) PRIMARY KEY," +
             "Username VARCHAR(100) NOT NULL UNIQUE," +
             "FirstName VARCHAR(100) NOT NULL," +
             "MiddleName VARCHAR(100)," +
@@ -83,9 +89,9 @@ public class DatabaseInitializer {
             "RoleTypeID INT NOT NULL DEFAULT 2," +
             "StatusTypeID INT NOT NULL DEFAULT 1," +
             "PeriodCanLoginInMinutes INT NOT NULL DEFAULT 0," +
-            "LastFailedLoginAt TIMESTAMP," +
-            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+            "LastFailedLoginAt DATETIME2," +
+            "CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME2 NOT NULL DEFAULT GETDATE()" +
             ")"
         );
     }
@@ -93,6 +99,7 @@ public class DatabaseInitializer {
     private static void insertInitialData(Statement stmt) throws Exception {
         // Insert Status Types
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM StatusType WHERE StatusTypeID = 1) " +
             "INSERT INTO StatusType (StatusTypeID, Name) VALUES " +
             "(1, 'Active'), " +
             "(2, 'Inactive'), " +
@@ -102,6 +109,7 @@ public class DatabaseInitializer {
         
         // Insert Role Types
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM RoleType WHERE RoleTypeID = 1) " +
             "INSERT INTO RoleType (RoleTypeID, Name) VALUES " +
             "(1, 'Administrator'), " +
             "(2, 'User'), " +
@@ -111,6 +119,7 @@ public class DatabaseInitializer {
         
         // Insert Event Status Types
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM EventStatusType WHERE EventStatusTypeID = 1) " +
             "INSERT INTO EventStatusType (EventStatusTypeID, Name) VALUES " +
             "(1, 'Draft'), " +
             "(2, 'Published'), " +
@@ -120,6 +129,7 @@ public class DatabaseInitializer {
         
         // Insert Session Status Types
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM SessionStatusType WHERE SessionStatusTypeID = 1) " +
             "INSERT INTO SessionStatusType (SessionStatusTypeID, Name) VALUES " +
             "(1, 'Draft'), " +
             "(2, 'Confirmed'), " +
@@ -129,6 +139,7 @@ public class DatabaseInitializer {
         
         // Insert Registration Status Types
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM RegistrationStatusType WHERE RegistrationStatusTypeID = 1) " +
             "INSERT INTO RegistrationStatusType (RegistrationStatusTypeID, Name) VALUES " +
             "(1, 'Pending'), " +
             "(2, 'Confirmed'), " +
@@ -138,6 +149,7 @@ public class DatabaseInitializer {
         
         // Insert test user (password: test123)
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM UserM WHERE Email = 'test@eventra.com') " +
             "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
             "VALUES ('testuser', 'Test', 'User', 'test@eventra.com', " +
             "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 1)"

@@ -87,7 +87,7 @@
                 <ComboBox fx:id="organizationComboBox" 
                          promptText="Select your organization"
                          styleClass="form-input"
-                         prefWidth="Double.MAX_VALUE"/>
+                         prefWidth="400"/>
             </VBox>
 
             <!-- Error Message -->
@@ -101,7 +101,7 @@
                     text="Create Account"
                     onAction="#handleSignUp"
                     styleClass="primary-button"
-                    prefWidth="Double.MAX_VALUE"/>
+                    prefWidth="400"/>
 
             <!-- Sign In Link -->
             <HBox alignment="CENTER" spacing="5">

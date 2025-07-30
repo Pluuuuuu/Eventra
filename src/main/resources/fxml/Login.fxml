@@ -79,7 +79,8 @@
                     <Hyperlink fx:id="signUpLink"
                                text="Sign Up"
                                onAction="#handleSignUp"
-                               styleClass="signup-link"/>
+                               styleClass="signup-link"
+                               style="-fx-cursor: hand;"/>
                 </HBox>
             </VBox>
         </VBox>

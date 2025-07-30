@@ -8,9 +8,12 @@ import javafx.stage.Stage;
 public class ViewUtil {
     public static void switchTo(String fxmlFile, Window window) {
         try {
+            System.out.println("ViewUtil: Loading FXML file: " + fxmlFile);
             Parent pane = FXMLLoader.load(
                     ViewUtil.class.getResource("/fxml/" + fxmlFile + ".fxml"));
+            System.out.println("ViewUtil: FXML loaded successfully, setting root...");
             window.getScene().setRoot(pane);
+            System.out.println("ViewUtil: Root set successfully");
             
             // Resize window for login page to accommodate two-column design
             if (fxmlFile.equals("Login")) {
@@ -21,6 +24,7 @@ public class ViewUtil {
                 stage.setHeight(700);
             }
         } catch (Exception e) {
+            System.err.println("ViewUtil: Error switching to " + fxmlFile + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
