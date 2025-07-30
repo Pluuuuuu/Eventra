@@ -17,7 +17,7 @@ public class SignUpController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField confirmPasswordField;
-    @FXML private ComboBox<String> organizationComboBox;
+    @FXML private TextField organizationField;
     @FXML private Button signUpButton;
     @FXML private Label errorLabel;
     @FXML private Hyperlink signInLink;
@@ -26,16 +26,7 @@ public class SignUpController {
     
     @FXML
     public void initialize() {
-        // Populate organization options
-        organizationComboBox.getItems().addAll(
-            "Acme Corporation",
-            "Tech Solutions Inc.",
-            "Global Events Ltd.",
-            "Creative Studio",
-            "Business Partners LLC",
-            "Innovation Labs",
-            "Other"
-        );
+        // Organization field is now a text field - no initialization needed
         
         // Set up enter key handling
         confirmPasswordField.setOnAction(event -> handleSignUp());
@@ -75,7 +66,7 @@ public class SignUpController {
             if (errorLabel.isVisible()) hideError();
         });
         
-        organizationComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+        organizationField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (errorLabel.isVisible()) hideError();
         });
     }
@@ -105,7 +96,7 @@ public class SignUpController {
         String email = emailField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
-        String organization = organizationComboBox.getValue();
+        String organization = organizationField.getText().trim();
         
         // Generate username from email (part before @)
         String username = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
@@ -227,8 +218,8 @@ public class SignUpController {
         }
         
         if (organization == null || organization.isEmpty()) {
-            showError("Please select your organization.");
-            organizationComboBox.requestFocus();
+            showError("Please enter your organization.");
+            organizationField.requestFocus();
             return false;
         }
         
@@ -297,6 +288,6 @@ public class SignUpController {
         emailField.clear();
         passwordField.clear();
         confirmPasswordField.clear();
-        organizationComboBox.setValue(null);
+        organizationField.clear();
     }
 } 

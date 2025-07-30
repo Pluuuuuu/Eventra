@@ -84,10 +84,9 @@
             <!-- Organization Field -->
             <VBox spacing="5" styleClass="form-field">
                 <Label text="Organization" styleClass="form-label"/>
-                <ComboBox fx:id="organizationComboBox" 
-                         promptText="Select your organization"
-                         styleClass="form-input"
-                         prefWidth="Double.MAX_VALUE"/>
+                <TextField fx:id="organizationField" 
+                          promptText="Enter your organization"
+                          styleClass="form-input"/>
             </VBox>
 
             <!-- Error Message -->
