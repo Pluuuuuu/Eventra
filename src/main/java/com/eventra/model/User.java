@@ -27,7 +27,7 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.passwordHash = passwordHash;
-        this.roleTypeId = 2; // Default role
+        this.roleTypeId = 4; // Default role (Attendees)
         this.statusTypeId = 1; // Default status
         this.periodCanLoginInMinutes = 0;
     }

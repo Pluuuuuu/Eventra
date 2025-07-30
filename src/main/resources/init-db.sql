@@ -9,10 +9,10 @@ INSERT INTO StatusType (StatusTypeID, Name) VALUES
 
 -- Role Type lookup table
 INSERT INTO RoleType (RoleTypeID, Name) VALUES 
-(1, 'Administrator'),
-(2, 'User'),
-(3, 'Event Manager'),
-(4, 'Presenter');
+(1, 'SuperAdmin'),
+(2, 'Admin'),
+(3, 'Staff'),
+(4, 'Attendees');
 
 -- Event Status Type lookup table
 INSERT INTO EventStatusType (EventStatusTypeID, Name) VALUES 

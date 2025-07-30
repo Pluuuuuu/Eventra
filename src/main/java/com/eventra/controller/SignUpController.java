@@ -1,7 +1,9 @@
 package com.eventra.controller;
 
 import com.eventra.dao.UserDAO;
+import com.eventra.dao.AttendeeDAO;
 import com.eventra.model.User;
+import com.eventra.model.Attendee;
 import com.eventra.util.ViewUtil;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
@@ -76,7 +78,7 @@ public class SignUpController {
         // Only check if email is not empty and has valid format
         if (!email.isEmpty() && isValidEmail(email)) {
             try {
-                if (UserDAO.emailExists(email)) {
+                if (UserDAO.emailExists(email) || AttendeeDAO.emailExists(email)) {
                     showError("This email already exists");
                     emailField.requestFocus();
                 }
@@ -131,18 +133,30 @@ public class SignUpController {
                 }
             }
             
-            // Double-check if email already exists during submission
-            if (UserDAO.emailExists(email)) {
+            // Double-check if email already exists in either User or Attendee tables
+            if (UserDAO.emailExists(email) || AttendeeDAO.emailExists(email)) {
                 showError("This email already exists. Please use a different email or sign in.");
                 emailField.requestFocus();
                 return;
             }
             
-            // Create new user
-            User newUser = new User(username, firstName, lastName, email, UserDAO.hashPassword(password));
-            newUser.setMiddleName(middleName.isEmpty() ? null : middleName);
+            // Hash password once for both User and Attendee
+            String hashedPassword = UserDAO.hashPassword(password);
             
-            if (UserDAO.createUser(newUser)) {
+            // Create new user with role 4 (Attendees)
+            User newUser = new User(username, firstName, lastName, email, hashedPassword);
+            newUser.setMiddleName(middleName.isEmpty() ? null : middleName);
+            newUser.setRoleTypeId(4); // Explicitly set to Attendees role
+            
+            // Create new attendee record
+            Attendee newAttendee = new Attendee(firstName, lastName, email, organization, hashedPassword, "Regular");
+            newAttendee.setMiddleName(middleName.isEmpty() ? null : middleName);
+            
+            // Create both User and Attendee records
+            boolean userCreated = UserDAO.createUser(newUser);
+            boolean attendeeCreated = AttendeeDAO.createAttendee(newAttendee);
+            
+            if (userCreated && attendeeCreated) {
                 // Registration successful
                 showSuccess("Account created successfully! Please sign in.");
                 
@@ -162,7 +176,14 @@ public class SignUpController {
                 }).start();
                 
             } else {
-                showError("Failed to create account. Please try again.");
+                // More specific error messages
+                if (!userCreated && !attendeeCreated) {
+                    showError("Failed to create account. Please try again.");
+                } else if (!userCreated) {
+                    showError("Failed to create user account. Please try again.");
+                } else {
+                    showError("Failed to create attendee profile. Please try again.");
+                }
             }
             
         } catch (Exception e) {
