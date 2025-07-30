@@ -12,35 +12,36 @@ public class AttendeeDAO {
      * Create a new attendee in the database
      */
     public static boolean createAttendee(Attendee attendee) {
-        String sql = "INSERT INTO Attendee (FirstName, MiddleName, LastName, Email, Organization, " +
+        String sql = "INSERT INTO Attendee (UserID, FirstName, MiddleName, LastName, Email, Organization, " +
                     "Phone, Location, Gender, DateOfBirth, ProfilePicUrl, Type, PasswordHash, " +
                     "StatusTypeID, PeriodCanLoginInMinutes, CreatedAt, UpdatedAt) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETUTCDATE(), GETUTCDATE())";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETUTCDATE(), GETUTCDATE())";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-            stmt.setString(1, attendee.getFirstName());
-            stmt.setString(2, attendee.getMiddleName());
-            stmt.setString(3, attendee.getLastName());
-            stmt.setString(4, attendee.getEmail());
-            stmt.setString(5, attendee.getOrganization());
-            stmt.setString(6, attendee.getPhone());
-            stmt.setString(7, attendee.getLocation());
-            stmt.setString(8, attendee.getGender());
+            stmt.setInt(1, attendee.getUserId());
+            stmt.setString(2, attendee.getFirstName());
+            stmt.setString(3, attendee.getMiddleName());
+            stmt.setString(4, attendee.getLastName());
+            stmt.setString(5, attendee.getEmail());
+            stmt.setString(6, attendee.getOrganization());
+            stmt.setString(7, attendee.getPhone());
+            stmt.setString(8, attendee.getLocation());
+            stmt.setString(9, attendee.getGender());
             
             // Handle date conversion
             if (attendee.getDateOfBirth() != null) {
-                stmt.setDate(9, Date.valueOf(attendee.getDateOfBirth()));
+                stmt.setDate(10, Date.valueOf(attendee.getDateOfBirth()));
             } else {
-                stmt.setNull(9, Types.DATE);
+                stmt.setNull(10, Types.DATE);
             }
             
-            stmt.setString(10, attendee.getProfilePicUrl());
-            stmt.setString(11, attendee.getType());
-            stmt.setString(12, attendee.getPasswordHash());
-            stmt.setInt(13, attendee.getStatusTypeId());
-            stmt.setInt(14, attendee.getPeriodCanLoginInMinutes());
+            stmt.setString(11, attendee.getProfilePicUrl());
+            stmt.setString(12, attendee.getType());
+            stmt.setString(13, attendee.getPasswordHash());
+            stmt.setInt(14, attendee.getStatusTypeId());
+            stmt.setInt(15, attendee.getPeriodCanLoginInMinutes());
             
             int affectedRows = stmt.executeUpdate();
             
@@ -99,6 +100,7 @@ public class AttendeeDAO {
             if (rs.next()) {
                 Attendee attendee = new Attendee();
                 attendee.setAttendeeId(rs.getInt("AttendeeID"));
+                attendee.setUserId(rs.getInt("UserID"));
                 attendee.setFirstName(rs.getString("FirstName"));
                 attendee.setMiddleName(rs.getString("MiddleName"));
                 attendee.setLastName(rs.getString("LastName"));
@@ -161,6 +163,7 @@ public class AttendeeDAO {
             if (rs.next()) {
                 Attendee attendee = new Attendee();
                 attendee.setAttendeeId(rs.getInt("AttendeeID"));
+                attendee.setUserId(rs.getInt("UserID"));
                 attendee.setFirstName(rs.getString("FirstName"));
                 attendee.setMiddleName(rs.getString("MiddleName"));
                 attendee.setLastName(rs.getString("LastName"));

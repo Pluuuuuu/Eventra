@@ -93,14 +93,13 @@ public class SignUpController {
     private void handleSignUp() {
         System.out.println("=== DEBUG: handleSignUp method called ===");
         
-        try {
-            String firstName = firstNameField.getText() != null ? firstNameField.getText().trim() : "";
-            String middleName = middleNameField.getText() != null ? middleNameField.getText().trim() : "";
-            String lastName = lastNameField.getText() != null ? lastNameField.getText().trim() : "";
-            String email = emailField.getText() != null ? emailField.getText().trim() : "";
-            String password = passwordField.getText() != null ? passwordField.getText() : "";
-            String confirmPassword = confirmPasswordField.getText() != null ? confirmPasswordField.getText() : "";
-            String organization = organizationField.getText() != null ? organizationField.getText().trim() : "";
+        String firstName = firstNameField.getText() != null ? firstNameField.getText().trim() : "";
+        String middleName = middleNameField.getText() != null ? middleNameField.getText().trim() : "";
+        String lastName = lastNameField.getText() != null ? lastNameField.getText().trim() : "";
+        String email = emailField.getText() != null ? emailField.getText().trim() : "";
+        String password = passwordField.getText() != null ? passwordField.getText() : "";
+        String confirmPassword = confirmPasswordField.getText() != null ? confirmPasswordField.getText() : "";
+        String organization = organizationField.getText() != null ? organizationField.getText().trim() : "";
             
             System.out.println("DEBUG: Form data collected:");
             System.out.println("  First Name: '" + firstName + "'");
@@ -113,9 +112,12 @@ public class SignUpController {
         String username = email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
         
         // Validate input
+        System.out.println("DEBUG: Starting validation...");
         if (!validateInput(firstName, middleName, lastName, email, password, confirmPassword, organization)) {
+            System.out.println("DEBUG: Validation failed!");
             return;
         }
+        System.out.println("DEBUG: Validation passed!");
         
         // Disable button during registration
         signUpButton.setDisable(true);
@@ -134,11 +136,19 @@ public class SignUpController {
             }
             
             // Double-check if email already exists in either User or Attendee tables
-            if (UserDAO.emailExists(email) || AttendeeDAO.emailExists(email)) {
+            System.out.println("DEBUG: Checking if email exists...");
+            boolean userEmailExists = UserDAO.emailExists(email);
+            boolean attendeeEmailExists = AttendeeDAO.emailExists(email);
+            System.out.println("DEBUG: Email exists in UserM: " + userEmailExists);
+            System.out.println("DEBUG: Email exists in Attendee: " + attendeeEmailExists);
+            
+            if (userEmailExists || attendeeEmailExists) {
+                System.out.println("DEBUG: Email already exists, showing error");
                 showError("This email already exists. Please use a different email or sign in.");
                 emailField.requestFocus();
                 return;
             }
+            System.out.println("DEBUG: Email is unique, proceeding...");
             
             // Hash password once for both User and Attendee
             String hashedPassword = UserDAO.hashPassword(password);
@@ -153,27 +163,40 @@ public class SignUpController {
             newAttendee.setMiddleName(middleName.isEmpty() ? null : middleName);
             
             // Create both User and Attendee records
+            System.out.println("DEBUG: About to create User record...");
             boolean userCreated = UserDAO.createUser(newUser);
-            boolean attendeeCreated = AttendeeDAO.createAttendee(newAttendee);
+            System.out.println("DEBUG: User created: " + userCreated);
+            System.out.println("DEBUG: User ID: " + newUser.getUserId());
+            
+            boolean attendeeCreated = false;
+            if (userCreated) {
+                // Set the UserID from the created user
+                newAttendee.setUserId(newUser.getUserId());
+                System.out.println("DEBUG: About to create Attendee record with UserID: " + newUser.getUserId());
+                attendeeCreated = AttendeeDAO.createAttendee(newAttendee);
+                System.out.println("DEBUG: Attendee created: " + attendeeCreated);
+            } else {
+                System.out.println("DEBUG: Skipping Attendee creation - User creation failed");
+            }
             
             if (userCreated && attendeeCreated) {
+                System.out.println("DEBUG: Both records created successfully! Navigating to login...");
                 // Registration successful
                 showSuccess("Account created successfully! Please sign in.");
                 
                 // Clear form
                 clearForm();
                 
-                // Navigate to login after a short delay
-                new Thread(() -> {
+                // Navigate to login immediately after showing success message
+                javafx.application.Platform.runLater(() -> {
                     try {
-                        Thread.sleep(2000);
-                        javafx.application.Platform.runLater(() -> 
-                            ViewUtil.switchTo("Login", firstNameField.getScene().getWindow())
-                        );
+                        Thread.sleep(1500); // Short delay to show success message
+                        ViewUtil.switchTo("Login", firstNameField.getScene().getWindow());
+                        System.out.println("DEBUG: Successfully navigated to Login page");
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
-                }).start();
+                });
                 
             } else {
                 // More specific error messages
@@ -194,11 +217,6 @@ public class SignUpController {
             // Re-enable button
             signUpButton.setDisable(false);
             signUpButton.setText("Create Account");
-        }
-        } catch (Exception e) {
-            System.err.println("CRITICAL ERROR in handleSignUp: " + e.getMessage());
-            e.printStackTrace();
-            showError("A critical error occurred. Please try again.");
         }
     }
     

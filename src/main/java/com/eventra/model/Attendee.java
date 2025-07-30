@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 public class Attendee {
     private int attendeeId;
+    private int userId;  // Foreign key to UserM table
     private String firstName;
     private String middleName;
     private String lastName;
@@ -41,6 +42,9 @@ public class Attendee {
     // Getters and Setters
     public int getAttendeeId() { return attendeeId; }
     public void setAttendeeId(int attendeeId) { this.attendeeId = attendeeId; }
+
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
