@@ -6,19 +6,30 @@ import com.eventra.util.ViewUtil;
 import com.eventra.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 import java.util.Optional;
 
-public class LoginController {
+public class  LoginController {  
     
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private Button signInButton;
     @FXML private Label errorLabel;
     @FXML private Hyperlink signUpLink;
+    @FXML private ImageView logoImage;
     
     @FXML
     public void initialize() {
+        // Set up logo
+        try {
+            Image logo = new Image(getClass().getResourceAsStream("/images/logo.png.png"));
+            logoImage.setImage(logo);
+        } catch (Exception e) {
+            System.err.println("Could not load logo: " + e.getMessage());
+        }
+        
         // Set up enter key handling
         passwordField.setOnAction(event -> handleSignIn());
         
@@ -90,7 +101,14 @@ public class LoginController {
     @FXML
     private void handleSignUp() {
         // Navigate to sign up page
-        ViewUtil.switchTo("SignUp", emailField.getScene().getWindow());
+        System.out.println("Sign Up button clicked! Attempting to navigate to SignUp page...");
+        try {
+            ViewUtil.switchTo("SignUp", emailField.getScene().getWindow());
+            System.out.println("Successfully navigated to SignUp page");
+        } catch (Exception e) {
+            System.err.println("Error navigating to SignUp page: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private boolean validateInput(String email, String password) {
