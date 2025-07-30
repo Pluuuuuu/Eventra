@@ -9,10 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <!-- your Java version -->
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
-        <!-- JavaFX version -->
         <javafx.version>21.0.2</javafx.version>
     </properties>
 
@@ -46,28 +44,28 @@
             <version>5.0.1</version>
         </dependency>
 
-        <!-- H2 Database for development -->
+        <!-- H2 Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
         </dependency>
 
-        <!-- Microsoft SQL Server JDBC driver -->
+        <!-- SQL Server JDBC driver -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>10.2.0.jre11</version>
         </dependency>
 
-        <!-- SLF4J Simple Logger -->
+        <!-- SLF4J Logger -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.36</version>
         </dependency>
 
-        <!-- BCrypt for password hashing -->
+        <!-- BCrypt -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
@@ -77,35 +75,34 @@
 
     <build>
         <plugins>
-            <!-- JavaFX Maven plugin -->
+            <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.eventra.App</mainClass>
-                    <options>
-                        <option>--add-modules</option>
-                        <option>javafx.controls,javafx.fxml</option>
-                    </options>
-                    <jlinkZipName>eventra-app</jlinkZipName>
-                    <jlinkImageName>eventra-app</jlinkImageName>
-                    <launcher>launcher</launcher>
-                    <mainClass>com.eventra.App</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-            
+
             <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>24</source>
-                    <target>24</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-            
+
             <!-- Maven Exec Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
