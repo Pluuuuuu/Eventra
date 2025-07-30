@@ -2,7 +2,7 @@
 echo Building Eventra Application...
 
 REM Set Java home
-set JAVA_HOME=C:\Program Files\Java\jdk-21
+set JAVA_HOME=C:\Program Files\Java\jdk-24
 set PATH=%JAVA_HOME%\bin;%PATH%
 
 REM Create directories
@@ -16,6 +16,7 @@ if not exist "target\lib\javafx-controls-21.0.2.jar" (
     powershell -Command "Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/openjfx/javafx-fxml/21.0.2/javafx-fxml-21.0.2.jar' -OutFile 'target\lib\javafx-fxml-21.0.2.jar'"
     powershell -Command "Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/openjfx/javafx-base/21.0.2/javafx-base-21.0.2.jar' -OutFile 'target\lib\javafx-base-21.0.2.jar'"
     powershell -Command "Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/21.0.2/javafx-graphics-21.0.2.jar' -OutFile 'target\lib\javafx-graphics-21.0.2.jar'"
+    powershell -Command "Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/21.0.2/javafx-graphics-21.0.2-win.jar' -OutFile 'target\lib\javafx-graphics-21.0.2-win.jar'"
     powershell -Command "Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/openjfx/javafx-graphics/21.0.2/javafx-graphics-21.0.2-win.jar' -OutFile 'target\lib\javafx-graphics-21.0.2-win.jar'"
 )
 
@@ -38,7 +39,7 @@ if not exist "target\lib\h2-2.2.224.jar" (
 
 REM Compile Java files
 echo Compiling Java files...
-javac -cp "target\lib\*;src\main\java" -d target\classes src\main\java\com\eventra\*.java src\main\java\com\eventra\controller\*.java src\main\java\com\eventra\dao\*.java src\main\java\com\eventra\model\*.java src\main\java\com\eventra\util\*.java
+javac -cp "target\lib\*" -d target\classes src\main\java\com\eventra\*.java src\main\java\com\eventra\controller\*.java src\main\java\com\eventra\dao\*.java src\main\java\com\eventra\model\*.java src\main\java\com\eventra\util\*.java
 
 if %ERRORLEVEL% EQU 0 (
     echo Build successful!

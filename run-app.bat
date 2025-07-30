@@ -2,7 +2,7 @@
 echo Running Eventra Application...
 
 REM Set Java home with proper quoting for paths with spaces
-set "JAVA_HOME=C:\Program Files\Java\jdk-11"
+set "JAVA_HOME=C:\Program Files\Java\jdk-24"
 set "PATH=%JAVA_HOME%\bin;%PATH%"
 
 REM Verify Java is available
