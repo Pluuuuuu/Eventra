@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 
 import java.util.Optional;
 
@@ -15,10 +16,18 @@ public class  LoginController {
     
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
+    @FXML private TextField visiblePasswordField;
     @FXML private Button signInButton;
     @FXML private Label errorLabel;
     @FXML private Hyperlink signUpLink;
     @FXML private ImageView logoImage;
+    @FXML private Button togglePasswordButton;
+    @FXML private ImageView eyeIcon;
+    @FXML private HBox passwordContainer;
+    
+    private boolean passwordVisible = false;
+    private Image eyeOpenIcon;
+    private Image eyeClosedIcon;
     
     @FXML
     public void initialize() {
@@ -30,8 +39,24 @@ public class  LoginController {
             System.err.println("Could not load logo: " + e.getMessage());
         }
         
+        // Load eye icons for password toggle
+        try {
+            eyeOpenIcon = new Image(getClass().getResourceAsStream("/images/eye-open.png"));
+            eyeClosedIcon = new Image(getClass().getResourceAsStream("/images/eye-closed.png"));
+            eyeIcon.setImage(eyeClosedIcon);
+        } catch (Exception e) {
+            System.err.println("Could not load eye icons: " + e.getMessage());
+            // Use Unicode characters as fallback
+            togglePasswordButton.setText("👁");
+            eyeIcon.setVisible(false);
+            // Set default icons to null to avoid null pointer exceptions
+            eyeOpenIcon = null;
+            eyeClosedIcon = null;
+        }
+        
         // Set up enter key handling
         passwordField.setOnAction(event -> handleSignIn());
+        visiblePasswordField.setOnAction(event -> handleSignIn());
         
         // Clear error when user starts typing
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -44,13 +69,60 @@ public class  LoginController {
             if (errorLabel.isVisible()) {
                 hideError();
             }
+            // Sync with visible password field
+            if (!passwordVisible) {
+                visiblePasswordField.setText(newValue);
+            }
         });
+        
+        visiblePasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (errorLabel.isVisible()) {
+                hideError();
+            }
+            // Sync with password field
+            if (passwordVisible) {
+                passwordField.setText(newValue);
+            }
+        });
+    }
+    
+    @FXML
+    private void handleTogglePassword() {
+        passwordVisible = !passwordVisible;
+        
+        if (passwordVisible) {
+            // Show password as text
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+            visiblePasswordField.setVisible(true);
+            visiblePasswordField.setManaged(true);
+            visiblePasswordField.setText(passwordField.getText());
+            visiblePasswordField.requestFocus();
+            if (eyeOpenIcon != null) {
+                eyeIcon.setImage(eyeOpenIcon);
+            } else {
+                togglePasswordButton.setText("🙈");
+            }
+        } else {
+            // Hide password
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            visiblePasswordField.setVisible(false);
+            visiblePasswordField.setManaged(false);
+            passwordField.setText(visiblePasswordField.getText());
+            passwordField.requestFocus();
+            if (eyeClosedIcon != null) {
+                eyeIcon.setImage(eyeClosedIcon);
+            } else {
+                togglePasswordButton.setText("👁");
+            }
+        }
     }
     
     @FXML
     private void handleSignIn() {
         String email = emailField.getText().trim();
-        String password = passwordField.getText();
+        String password = passwordVisible ? visiblePasswordField.getText() : passwordField.getText();
         
         // Validate input
         if (!validateInput(email, password)) {
@@ -67,30 +139,33 @@ public class  LoginController {
                 // Create demo user
                 User demoUser = new User("demo", "Demo", "User", email, "");
                 demoUser.setUserId(1);
-                demoUser.setRoleTypeId(2);
+                demoUser.setRoleTypeId(2); // Admin role
                 
                 SessionManager.setCurrentUser(demoUser);
                 ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
                 return;
             }
             
-            // Real authentication (when database is available)
-            Optional<User> userOpt = UserDAO.authenticateUser(email, password);
-            
-            if (userOpt.isPresent()) {
-                User user = userOpt.get();
-                // Store current user in session (you can create a SessionManager class)
-                SessionManager.setCurrentUser(user);
+            // Try real authentication (when database is available)
+            try {
+                Optional<User> userOpt = UserDAO.authenticateUser(email, password);
                 
-                // Navigate to dashboard
-                ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
-            } else {
-                showError("Invalid email or password. Please try again.");
+                if (userOpt.isPresent()) {
+                    User user = userOpt.get();
+                    SessionManager.setCurrentUser(user);
+                    ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
+                } else {
+                    showError("Invalid email or password. Please try again.");
+                }
+            } catch (Exception e) {
+                // Database connection failed, show demo mode message
+                System.err.println("Database connection failed: " + e.getMessage());
+                showError("Database not available. Use demo@eventra.com / demo123 for demo mode.");
             }
             
         } catch (Exception e) {
             System.err.println("Login error: " + e.getMessage());
-            showError("Database not available. Use demo@eventra.com / demo123 for demo mode.");
+            showError("An error occurred. Use demo@eventra.com / demo123 for demo mode.");
         } finally {
             // Re-enable button
             signInButton.setDisable(false);

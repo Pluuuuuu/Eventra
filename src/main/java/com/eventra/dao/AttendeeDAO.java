@@ -15,7 +15,7 @@ public class AttendeeDAO {
         String sql = "INSERT INTO Attendee (UserID, FirstName, MiddleName, LastName, Email, Organization, " +
                     "Phone, Location, Gender, DateOfBirth, ProfilePicUrl, Type, PasswordHash, " +
                     "StatusTypeID, PeriodCanLoginInMinutes, CreatedAt, UpdatedAt) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETUTCDATE(), GETUTCDATE())";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -217,7 +217,7 @@ public class AttendeeDAO {
     public static boolean updateAttendee(Attendee attendee) {
         String sql = "UPDATE Attendee SET FirstName = ?, MiddleName = ?, LastName = ?, " +
                     "Organization = ?, Phone = ?, Location = ?, Gender = ?, DateOfBirth = ?, " +
-                    "ProfilePicUrl = ?, Type = ?, UpdatedAt = GETUTCDATE() " +
+                    "ProfilePicUrl = ?, Type = ?, UpdatedAt = CURRENT_TIMESTAMP " +
                     "WHERE AttendeeID = ?";
         
         try (Connection conn = Db.get();

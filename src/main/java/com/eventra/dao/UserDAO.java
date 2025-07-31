@@ -25,9 +25,31 @@ public class UserDAO {
             if (rs.next()) {
                 String storedHash = rs.getString("PasswordHash");
                 
-                // Check if password matches
-                if (BCrypt.checkpw(password, storedHash)) {
+                // Check if password matches - handle both plain text and BCrypt hashes
+                boolean passwordMatches = false;
+                
+                // First, try BCrypt verification (for properly hashed passwords)
+                try {
+                    passwordMatches = BCrypt.checkpw(password, storedHash);
+                } catch (Exception e) {
+                    // If BCrypt fails, it might be a plain text password
+                    System.out.println("BCrypt verification failed, trying plain text comparison");
+                }
+                
+                // If BCrypt failed, try plain text comparison (for legacy data)
+                if (!passwordMatches) {
+                    passwordMatches = password.equals(storedHash);
+                }
+                
+                if (passwordMatches) {
                     User user = mapResultSetToUser(rs);
+                    
+                    // If the password was plain text, hash it and update the database
+                    if (password.equals(storedHash)) {
+                        System.out.println("Updating plain text password to BCrypt hash for user: " + email);
+                        updatePasswordToHash(user.getUserId(), password);
+                    }
+                    
                     return Optional.of(user);
                 } else {
                     // Update failed login attempt
@@ -49,7 +71,7 @@ public class UserDAO {
     public static boolean createUser(User user) {
         String sql = "INSERT INTO UserM (Username, FirstName, MiddleName, LastName, Email, PasswordHash, " +
                     "ProfilePicUrl, RoleTypeID, StatusTypeID, PeriodCanLoginInMinutes, CreatedAt, UpdatedAt) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETUTCDATE(), GETUTCDATE())";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -159,7 +181,7 @@ public class UserDAO {
      * Update failed login attempt timestamp
      */
     private static void updateFailedLoginAttempt(int userId) {
-        String sql = "UPDATE UserM SET LastFailedLoginAt = GETUTCDATE() WHERE UserID = ?";
+        String sql = "UPDATE UserM SET LastFailedLoginAt = CURRENT_TIMESTAMP WHERE UserID = ?";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -178,6 +200,22 @@ public class UserDAO {
      */
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    /**
+     * Update password to BCrypt hash
+     */
+    private static void updatePasswordToHash(int userId, String password) {
+        String sql = "UPDATE UserM SET PasswordHash = ? WHERE UserID = ?";
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, BCrypt.hashpw(password, BCrypt.gensalt()));
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error updating password to hash: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     /**

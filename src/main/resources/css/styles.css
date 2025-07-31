@@ -401,6 +401,38 @@
     -fx-fill: #666;
 }
 
+/* Password Toggle Button */
+.password-toggle-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.password-toggle-button:hover {
+    -fx-border-color: #4f46e5;
+    -fx-background-color: #f8f9fa;
+}
+
+.password-toggle-button:pressed {
+    -fx-background-color: #e9ecef;
+}
+
+/* Role-specific Content Area */
+.role-content {
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-padding: 20px;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e9ecef;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
 /* Welcome Button (existing) */
 Button {
     -fx-font-size: 16px;

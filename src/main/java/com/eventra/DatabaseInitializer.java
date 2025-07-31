@@ -29,8 +29,7 @@ public class DatabaseInitializer {
     private static void createLookupTables(Statement stmt) throws Exception {
         // Status Type table
         stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='StatusType' AND xtype='U') " +
-            "CREATE TABLE StatusType (" +
+            "CREATE TABLE IF NOT EXISTS StatusType (" +
             "StatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -38,8 +37,7 @@ public class DatabaseInitializer {
         
         // Role Type table
         stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RoleType' AND xtype='U') " +
-            "CREATE TABLE RoleType (" +
+            "CREATE TABLE IF NOT EXISTS RoleType (" +
             "RoleTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -47,8 +45,7 @@ public class DatabaseInitializer {
         
         // Event Status Type table
         stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='EventStatusType' AND xtype='U') " +
-            "CREATE TABLE EventStatusType (" +
+            "CREATE TABLE IF NOT EXISTS EventStatusType (" +
             "EventStatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -56,8 +53,7 @@ public class DatabaseInitializer {
         
         // Session Status Type table
         stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='SessionStatusType' AND xtype='U') " +
-            "CREATE TABLE SessionStatusType (" +
+            "CREATE TABLE IF NOT EXISTS SessionStatusType (" +
             "SessionStatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -65,8 +61,7 @@ public class DatabaseInitializer {
         
         // Registration Status Type table
         stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RegistrationStatusType' AND xtype='U') " +
-            "CREATE TABLE RegistrationStatusType (" +
+            "CREATE TABLE IF NOT EXISTS RegistrationStatusType (" +
             "RegistrationStatusTypeID INT PRIMARY KEY," +
             "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
@@ -76,9 +71,8 @@ public class DatabaseInitializer {
     private static void createMainTables(Statement stmt) throws Exception {
         // UserM table
         stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='UserM' AND xtype='U') " +
-            "CREATE TABLE UserM (" +
-            "UserID INT IDENTITY(1,1) PRIMARY KEY," +
+            "CREATE TABLE IF NOT EXISTS UserM (" +
+            "UserID INT AUTO_INCREMENT PRIMARY KEY," +
             "Username VARCHAR(100) NOT NULL UNIQUE," +
             "FirstName VARCHAR(100) NOT NULL," +
             "MiddleName VARCHAR(100)," +
@@ -89,70 +83,165 @@ public class DatabaseInitializer {
             "RoleTypeID INT NOT NULL DEFAULT 2," +
             "StatusTypeID INT NOT NULL DEFAULT 1," +
             "PeriodCanLoginInMinutes INT NOT NULL DEFAULT 0," +
-            "LastFailedLoginAt DATETIME2," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT GETDATE()" +
+            "LastFailedLoginAt TIMESTAMP," +
+            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+            ")"
+        );
+        
+        // Attendee table
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS Attendee (" +
+            "AttendeeID INT AUTO_INCREMENT PRIMARY KEY," +
+            "UserID INT NOT NULL," +
+            "FirstName VARCHAR(100) NOT NULL," +
+            "MiddleName VARCHAR(100)," +
+            "LastName VARCHAR(100) NOT NULL," +
+            "Email VARCHAR(255) NOT NULL UNIQUE," +
+            "Organization VARCHAR(255) NOT NULL," +
+            "Phone VARCHAR(20)," +
+            "Location VARCHAR(255)," +
+            "Gender VARCHAR(10)," +
+            "DateOfBirth DATE," +
+            "ProfilePicUrl VARCHAR(500)," +
+            "Type VARCHAR(50) NOT NULL DEFAULT 'Regular'," +
+            "PasswordHash VARCHAR(255) NOT NULL," +
+            "StatusTypeID INT NOT NULL DEFAULT 1," +
+            "PeriodCanLoginInMinutes INT NOT NULL DEFAULT 0," +
+            "LastFailedLoginAt TIMESTAMP," +
+            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (UserID) REFERENCES UserM(UserID)" +
             ")"
         );
     }
     
     private static void insertInitialData(Statement stmt) throws Exception {
         // Insert Status Types
-        stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM StatusType WHERE StatusTypeID = 1) " +
-            "INSERT INTO StatusType (StatusTypeID, Name) VALUES " +
-            "(1, 'Active'), " +
-            "(2, 'Inactive'), " +
-            "(3, 'Suspended'), " +
-            "(4, 'Deleted')"
-        );
+        try {
+            stmt.execute(
+                "INSERT INTO StatusType (StatusTypeID, Name) VALUES " +
+                "(1, 'Active'), " +
+                "(2, 'Inactive'), " +
+                "(3, 'Suspended'), " +
+                "(4, 'Deleted')"
+            );
+        } catch (Exception e) {
+            // Data already exists, ignore
+        }
         
         // Insert Role Types
-        stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM RoleType WHERE RoleTypeID = 1) " +
-            "INSERT INTO RoleType (RoleTypeID, Name) VALUES " +
-            "(1, 'Administrator'), " +
-            "(2, 'User'), " +
-            "(3, 'Event Manager'), " +
-            "(4, 'Presenter')"
-        );
+        try {
+            stmt.execute(
+                "INSERT INTO RoleType (RoleTypeID, Name) VALUES " +
+                "(1, 'SuperAdmin'), " +
+                "(2, 'Admin'), " +
+                "(3, 'Staff'), " +
+                "(4, 'Attendee')"
+            );
+        } catch (Exception e) {
+            // Data already exists, ignore
+        }
         
         // Insert Event Status Types
-        stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM EventStatusType WHERE EventStatusTypeID = 1) " +
-            "INSERT INTO EventStatusType (EventStatusTypeID, Name) VALUES " +
-            "(1, 'Draft'), " +
-            "(2, 'Published'), " +
-            "(3, 'Cancelled'), " +
-            "(4, 'Completed')"
-        );
+        try {
+            stmt.execute(
+                "INSERT INTO EventStatusType (EventStatusTypeID, Name) VALUES " +
+                "(1, 'Draft'), " +
+                "(2, 'Published'), " +
+                "(3, 'Cancelled'), " +
+                "(4, 'Completed')"
+            );
+        } catch (Exception e) {
+            // Data already exists, ignore
+        }
         
         // Insert Session Status Types
-        stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM SessionStatusType WHERE SessionStatusTypeID = 1) " +
-            "INSERT INTO SessionStatusType (SessionStatusTypeID, Name) VALUES " +
-            "(1, 'Draft'), " +
-            "(2, 'Confirmed'), " +
-            "(3, 'Cancelled'), " +
-            "(4, 'Completed')"
-        );
+        try {
+            stmt.execute(
+                "INSERT INTO SessionStatusType (SessionStatusTypeID, Name) VALUES " +
+                "(1, 'Draft'), " +
+                "(2, 'Confirmed'), " +
+                "(3, 'Cancelled'), " +
+                "(4, 'Completed')"
+            );
+        } catch (Exception e) {
+            // Data already exists, ignore
+        }
         
         // Insert Registration Status Types
-        stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM RegistrationStatusType WHERE RegistrationStatusTypeID = 1) " +
-            "INSERT INTO RegistrationStatusType (RegistrationStatusTypeID, Name) VALUES " +
-            "(1, 'Pending'), " +
-            "(2, 'Confirmed'), " +
-            "(3, 'Cancelled'), " +
-            "(4, 'Attended')"
-        );
+        try {
+            stmt.execute(
+                "INSERT INTO RegistrationStatusType (RegistrationStatusTypeID, Name) VALUES " +
+                "(1, 'Pending'), " +
+                "(2, 'Confirmed'), " +
+                "(3, 'Cancelled'), " +
+                "(4, 'Attended')"
+            );
+        } catch (Exception e) {
+            // Data already exists, ignore
+        }
         
         // Insert test user (password: test123)
-        stmt.execute(
-            "IF NOT EXISTS (SELECT * FROM UserM WHERE Email = 'test@eventra.com') " +
-            "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
-            "VALUES ('testuser', 'Test', 'User', 'test@eventra.com', " +
-            "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 1)"
-        );
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('testuser', 'Test', 'User', 'test@eventra.com', " +
+                "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
+        
+        // Insert your test users with plain text passwords (as requested)
+        // Password for all users: staff@gmail.com (stored as plain text)
+        
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('superadmin11', 'System1', 'Owner1', 'superadmin11@gmail.com', 'staff@gmail.com', 1, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('admin111', 'Alice1', 'Admin1', 'admin11@gmail.com', 'staff@gmail.com', 2, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('staff111', 'Bob1', 'Staff1', 'staff11@gmail.com', 'staff@gmail.com', 3, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
+        
+        // Insert demo attendees (password: demo123)
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('attendee1', 'John', 'Doe', 'john.doe@example.com', " +
+                "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('attendee2', 'Jane', 'Smith', 'jane.smith@example.com', " +
+                "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
     }
 } 

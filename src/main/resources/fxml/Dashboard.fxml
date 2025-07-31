@@ -31,11 +31,12 @@
         </VBox>
 
         <!-- Action Buttons -->
+        <VBox fx:id="roleSpecificContent" alignment="CENTER" spacing="15" styleClass="role-content">
+            <!-- Role-specific buttons will be dynamically added here -->
+        </VBox>
+
+        <!-- Logout Button -->
         <HBox alignment="CENTER" spacing="15">
-            <Button text="View Events"
-                    onAction="#handleViewEvents"
-                    styleClass="secondary-button"/>
-            
             <Button text="Logout"
                     onAction="#handleLogout"
                     styleClass="danger-button"/>

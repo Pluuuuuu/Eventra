@@ -3,6 +3,12 @@ package com.eventra.model;
 import java.time.LocalDateTime;
 
 public class User {
+    // Role constants
+    public static final int ROLE_SUPER_ADMIN = 1;
+    public static final int ROLE_ADMIN = 2;
+    public static final int ROLE_STAFF = 3;
+    public static final int ROLE_ATTENDEE = 4;
+    
     private int userId;
     private String username;
     private String firstName;

@@ -56,9 +56,27 @@
                 <!-- Password Field -->
                 <VBox spacing="8" styleClass="form-field">
                     <Label text="Password" styleClass="form-label"/>
-                    <PasswordField fx:id="passwordField" 
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <PasswordField fx:id="passwordField" 
+                                      promptText="********"
+                                      styleClass="form-input"
+                                      HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="visiblePasswordField"
                                   promptText="********"
-                                  styleClass="form-input"/>
+                                  styleClass="form-input"
+                                  HBox.hgrow="ALWAYS"
+                                  visible="false"
+                                  managed="false"/>
+                        <Button fx:id="togglePasswordButton"
+                                styleClass="password-toggle-button"
+                                onAction="#handleTogglePassword"
+                                prefWidth="40"
+                                prefHeight="40">
+                            <graphic>
+                                <ImageView fx:id="eyeIcon" fitWidth="20" fitHeight="20"/>
+                            </graphic>
+                        </Button>
+                    </HBox>
                 </VBox>
 
                 <!-- Error Message -->
