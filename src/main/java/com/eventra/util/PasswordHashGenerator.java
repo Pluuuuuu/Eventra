@@ -5,7 +5,13 @@ import org.mindrot.jbcrypt.BCrypt;
 public class PasswordHashGenerator {
     
     public static void main(String[] args) {
-        String password = "staff@gmail.com";
+        if (args.length == 0) {
+            System.out.println("Usage: java PasswordHashGenerator <password>");
+            System.out.println("Example: java PasswordHashGenerator mypassword123");
+            return;
+        }
+        
+        String password = args[0];
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         
         System.out.println("Password: " + password);

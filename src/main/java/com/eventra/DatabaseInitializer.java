@@ -187,7 +187,7 @@ public class DatabaseInitializer {
             stmt.execute(
                 "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
                 "VALUES ('testuser', 'Test', 'User', 'test@eventra.com', " +
-                "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, 1)"
+                "'$2a$10$TToB9tKSXwz5Ub9mOByFMekz.ygcmX2ZMgiDmpP.QigvnhUtjVXrK', 2, 1)"
             );
         } catch (Exception e) {
             // User already exists, ignore
@@ -228,7 +228,7 @@ public class DatabaseInitializer {
             stmt.execute(
                 "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
                 "VALUES ('attendee1', 'John', 'Doe', 'john.doe@example.com', " +
-                "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, 1)"
+                "'$2a$10$7G4gg/2D.5VwHNyXKrRoAODBUyvqZ2mXlhMTi/jKMFxhPRlT54O6e', 4, 1)"
             );
         } catch (Exception e) {
             // User already exists, ignore
@@ -238,7 +238,7 @@ public class DatabaseInitializer {
             stmt.execute(
                 "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
                 "VALUES ('attendee2', 'Jane', 'Smith', 'jane.smith@example.com', " +
-                "'$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 4, 1)"
+                "'$2a$10$7G4gg/2D.5VwHNyXKrRoAODBUyvqZ2mXlhMTi/jKMFxhPRlT54O6e', 4, 1)"
             );
         } catch (Exception e) {
             // User already exists, ignore

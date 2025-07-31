@@ -44,8 +44,10 @@ public class  LoginController {
             eyeOpenIcon = new Image(getClass().getResourceAsStream("/images/eye-open.png"));
             eyeClosedIcon = new Image(getClass().getResourceAsStream("/images/eye-closed.png"));
             eyeIcon.setImage(eyeClosedIcon);
+            System.out.println("Eye icons loaded successfully!");
         } catch (Exception e) {
             System.err.println("Could not load eye icons: " + e.getMessage());
+            e.printStackTrace();
             // Use Unicode characters as fallback
             togglePasswordButton.setText("👁");
             eyeIcon.setVisible(false);
