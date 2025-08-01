@@ -1,0 +1,171 @@
+package com.eventra.dao;
+
+import com.eventra.Db;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.format.DateTimeFormatter;
+
+public class EventDAO {
+    
+    /**
+     * Get all events created by a specific admin user
+     */
+    public static List<EventItem> getEventsForAdmin(int adminUserId) {
+        List<EventItem> events = new ArrayList<>();
+        String sql = "SELECT e.EventID, e.Title, e.Description, e.StartDate, e.EndDate, " +
+                     "v.Name as VenueName, e.StatusTypeID, e.CreatedAt " +
+                     "FROM EventM e " +
+                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " + 
+                     "WHERE e.CreatedByUserID = ? " +
+                     "ORDER BY e.StartDate DESC";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, adminUserId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                EventItem event = new EventItem();
+                event.setEventId(rs.getInt("EventID"));
+                event.setTitle(rs.getString("Title"));
+                event.setDescription(rs.getString("Description"));
+                
+                // Format date and time
+                Timestamp startDate = rs.getTimestamp("StartDate");
+                if (startDate != null) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh:mm a");
+                    event.setDateTime(startDate.toLocalDateTime().format(formatter));
+                } else {
+                    event.setDateTime("TBD");
+                }
+                
+                // Set location from venue
+                String venueName = rs.getString("VenueName");
+                event.setLocation(venueName != null ? venueName : "Online Event");
+                
+                // Map status type ID to readable status
+                int statusTypeId = rs.getInt("StatusTypeID");
+                switch (statusTypeId) {
+                    case 1: event.setStatus("Draft"); break;
+                    case 2: event.setStatus("Published"); break;
+                    case 3: event.setStatus("Cancelled"); break;
+                    case 4: event.setStatus("Completed"); break;
+                    default: event.setStatus("Unknown");
+                }
+                
+                events.add(event);
+            }
+            
+            System.out.println("✅ Loaded " + events.size() + " events for admin user " + adminUserId);
+            
+        } catch (SQLException e) {
+            System.err.println("❌ Error loading events for admin " + adminUserId + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return events;
+    }
+    
+    /**
+     * Get all events (for SuperAdmin or system-wide view)
+     */
+    public static List<EventItem> getAllEvents() {
+        List<EventItem> events = new ArrayList<>();
+        String sql = "SELECT e.EventID, e.Title, e.Description, e.StartDate, e.EndDate, " +
+                     "v.Name as VenueName, e.StatusTypeID, e.CreatedAt, " +
+                     "u.FirstName + ' ' + u.LastName as CreatedBy " +
+                     "FROM EventM e " +
+                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                     "LEFT JOIN UserM u ON e.CreatedByUserID = u.UserID " +
+                     "ORDER BY e.StartDate DESC";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                EventItem event = new EventItem();
+                event.setEventId(rs.getInt("EventID"));
+                event.setTitle(rs.getString("Title"));
+                event.setDescription(rs.getString("Description"));
+                
+                // Format date and time
+                Timestamp startDate = rs.getTimestamp("StartDate");
+                if (startDate != null) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy 'at' hh:mm a");
+                    event.setDateTime(startDate.toLocalDateTime().format(formatter));
+                } else {
+                    event.setDateTime("TBD");
+                }
+                
+                // Set location from venue
+                String venueName = rs.getString("VenueName");
+                event.setLocation(venueName != null ? venueName : "Online Event");
+                
+                // Map status type ID to readable status
+                int statusTypeId = rs.getInt("StatusTypeID");
+                switch (statusTypeId) {
+                    case 1: event.setStatus("Draft"); break;
+                    case 2: event.setStatus("Published"); break;
+                    case 3: event.setStatus("Cancelled"); break;
+                    case 4: event.setStatus("Completed"); break;
+                    default: event.setStatus("Unknown");
+                }
+                
+                events.add(event);
+            }
+            
+            System.out.println("✅ Loaded " + events.size() + " total events");
+            
+        } catch (SQLException e) {
+            System.err.println("❌ Error loading all events: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return events;
+    }
+    
+    /**
+     * Inner class to represent an Event item for table display
+     */
+    public static class EventItem {
+        private int eventId;
+        private String title;
+        private String description;
+        private String dateTime;
+        private String location;
+        private String status;
+        
+        public EventItem() {}
+        
+        public EventItem(int eventId, String title, String dateTime, String location, String status) {
+            this.eventId = eventId;
+            this.title = title;
+            this.dateTime = dateTime;
+            this.location = location;
+            this.status = status;
+        }
+        
+        // Getters and Setters
+        public int getEventId() { return eventId; }
+        public void setEventId(int eventId) { this.eventId = eventId; }
+        
+        public String getTitle() { return title; }
+        public void setTitle(String title) { this.title = title; }
+        
+        public String getDescription() { return description; }
+        public void setDescription(String description) { this.description = description; }
+        
+        public String getDateTime() { return dateTime; }
+        public void setDateTime(String dateTime) { this.dateTime = dateTime; }
+        
+        public String getLocation() { return location; }
+        public void setLocation(String location) { this.location = location; }
+        
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+    }
+}

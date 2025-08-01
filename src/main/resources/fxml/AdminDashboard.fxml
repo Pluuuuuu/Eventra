@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventra.controller.AdminDashboardController"
+      stylesheets="@../css/styles.css"
+      styleClass="admin-dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <VBox styleClass="dashboard-sidebar" prefWidth="250" maxWidth="250" minWidth="250">
+        
+        <!-- Logo/Title Area -->
+        <VBox styleClass="sidebar-header" alignment="CENTER" spacing="10">
+            <Text text="EVENTRA" styleClass="sidebar-logo"/>
+            <Text text="Admin Panel" styleClass="sidebar-subtitle"/>
+        </VBox>
+        
+        <!-- Navigation Menu -->
+        <VBox styleClass="sidebar-nav" spacing="5">
+            <Button fx:id="dashboardNavBtn" text="Dashboard" 
+                    onAction="#handleDashboardNav"
+                    styleClass="nav-button,nav-button-active"/>
+            
+            <Button fx:id="eventsNavBtn" text="Manage Events" 
+                    onAction="#handleEventsNav"
+                    styleClass="nav-button"/>
+            
+            <Button fx:id="reportsNavBtn" text="Reports" 
+                    onAction="#handleReportsNav"
+                    styleClass="nav-button"/>
+            
+            <Button fx:id="settingsNavBtn" text="Settings" 
+                    onAction="#handleSettingsNav"
+                    styleClass="nav-button"/>
+        </VBox>
+        
+        <!-- Spacer -->
+        <Region VBox.vgrow="ALWAYS"/>
+        
+        <!-- User Info & Logout -->
+        <VBox styleClass="sidebar-footer" spacing="10">
+            <Separator styleClass="sidebar-separator"/>
+            <Text fx:id="userNameText" text="Admin User" styleClass="sidebar-user"/>
+            <Button text="Logout" 
+                    onAction="#handleLogout"
+                    styleClass="logout-button"/>
+        </VBox>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <VBox styleClass="dashboard-main-content" HBox.hgrow="ALWAYS">
+        
+        <!-- Header -->
+        <VBox styleClass="dashboard-content-header" spacing="10">
+            <Text text="Admin Dashboard" styleClass="dashboard-main-title"/>
+            <Text text="Manage events, view reports and oversee operations" styleClass="dashboard-main-subtitle"/>
+        </VBox>
+        
+        <!-- Metrics Cards Grid (3 cards - removed Revenue) -->
+        <GridPane styleClass="metrics-grid" hgap="20" vgap="20">
+            
+            <!-- My Events Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="📅" styleClass="metric-icon"/>
+                    <Text text="My Events" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="myEventsText" text="0" styleClass="metric-value"/>
+                <Text text="Events I Created" styleClass="metric-description"/>
+            </VBox>
+            
+            <!-- Total Registrations Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="📊" styleClass="metric-icon"/>
+                    <Text text="Registrations" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="totalRegistrationsText" text="0" styleClass="metric-value"/>
+                <Text text="Total Registrations" styleClass="metric-description"/>
+            </VBox>
+            
+            <!-- Active Events Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="🚀" styleClass="metric-icon"/>
+                    <Text text="Active Events" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="activeEventsText" text="0" styleClass="metric-value"/>
+                <Text text="Currently Running" styleClass="metric-description"/>
+            </VBox>
+            
+        </GridPane>
+        
+        <!-- Quick Actions Section -->
+        <VBox styleClass="quick-actions-section" spacing="15">
+            <Text text="Quick Actions" styleClass="section-title"/>
+            
+            <HBox styleClass="quick-actions-buttons" spacing="15" alignment="CENTER_LEFT">
+                <Button text="Create Event" 
+                        onAction="#handleCreateEvent"
+                        styleClass="primary-button"/>
+                
+                <Button text="Manage Events" 
+                        onAction="#handleManageEvents"
+                        styleClass="secondary-button"/>
+                
+                <Button text="View Reports" 
+                        onAction="#handleViewReports"
+                        styleClass="secondary-button"/>
+                
+                <Button text="Export Data" 
+                        onAction="#handleExportData"
+                        styleClass="secondary-button"/>
+            </HBox>
+        </VBox>
+        
+        <!-- Spacer to push content to top -->
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+</HBox>

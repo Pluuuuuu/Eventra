@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
@@ -8,38 +9,114 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.AdminManageEventsController"
-      alignment="CENTER" spacing="20"
+      spacing="20"
       stylesheets="@../css/styles.css"
-      styleClass="dashboard-container">
+      styleClass="manage-events-container">
 
-    <!-- Header -->
-    <VBox alignment="CENTER" spacing="10" styleClass="dashboard-header">
-        <Text fx:id="titleText" text="Event Management" styleClass="dashboard-title"/>
-        <Text text="Administrator Dashboard" styleClass="dashboard-subtitle"/>
-    </VBox>
-
-    <!-- Content -->
-    <VBox alignment="CENTER" spacing="15" styleClass="dashboard-content">
-        
-        <Text text="Event Management System" styleClass="dashboard-text"/>
-        
-        <!-- Placeholder Content -->
-        <VBox spacing="10" styleClass="user-info">
-            <Text text="This is the Event Management page for Administrators" styleClass="info-title"/>
-            <Text text="Here you can manage all events in the system" styleClass="info-text"/>
-            <Text text="Features: Create, Edit, Delete, and Publish Events" styleClass="info-text"/>
+    <!-- Header with Search and Create Button -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="manage-events-header">
+        <VBox spacing="5">
+            <Text text="Manage Your Events" styleClass="manage-events-title"/>
+            <Text text="Create, edit and manage all your events" styleClass="manage-events-subtitle"/>
         </VBox>
-
-        <!-- Action Buttons -->
-        <HBox alignment="CENTER" spacing="15">
-            <Button text="Create New Event"
-                    onAction="#handleCreateEvent"
-                    styleClass="primary-button"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <TextField fx:id="searchField" 
+                      promptText="Search events..."
+                      styleClass="search-field"
+                      prefWidth="200"/>
             
-            <Button text="Back to Dashboard"
-                    onAction="#handleBackToDashboard"
-                    styleClass="secondary-button"/>
+            <Button text="Create Event" 
+                    onAction="#handleCreateEvent"
+                    styleClass="create-event-button"/>
         </HBox>
-    </VBox>
+    </HBox>
 
-</VBox> 
+    <!-- Filters Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filters-bar">
+        <Label text="Filter by:" styleClass="filter-label"/>
+        
+        <ComboBox fx:id="statusFilter" 
+                 promptText="Status"
+                 styleClass="filter-combo"
+                 prefWidth="120">
+        </ComboBox>
+        
+        <ComboBox fx:id="dateFilter" 
+                 promptText="Date Range"
+                 styleClass="filter-combo"
+                 prefWidth="130">
+        </ComboBox>
+        
+        <ComboBox fx:id="locationFilter" 
+                 promptText="Location"
+                 styleClass="filter-combo"
+                 prefWidth="120">
+        </ComboBox>
+        
+        <Button text="Reset" 
+                onAction="#handleResetFilters"
+                styleClass="reset-filters-button"/>
+    </HBox>
+
+    <!-- Events Table -->
+    <TableView fx:id="eventsTable" styleClass="events-table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="eventNameColumn" text="Event Name" prefWidth="200">
+                <cellValueFactory>
+                    <PropertyValueFactory property="title"/>
+                </cellValueFactory>
+            </TableColumn>
+            
+            <TableColumn fx:id="dateTimeColumn" text="Date &amp; Time" prefWidth="180">
+                <cellValueFactory>
+                    <PropertyValueFactory property="startDate"/>
+                </cellValueFactory>
+            </TableColumn>
+            
+            <TableColumn fx:id="locationColumn" text="Location" prefWidth="150">
+                <cellValueFactory>
+                    <PropertyValueFactory property="location"/>
+                </cellValueFactory>
+            </TableColumn>
+            
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120">
+                <cellValueFactory>
+                    <PropertyValueFactory property="status"/>
+                </cellValueFactory>
+            </TableColumn>
+            
+            <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="120" sortable="false">
+            </TableColumn>
+        </columns>
+        
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10" styleClass="table-placeholder">
+                <Text text="📅" styleClass="placeholder-icon"/>
+                <Text text="No events found" styleClass="placeholder-title"/>
+                <Text text="Create your first event to get started" styleClass="placeholder-subtitle"/>
+                <Button text="Create Event" 
+                        onAction="#handleCreateEvent"
+                        styleClass="placeholder-button"/>
+            </VBox>
+        </placeholder>
+    </TableView>
+
+    <!-- Bottom Action Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="bottom-action-bar">
+        <Text fx:id="resultsCountText" text="Showing 0 events" styleClass="results-count"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button text="Back to Dashboard"
+                onAction="#handleBackToDashboard"
+                styleClass="back-button"/>
+        
+        <Button text="Export Events" 
+                onAction="#handleExportEvents"
+                styleClass="export-button"/>
+    </HBox>
+
+</VBox>

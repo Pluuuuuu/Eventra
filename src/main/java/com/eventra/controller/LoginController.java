@@ -148,6 +148,18 @@ public class  LoginController {
                 return;
             }
             
+            // SUPER ADMIN DEMO MODE: Direct access to SuperAdmin Dashboard
+            if (email.equals("superadmin@eventra.com") && password.equals("admin123")) {
+                // Create demo super admin user
+                User superAdminUser = new User("superadmin", "Super", "Admin", email, "");
+                superAdminUser.setUserId(0);
+                superAdminUser.setRoleTypeId(1); // SuperAdmin role
+                
+                SessionManager.setCurrentUser(superAdminUser);
+                ViewUtil.switchTo("SuperAdminDashboard", emailField.getScene().getWindow());
+                return;
+            }
+            
             // Try real authentication (when database is available)
             try {
                 Optional<User> userOpt = UserDAO.authenticateUser(email, password);
@@ -155,7 +167,18 @@ public class  LoginController {
                 if (userOpt.isPresent()) {
                     User user = userOpt.get();
                     SessionManager.setCurrentUser(user);
-                    ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
+                    
+                    // Direct users to their role-specific dashboards
+                    if (user.getRoleTypeId() == 1) {
+                        // SuperAdmin gets the specialized dashboard
+                        ViewUtil.switchTo("SuperAdminDashboard", emailField.getScene().getWindow());
+                    } else if (user.getRoleTypeId() == 2) {
+                        // Admin gets the admin dashboard
+                        ViewUtil.switchTo("AdminDashboard", emailField.getScene().getWindow());
+                    } else {
+                        // Staff and Attendees get the generic dashboard
+                        ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
+                    }
                 } else {
                     showError("Invalid email or password. Please try again.");
                 }

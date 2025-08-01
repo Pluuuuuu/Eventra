@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventra.controller.SuperAdminDashboardController"
+      stylesheets="@../css/styles.css"
+      styleClass="admin-dashboard-container">
+
+    <!-- Sidebar Navigation -->
+    <VBox styleClass="dashboard-sidebar" prefWidth="250" maxWidth="250" minWidth="250">
+        
+        <!-- Logo/Title Area -->
+        <VBox styleClass="sidebar-header" alignment="CENTER" spacing="10">
+            <Text text="EVENTRA" styleClass="sidebar-logo"/>
+            <Text text="Super Admin" styleClass="sidebar-subtitle"/>
+        </VBox>
+        
+        <!-- Navigation Menu -->
+        <VBox styleClass="sidebar-nav" spacing="5">
+            <Button fx:id="dashboardNavBtn" 
+                    text="Dashboard" 
+                    onAction="#handleDashboardNav"
+                    styleClass="nav-button,nav-button-active"/>
+            
+            <Button fx:id="analyticsNavBtn" 
+                    text="Analytics" 
+                    onAction="#handleAnalyticsNav"
+                    styleClass="nav-button"/>
+            
+            <Button fx:id="reportsNavBtn" 
+                    text="Reports" 
+                    onAction="#handleReportsNav"
+                    styleClass="nav-button"/>
+            
+            <Button fx:id="settingsNavBtn" 
+                    text="Settings" 
+                    onAction="#handleSettingsNav"
+                    styleClass="nav-button"/>
+        </VBox>
+        
+        <!-- Spacer -->
+        <Region VBox.vgrow="ALWAYS"/>
+        
+        <!-- User Info & Logout -->
+        <VBox styleClass="sidebar-footer" spacing="10">
+            <Separator styleClass="sidebar-separator"/>
+            <Text fx:id="userNameText" text="Admin User" styleClass="sidebar-user"/>
+            <Button text="Logout" 
+                    onAction="#handleLogout"
+                    styleClass="logout-button"/>
+        </VBox>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <VBox styleClass="dashboard-main-content" HBox.hgrow="ALWAYS">
+        
+        <!-- Header -->
+        <VBox styleClass="dashboard-content-header" spacing="10">
+            <Text text="Event Management Dashboard" styleClass="dashboard-main-title"/>
+            <Text text="Overview of key metrics and quick actions for your events" styleClass="dashboard-main-subtitle"/>
+        </VBox>
+        
+        <!-- Metrics Cards Grid -->
+        <GridPane styleClass="metrics-grid" hgap="20" vgap="20">
+            
+            <!-- Events Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="📅" styleClass="metric-icon"/>
+                    <Text text="Total Events" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="totalEventsText" text="24" styleClass="metric-value"/>
+                <Text text="Active Events" styleClass="metric-description"/>
+            </VBox>
+            
+            <!-- Users/Participants Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="📊" styleClass="metric-icon"/>
+                    <Text text="Total Users" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="totalUsersText" text="1,245" styleClass="metric-value"/>
+                <Text text="Registered Users" styleClass="metric-description"/>
+            </VBox>
+            
+            <!-- Registrations Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="📄" styleClass="metric-icon"/>
+                    <Text text="Registrations" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="totalRegistrationsText" text="128" styleClass="metric-value"/>
+                <Text text="This Month" styleClass="metric-description"/>
+            </VBox>
+            
+            <!-- Revenue/Attendees Card -->
+            <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <Text text="👥" styleClass="metric-icon"/>
+                    <Text text="Total Attendees" styleClass="metric-label"/>
+                </HBox>
+                <Text fx:id="totalAttendeesText" text="7,890" styleClass="metric-value"/>
+                <Text text="All Time" styleClass="metric-description"/>
+            </VBox>
+            
+        </GridPane>
+        
+        <!-- Quick Actions Section -->
+        <VBox styleClass="quick-actions-section" spacing="15">
+            <Text text="Quick Actions" styleClass="section-title"/>
+            
+            <HBox styleClass="quick-actions-buttons" spacing="15" alignment="CENTER_LEFT">
+                <Button text="Create Event" 
+                        onAction="#handleCreateEvent"
+                        styleClass="primary-button"/>
+                
+                <Button text="Manage Users" 
+                        onAction="#handleManageUsers"
+                        styleClass="secondary-button"/>
+                
+                <Button text="View Reports" 
+                        onAction="#handleViewReports"
+                        styleClass="secondary-button"/>
+                
+                <Button text="System Settings" 
+                        onAction="#handleSystemSettings"
+                        styleClass="secondary-button"/>
+            </HBox>
+        </VBox>
+        
+        <!-- Spacer to push content to top -->
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+
+</HBox>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fitToWidth="true"
+           stylesheets="@../css/styles.css"
+           styleClass="create-event-scroll">
+
+    <VBox fx:controller="com.eventra.controller.CreateEventController"
+          spacing="25"
+          styleClass="create-event-container">
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="create-event-header">
+            <VBox spacing="5">
+                <Text text="Create Event" styleClass="create-event-title"/>
+                <Text text="Fill in the details to create a new event" styleClass="create-event-subtitle"/>
+            </VBox>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Button text="Save as Draft" 
+                    onAction="#handleSaveDraft"
+                    styleClass="draft-button"/>
+            
+            <Button text="Publish Event" 
+                    onAction="#handlePublishEvent"
+                    styleClass="publish-button"/>
+        </HBox>
+
+        <!-- Basic Information Section -->
+        <VBox spacing="20" styleClass="form-section">
+            <Text text="Basic Information" styleClass="section-title"/>
+            
+            <GridPane hgap="20" vgap="15" styleClass="form-grid">
+                
+                <!-- Event Name -->
+                <Label text="Event Name *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="eventNameField" 
+                          promptText="Enter event name"
+                          styleClass="form-input"
+                          GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+                
+                <!-- Event Type -->
+                <Label text="Event Type *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <ComboBox fx:id="eventTypeCombo" 
+                         promptText="Select event type"
+                         styleClass="form-combo"
+                         prefWidth="200"
+                         GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                
+                <!-- Event Category -->
+                <Label text="Category" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <ComboBox fx:id="categoryCombo" 
+                         promptText="Select category"
+                         styleClass="form-combo"
+                         prefWidth="200"
+                         GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                
+                <!-- Start Date & Time -->
+                <Label text="Start Date &amp; Time *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <DatePicker fx:id="startDatePicker" 
+                           styleClass="form-date"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <TextField fx:id="startTimeField" 
+                          promptText="HH:MM"
+                          styleClass="form-time"
+                          prefWidth="100"
+                          GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                
+                <!-- End Date & Time -->
+                <Label text="End Date &amp; Time *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <DatePicker fx:id="endDatePicker" 
+                           styleClass="form-date"
+                           GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <TextField fx:id="endTimeField" 
+                          promptText="HH:MM"
+                          styleClass="form-time"
+                          prefWidth="100"
+                          GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                
+                <!-- Location -->
+                <Label text="Location *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="locationField" 
+                          promptText="Enter event location"
+                          styleClass="form-input"
+                          GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+                
+                <!-- Capacity -->
+                <Label text="Capacity" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <TextField fx:id="capacityField" 
+                          promptText="Max attendees"
+                          styleClass="form-input"
+                          prefWidth="150"
+                          GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                
+                <!-- Price -->
+                <Label text="Price" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                <TextField fx:id="priceField" 
+                          promptText="0.00"
+                          styleClass="form-input"
+                          prefWidth="150"
+                          GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+            </GridPane>
+        </VBox>
+
+        <!-- Description Section -->
+        <VBox spacing="15" styleClass="form-section">
+            <Text text="Event Description" styleClass="section-title"/>
+            
+            <VBox spacing="10">
+                <Label text="Short Description *" styleClass="form-label"/>
+                <TextField fx:id="shortDescriptionField" 
+                          promptText="Brief description for event listings"
+                          styleClass="form-input"/>
+                
+                <Label text="Full Description" styleClass="form-label"/>
+                <TextArea fx:id="fullDescriptionArea" 
+                         promptText="Detailed event description..."
+                         styleClass="form-textarea"
+                         prefRowCount="4"/>
+            </VBox>
+        </VBox>
+
+        <!-- Registration Settings -->
+        <VBox spacing="15" styleClass="form-section">
+            <Text text="Registration Settings" styleClass="section-title"/>
+            
+            <GridPane hgap="20" vgap="15" styleClass="form-grid">
+                
+                <Label text="Registration Opens" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <DatePicker fx:id="regOpenDatePicker" 
+                           styleClass="form-date"
+                           GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <TextField fx:id="regOpenTimeField" 
+                          promptText="HH:MM"
+                          styleClass="form-time"
+                          prefWidth="100"
+                          GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                
+                <Label text="Registration Closes" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="regCloseDatePicker" 
+                           styleClass="form-date"
+                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <TextField fx:id="regCloseTimeField" 
+                          promptText="HH:MM"
+                          styleClass="form-time"
+                          prefWidth="100"
+                          GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                
+                <CheckBox fx:id="requireApprovalCheck" 
+                         text="Require approval for registration"
+                         styleClass="form-checkbox"
+                         GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2"/>
+                
+                <CheckBox fx:id="waitlistEnabledCheck" 
+                         text="Enable waitlist when full"
+                         styleClass="form-checkbox"
+                         GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+            </GridPane>
+        </VBox>
+
+        <!-- Contact Information -->
+        <VBox spacing="15" styleClass="form-section">
+            <Text text="Contact Information" styleClass="section-title"/>
+            
+            <GridPane hgap="20" vgap="15" styleClass="form-grid">
+                
+                <Label text="Contact Person" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="contactPersonField" 
+                          promptText="Contact person name"
+                          styleClass="form-input"
+                          GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                
+                <Label text="Contact Email" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <TextField fx:id="contactEmailField" 
+                          promptText="contact@example.com"
+                          styleClass="form-input"
+                          GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                
+                <Label text="Contact Phone" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="contactPhoneField" 
+                          promptText="Phone number"
+                          styleClass="form-input"
+                          GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                
+                <Label text="Website" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <TextField fx:id="websiteField" 
+                          promptText="https://example.com"
+                          styleClass="form-input"
+                          GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+            </GridPane>
+        </VBox>
+
+        <!-- Bottom Actions -->
+        <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="form-actions">
+            <Button text="Cancel" 
+                    onAction="#handleCancel"
+                    styleClass="cancel-button"/>
+            
+            <Button text="Save as Draft" 
+                    onAction="#handleSaveDraft"
+                    styleClass="draft-button"/>
+            
+            <Button text="Publish Event" 
+                    onAction="#handlePublishEvent"
+                    styleClass="publish-button"/>
+        </HBox>
+
+    </VBox>
+</ScrollPane>
