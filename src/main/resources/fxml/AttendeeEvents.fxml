@@ -56,11 +56,17 @@
                         <RadioButton fx:id="todayRadio" text="Today" selected="true" 
                                     styleClass="filter-radio" onAction="#handleDateFilter"/>
                         <RadioButton fx:id="tomorrowRadio" text="Tomorrow" 
-                                    styleClass="filter-radio" onAction="#handleDateFilter"/>
+                                    styleClass="filter-radio" onAction="#handleTomorrowToggle"/>
                         <RadioButton fx:id="weekendRadio" text="This weekend" 
                                     styleClass="filter-radio" onAction="#handleDateFilter"/>
                         <RadioButton fx:id="pickDateRadio" text="Pick a date..." 
-                                    styleClass="filter-radio" onAction="#handleDateFilter"/>
+                                    styleClass="filter-radio" onAction="#handlePickDate"/>
+                    </VBox>
+                    
+                    <!-- Selected Date Display -->
+                    <VBox fx:id="selectedDateContainer" spacing="5" visible="false">
+                        <Text fx:id="selectedDateText" style="-fx-font-weight: bold; -fx-fill: #007bff;"/>
+                        <Button text="Clear Date" styleClass="link-button" onAction="#handleClearDate"/>
                     </VBox>
                     
                     <Button text="View more" styleClass="link-button" onAction="#handleViewMore"/>

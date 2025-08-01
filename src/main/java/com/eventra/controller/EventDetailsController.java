@@ -62,8 +62,15 @@ public class EventDetailsController {
             currentEvent = SessionManager.getSelectedEvent();
             
             if (currentEvent == null) {
-                // Fallback to demo event
-                currentEvent = createDemoEvent();
+                // Try to get event from URL parameters or fallback to demo
+                showEventNotFoundError();
+                return;
+            }
+            
+            // Fetch fresh event data from database using the correct schema
+            Event freshEvent = eventDAO.getEventById(currentEvent.getEventId());
+            if (freshEvent != null) {
+                currentEvent = freshEvent;
             }
             
             displayEventDetails();
@@ -75,9 +82,19 @@ public class EventDetailsController {
         } catch (Exception e) {
             System.err.println("Error loading event details: " + e.getMessage());
             e.printStackTrace();
-            // Show demo data
-            showDemoEventDetails();
+            showEventNotFoundError();
         }
+    }
+    
+    private void showEventNotFoundError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Event Not Found");
+        alert.setHeaderText("404 - Event Not Found");
+        alert.setContentText("The requested event could not be found. It may have been removed or the link is invalid.");
+        alert.showAndWait();
+        
+        // Navigate back to events list
+        ViewUtil.switchTo("AttendeeEvents", searchField.getScene().getWindow());
     }
     
     private Event createDemoEvent() {

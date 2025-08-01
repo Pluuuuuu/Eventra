@@ -110,7 +110,7 @@
                         <Text text="Organizer" styleClass="organizer-title"/>
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Text text="👤" style="-fx-font-size: 24; -fx-background-color: #007bff; -fx-background-radius: 20; -fx-padding: 8; -fx-text-fill: white;"/>
-                            <Text fx:id="organizerName" text="AI & Data Science Conference" styleClass="organizer-name"/>
+                            <Text fx:id="organizerName" text="AI and Data Science Conference" styleClass="organizer-name"/>
                         </HBox>
                     </VBox>
                 </VBox>

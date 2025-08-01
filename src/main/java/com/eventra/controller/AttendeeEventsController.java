@@ -17,9 +17,12 @@ import javafx.scene.text.FontWeight;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
+import com.eventra.util.RouteManager;
 
 public class AttendeeEventsController {
     
@@ -34,10 +37,15 @@ public class AttendeeEventsController {
     @FXML private RadioButton weekendRadio;
     @FXML private RadioButton pickDateRadio;
     
+    @FXML private VBox selectedDateContainer;
+    @FXML private Text selectedDateText;
+    
     private EventDAO eventDAO;
     private UserDAO userDAO;
     private List<Event> allEvents;
     private List<User> organizers;
+    private LocalDateTime selectedDate = null;
+    private boolean isSearching = false;
     
     @FXML
     public void initialize() {
@@ -116,6 +124,10 @@ public class AttendeeEventsController {
         card.setPrefHeight(400);
         card.setPadding(new Insets(15));
         card.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8;");
+        
+        // Make the entire card clickable
+        card.setOnMouseClicked(e -> handleEventClick(event));
+        card.setCursor(javafx.scene.Cursor.HAND);
         
         // Event Image (placeholder)
         ImageView imageView = new ImageView();
@@ -255,12 +267,12 @@ public class AttendeeEventsController {
     
     @FXML
     private void handleDateFilter() {
+        if (isSearching) return; // Prevent multiple searches
+        
         LocalDateTime filterDate = null;
         
         if (todayRadio.isSelected()) {
             filterDate = LocalDateTime.now();
-        } else if (tomorrowRadio.isSelected()) {
-            filterDate = LocalDateTime.now().plusDays(1);
         } else if (weekendRadio.isSelected()) {
             // Get next Saturday
             int daysUntilSaturday = 6 - LocalDateTime.now().getDayOfWeek().getValue();
@@ -268,51 +280,132 @@ public class AttendeeEventsController {
             filterDate = LocalDateTime.now().plusDays(daysUntilSaturday);
         }
         
-        if (filterDate != null) {
-            try {
-                List<Event> filteredEvents = eventDAO.getEventsByDate(filterDate);
-                displayAllEvents(filteredEvents);
-                updateEventCount(filteredEvents.size());
-                
-                // Show feedback
+        performDateSearch(filterDate);
+    }
+    
+    @FXML
+    private void handleTomorrowToggle() {
+        if (isSearching) return;
+        
+        if (selectedDate != null && selectedDate.toLocalDate().equals(LocalDateTime.now().plusDays(1).toLocalDate())) {
+            // If tomorrow is already selected, clear it
+            clearDateSelection();
+        } else {
+            // Select tomorrow
+            LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+            performDateSearch(tomorrow);
+        }
+    }
+    
+    @FXML
+    private void handlePickDate() {
+        if (isSearching) return;
+        
+        // Create a date picker dialog
+        DatePicker datePicker = new DatePicker();
+        datePicker.setValue(LocalDate.now());
+        
+        Dialog<LocalDate> dialog = new Dialog<>();
+        dialog.setTitle("Select Date");
+        dialog.setHeaderText("Choose a date to filter events");
+        dialog.getDialogPane().setContent(datePicker);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        // Set the result converter
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return datePicker.getValue();
+            }
+            return null;
+        });
+        
+        // Show the dialog and handle the result
+        Optional<LocalDate> result = dialog.showAndWait();
+        result.ifPresent(date -> {
+            LocalDateTime selectedDateTime = date.atStartOfDay();
+            performDateSearch(selectedDateTime);
+        });
+    }
+    
+    @FXML
+    private void handleClearDate() {
+        clearDateSelection();
+    }
+    
+    private void performDateSearch(LocalDateTime filterDate) {
+        isSearching = true;
+        selectedDate = filterDate;
+        
+        // Update UI to show selected date
+        updateDateSelectionUI();
+        
+        // Disable search button during search
+        searchField.setDisable(true);
+        
+        try {
+            List<Event> filteredEvents;
+            if (filterDate != null) {
+                filteredEvents = eventDAO.getEventsByDate(filterDate);
+            } else {
+                filteredEvents = allEvents;
+            }
+            
+            displayAllEvents(filteredEvents);
+            updateEventCount(filteredEvents.size());
+            
+            // Show feedback
+            if (filterDate != null) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Date Filter Applied");
                 alert.setHeaderText("Events filtered by date");
                 alert.setContentText("Showing events for: " + filterDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
                 alert.showAndWait();
-            } catch (Exception e) {
-                System.err.println("Error filtering events by date: " + e.getMessage());
-                displayAllEvents(allEvents);
-                updateEventCount(allEvents.size());
-                
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Filter Error");
-                alert.setHeaderText("Could not filter events");
-                alert.setContentText("Showing all events instead.");
-                alert.showAndWait();
             }
-        } else {
+            
+        } catch (Exception e) {
+            System.err.println("Error filtering events by date: " + e.getMessage());
             displayAllEvents(allEvents);
             updateEventCount(allEvents.size());
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Filter Error");
+            alert.setHeaderText("Could not filter events");
+            alert.setContentText("Showing all events instead.");
+            alert.showAndWait();
+        } finally {
+            isSearching = false;
+            searchField.setDisable(false);
+        }
+    }
+    
+    private void clearDateSelection() {
+        selectedDate = null;
+        updateDateSelectionUI();
+        
+        // Reset radio buttons
+        todayRadio.setSelected(true);
+        tomorrowRadio.setSelected(false);
+        weekendRadio.setSelected(false);
+        pickDateRadio.setSelected(false);
+        
+        // Show all events
+        displayAllEvents(allEvents);
+        updateEventCount(allEvents.size());
+    }
+    
+    private void updateDateSelectionUI() {
+        if (selectedDate != null) {
+            selectedDateText.setText("Selected: " + selectedDate.format(DateTimeFormatter.ofPattern("MMM d, yyyy")));
+            selectedDateContainer.setVisible(true);
+        } else {
+            selectedDateContainer.setVisible(false);
         }
     }
     
     @FXML
     private void handleEventClick(Event event) {
-        try {
-            // Store the selected event in session and navigate to event details
-            SessionManager.setSelectedEvent(event);
-            ViewUtil.switchTo("EventDetails", searchField.getScene().getWindow());
-        } catch (Exception e) {
-            System.err.println("Error navigating to event details: " + e.getMessage());
-            e.printStackTrace();
-            
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Navigation Error");
-            alert.setHeaderText("Could not open event details");
-            alert.setContentText("Please try again later.");
-            alert.showAndWait();
-        }
+        // Use RouteManager for deep-link navigation
+        RouteManager.navigateToEventDetails(event, searchField.getScene().getWindow());
     }
     
     @FXML
