@@ -27,6 +27,7 @@ public class AdminManageEventsController {
     @FXML private TableColumn<EventItem, String> dateTimeColumn;
     @FXML private TableColumn<EventItem, String> locationColumn;
     @FXML private TableColumn<EventItem, String> statusColumn;
+    @FXML private TableColumn<EventItem, Integer> attendeeCountColumn;
     @FXML private TableColumn<EventItem, Void> actionsColumn;
     
     // Bottom Bar Components
@@ -137,7 +138,7 @@ public class AdminManageEventsController {
             // Add fallback demo data if database fails
             System.out.println("🔄 Using fallback demo data");
             eventsList.addAll(List.of(
-                new EventItem(1, "Sample Event", "Jan 01, 2024 at 10:00 AM", "Main Hall", "Published")
+                new EventItem(1, "Sample Event", "Jan 01, 2024 at 10:00 AM", "Main Hall", "Published", 0)
             ));
         }
     }

@@ -88,6 +88,12 @@
                 </cellValueFactory>
             </TableColumn>
             
+            <TableColumn fx:id="attendeeCountColumn" text="Attendees" prefWidth="100">
+                <cellValueFactory>
+                    <PropertyValueFactory property="attendeeCount"/>
+                </cellValueFactory>
+            </TableColumn>
+            
             <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="120" sortable="false">
             </TableColumn>
         </columns>

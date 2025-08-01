@@ -15,10 +15,14 @@ public class EventDAO {
     public static List<EventItem> getEventsForAdmin(int adminUserId) {
         List<EventItem> events = new ArrayList<>();
         String sql = "SELECT e.EventID, e.Title, e.Description, e.StartDate, e.EndDate, " +
-                     "v.Name as VenueName, e.StatusTypeID, e.CreatedAt " +
+                     "v.Name as VenueName, e.StatusTypeID, e.CreatedAt, " +
+                     "COUNT(r.RegistrationID) as AttendeeCount " +
                      "FROM EventM e " +
                      "LEFT JOIN Venue v ON e.VenueID = v.VenueID " + 
+                     "LEFT JOIN Registration r ON e.EventID = r.EventID " +
                      "WHERE e.CreatedByUserID = ? " +
+                     "GROUP BY e.EventID, e.Title, e.Description, e.StartDate, e.EndDate, " +
+                     "v.Name, e.StatusTypeID, e.CreatedAt " +
                      "ORDER BY e.StartDate DESC";
         
         try (Connection conn = Db.get();
@@ -56,6 +60,9 @@ public class EventDAO {
                     default: event.setStatus("Unknown");
                 }
                 
+                // Set attendee count
+                event.setAttendeeCount(rs.getInt("AttendeeCount"));
+                
                 events.add(event);
             }
             
@@ -76,10 +83,14 @@ public class EventDAO {
         List<EventItem> events = new ArrayList<>();
         String sql = "SELECT e.EventID, e.Title, e.Description, e.StartDate, e.EndDate, " +
                      "v.Name as VenueName, e.StatusTypeID, e.CreatedAt, " +
-                     "u.FirstName + ' ' + u.LastName as CreatedBy " +
+                     "u.FirstName + ' ' + u.LastName as CreatedBy, " +
+                     "COUNT(r.RegistrationID) as AttendeeCount " +
                      "FROM EventM e " +
                      "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
                      "LEFT JOIN UserM u ON e.CreatedByUserID = u.UserID " +
+                     "LEFT JOIN Registration r ON e.EventID = r.EventID " +
+                     "GROUP BY e.EventID, e.Title, e.Description, e.StartDate, e.EndDate, " +
+                     "v.Name, e.StatusTypeID, e.CreatedAt, u.FirstName, u.LastName " +
                      "ORDER BY e.StartDate DESC";
         
         try (Connection conn = Db.get();
@@ -115,6 +126,9 @@ public class EventDAO {
                     case 4: event.setStatus("Completed"); break;
                     default: event.setStatus("Unknown");
                 }
+                
+                // Set attendee count
+                event.setAttendeeCount(rs.getInt("AttendeeCount"));
                 
                 events.add(event);
             }
@@ -209,15 +223,17 @@ public class EventDAO {
         private String dateTime;
         private String location;
         private String status;
+        private int attendeeCount;
         
         public EventItem() {}
         
-        public EventItem(int eventId, String title, String dateTime, String location, String status) {
+        public EventItem(int eventId, String title, String dateTime, String location, String status, int attendeeCount) {
             this.eventId = eventId;
             this.title = title;
             this.dateTime = dateTime;
             this.location = location;
             this.status = status;
+            this.attendeeCount = attendeeCount;
         }
         
         // Getters and Setters
@@ -238,5 +254,8 @@ public class EventDAO {
         
         public String getStatus() { return status; }
         public void setStatus(String status) { this.status = status; }
+        
+        public int getAttendeeCount() { return attendeeCount; }
+        public void setAttendeeCount(int attendeeCount) { this.attendeeCount = attendeeCount; }
     }
 }
