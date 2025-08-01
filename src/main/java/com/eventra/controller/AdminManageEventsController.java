@@ -200,9 +200,32 @@ public class AdminManageEventsController {
             alert.setContentText("Are you sure you want to delete this event? This action cannot be undone.");
             
             if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                eventsList.remove(event);
-                updateResultsCount();
-                System.out.println("Event deleted: " + event.getTitle());
+                // Delete from database first
+                boolean deleted = EventDAO.deleteEvent(event.getEventId());
+                
+                if (deleted) {
+                    // Remove from UI and refresh the list
+                    eventsList.remove(event);
+                    updateResultsCount();
+                    System.out.println("Event deleted: " + event.getTitle());
+                    
+                    // Optionally reload events from database to ensure UI is in sync
+                    // loadEvents(); // Uncomment if you want to fully refresh from DB
+                    
+                    // Show success message
+                    Alert successAlert = new Alert(AlertType.INFORMATION);
+                    successAlert.setTitle("Event Deleted");
+                    successAlert.setHeaderText("Success");
+                    successAlert.setContentText("Event '" + event.getTitle() + "' has been deleted successfully.");
+                    successAlert.showAndWait();
+                } else {
+                    // Show error message if database deletion failed
+                    Alert errorAlert = new Alert(AlertType.ERROR);
+                    errorAlert.setTitle("Delete Failed");
+                    errorAlert.setHeaderText("Failed to Delete Event");
+                    errorAlert.setContentText("Could not delete event '" + event.getTitle() + "' from the database. Please try again.");
+                    errorAlert.showAndWait();
+                }
             }
         }
     }

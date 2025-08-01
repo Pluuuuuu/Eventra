@@ -46,9 +46,9 @@
         <VBox styleClass="sidebar-footer" spacing="10">
             <Separator styleClass="sidebar-separator"/>
             <Text fx:id="userNameText" text="Admin User" styleClass="sidebar-user"/>
-            <Button text="Logout" 
-                    onAction="#handleLogout"
-                    styleClass="logout-button"/>
+                            <Button text="🚪 Logout"
+                        onAction="#handleLogout"
+                        styleClass="logout-button"/>
         </VBox>
     </VBox>
 

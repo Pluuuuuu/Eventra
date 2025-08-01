@@ -1,6 +1,7 @@
 package com.eventra.dao;
 
 import com.eventra.Db;
+import com.eventra.controller.CreateEventController.PresenterInfo;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +127,76 @@ public class EventDAO {
         }
         
         return events;
+    }
+    
+    /**
+     * Delete an event from the database by its ID
+     */
+    public static boolean deleteEvent(int eventId) {
+        String sql = "DELETE FROM EventM WHERE EventID = ?";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, eventId);
+            int rowsAffected = stmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                System.out.println("✅ Event with ID " + eventId + " deleted from database successfully");
+                return true;
+            } else {
+                System.out.println("⚠️ No event found with ID " + eventId);
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("❌ Error deleting event with ID " + eventId + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Get all presenters from the database
+     */
+    public static List<PresenterInfo> getAllPresenters() {
+        List<PresenterInfo> presenters = new ArrayList<>();
+        String sql = "SELECT PresenterID, FirstName, LastName, Bio, ContactInfo " +
+                     "FROM Presenter ORDER BY FirstName, LastName";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                String firstName = rs.getString("FirstName");
+                String lastName = rs.getString("LastName");
+                String fullName = firstName + (lastName != null && !lastName.trim().isEmpty() ? " " + lastName : "");
+                
+                String bio = rs.getString("Bio");
+                String contactInfo = rs.getString("ContactInfo");
+                
+                // Parse title and company from ContactInfo if available
+                String title = "";
+                String company = "";
+                if (contactInfo != null && contactInfo.contains(" - ")) {
+                    String[] parts = contactInfo.split(" - ", 2);
+                    company = parts[0].trim();
+                    title = parts[1].trim();
+                }
+                
+                presenters.add(new PresenterInfo(fullName, title, company, bio != null ? bio : ""));
+            }
+            
+            System.out.println("✅ Loaded " + presenters.size() + " presenters from database");
+            
+        } catch (SQLException e) {
+            System.err.println("❌ Error loading presenters: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return presenters;
     }
     
     /**

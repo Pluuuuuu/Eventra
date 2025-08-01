@@ -20,6 +20,9 @@ public class DatabaseInitializer {
             
             System.out.println("Database initialized successfully!");
             
+            // Clean up any duplicate presenters
+            com.eventra.dao.EventSaveDAO.cleanupDuplicatePresenters();
+            
         } catch (Exception e) {
             System.err.println("Error initializing database: " + e.getMessage());
             e.printStackTrace();
@@ -326,75 +329,7 @@ public class DatabaseInitializer {
             }
         }
         
-        // Insert sample venues first
-        String[] venueData = {
-            "('Grand Conference Center', '1234 Main Street, City Center', 500, 5, 'https://maps.example.com/venue1')",
-            "('Tech Hub Auditorium', '5678 Innovation Drive, Tech District', 300, 3, 'https://maps.example.com/venue2')",
-            "('Business Plaza Hall', '9012 Corporate Ave, Downtown', 200, 4, 'https://maps.example.com/venue3')",
-            "('Community Center', '3456 Community Blvd, Suburbs', 150, 2, 'https://maps.example.com/venue4')",
-            "('Online Virtual Space', 'Virtual Meeting Platform', 1000, 1, 'https://platform.example.com/virtual')"
-        };
-        
-        for (int i = 0; i < venueData.length; i++) {
-            try {
-                stmt.execute(
-                    "INSERT INTO Venue (Name, Address, Capacity, Rooms, MapLink) " +
-                    "VALUES " + venueData[i]
-                );
-                System.out.println("✅ Sample venue " + (i+1) + " created");
-            } catch (Exception e) {
-                // Venue already exists, ignore
-                System.out.println("ℹ️ Sample venue " + (i+1) + " already exists, skipping");
-            }
-        }
-        
-        // Get the test admin user ID for sample events
-        int testAdminUserId = 23; // Based on logs, this is the ID of test@eventra.com
-        
-        // Insert multiple sample events created by the test admin (now with VenueID)
-        String[] eventData = {
-            "('Tech Conference 2024', 'Annual technology conference', '2024-03-15 09:00:00', '2024-03-15 18:00:00', 1, " + testAdminUserId + ", 2)",
-            "('Business Summit', 'Quarterly business meeting', '2024-02-20 10:00:00', '2024-02-20 16:00:00', 3, " + testAdminUserId + ", 2)",
-            "('Innovation Workshop', 'Workshop on latest innovations', '2024-04-10 14:00:00', '2024-04-10 17:00:00', 2, " + testAdminUserId + ", 2)",
-            "('Marketing Seminar', 'Digital marketing strategies', '2024-05-05 10:00:00', '2024-05-05 15:00:00', 2, " + testAdminUserId + ", 2)",
-            "('Leadership Forum', 'Leadership development program', '2024-06-12 09:00:00', '2024-06-12 17:00:00', 1, " + testAdminUserId + ", 2)",
-            "('Product Launch', 'New product unveiling event', '2024-07-18 11:00:00', '2024-07-18 16:00:00', 3, " + testAdminUserId + ", 1)",
-            "('Networking Mixer', 'Professional networking event', '2024-08-22 18:00:00', '2024-08-22 21:00:00', 4, " + testAdminUserId + ", 2)",
-            "('Training Bootcamp', 'Intensive skills training', '2024-09-30 08:00:00', '2024-10-02 18:00:00', 2, " + testAdminUserId + ", 1)",
-            "('Annual Gala', 'Company annual celebration', '2024-11-15 19:00:00', '2024-11-15 23:00:00', 1, " + testAdminUserId + ", 2)",
-            "('Year-End Review', 'Annual performance review meeting', '2024-12-20 13:00:00', '2024-12-20 17:00:00', 5, " + testAdminUserId + ", 2)"
-        };
-        
-        for (int i = 0; i < eventData.length; i++) {
-            try {
-                stmt.execute(
-                    "INSERT INTO EventM (Title, Description, StartDate, EndDate, VenueID, CreatedByUserID, StatusTypeID) " +
-                    "VALUES " + eventData[i]
-                );
-                System.out.println("✅ Sample event " + (i+1) + " created for admin user " + testAdminUserId);
-            } catch (Exception e) {
-                // Event already exists, ignore
-                System.out.println("ℹ️ Sample event " + (i+1) + " already exists, skipping");
-            }
-        }
-        
-        // Insert multiple sample registrations to create realistic data
-        // Generate registrations for each attendee to multiple events
-        for (int attendeeId = 1; attendeeId <= 10; attendeeId++) {
-            for (int eventId = 1; eventId <= 10; eventId++) {
-                // Not every attendee registers for every event - add some randomness
-                if ((attendeeId + eventId) % 3 != 0) { // Skip some combinations to make it more realistic
-                    try {
-                        stmt.execute(
-                            "INSERT INTO Registration (AttendeeID, EventID, RegistrationStatusTypeID) " +
-                            "VALUES (" + attendeeId + ", " + eventId + ", " + 
-                            (((attendeeId + eventId) % 4 == 0) ? "1" : "2") + ")" // Mix of Pending and Confirmed
-                        );
-                    } catch (Exception e) {
-                        // Registration already exists, ignore
-                    }
-                }
-            }
-        }
+        // NOTE: Removed automatic sample data creation (venues, events, registrations)
+        // These should be created manually through the application interface
     }
 } 

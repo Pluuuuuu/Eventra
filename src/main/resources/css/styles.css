@@ -534,17 +534,22 @@ Button:hover {
 }
 
 .logout-button {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-color: #e74c3c;
     -fx-text-fill: white;
     -fx-font-size: 12px;
+    -fx-font-weight: bold;
     -fx-padding: 8px 15px;
-    -fx-background-radius: 4px;
+    -fx-background-radius: 6px;
     -fx-border-width: 0;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.3), 4, 0, 0, 2);
 }
 
 .logout-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-color: #c0392b;
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.5), 6, 0, 0, 3);
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
 }
 
 /* Main Content Area */
