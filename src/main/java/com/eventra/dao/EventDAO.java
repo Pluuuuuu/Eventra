@@ -11,7 +11,7 @@ public class EventDAO {
     
     public List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event ORDER BY StartDateTime ASC";
+        String sql = "SELECT * FROM EventM ORDER BY StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -30,7 +30,7 @@ public class EventDAO {
     
     public List<Event> getComingSoonEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event WHERE EventStatusTypeID = 2 AND StartDateTime > CURRENT_TIMESTAMP ORDER BY StartDateTime ASC LIMIT 2";
+        String sql = "SELECT * FROM EventM WHERE StatusTypeID = 1 AND StartDate > GETUTCDATE() ORDER BY StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -48,7 +48,7 @@ public class EventDAO {
     }
     
     public Event getEventById(int eventId) {
-        String sql = "SELECT * FROM Event WHERE EventID = ?";
+        String sql = "SELECT * FROM EventM WHERE EventID = ?";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -68,7 +68,7 @@ public class EventDAO {
     
     public List<Event> getEventsByDate(LocalDateTime date) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event WHERE CAST(StartDateTime AS DATE) = CAST(? AS DATE) AND EventStatusTypeID = 2 ORDER BY StartDateTime ASC";
+        String sql = "SELECT * FROM EventM WHERE CAST(StartDate AS DATE) = CAST(? AS DATE) AND StatusTypeID = 1 ORDER BY StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -89,7 +89,7 @@ public class EventDAO {
     
     public List<Event> getEventsByOrganizer(int organizerId) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM Event WHERE OrganizerID = ? AND EventStatusTypeID = 2 ORDER BY StartDateTime ASC";
+        String sql = "SELECT * FROM EventM WHERE CreatedByUserID = ? AND StatusTypeID = 1 ORDER BY StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -131,17 +131,29 @@ public class EventDAO {
         event.setEventId(rs.getInt("EventID"));
         event.setTitle(rs.getString("Title"));
         event.setDescription(rs.getString("Description"));
-        event.setStartDateTime(rs.getTimestamp("StartDateTime").toLocalDateTime());
-        event.setEndDateTime(rs.getTimestamp("EndDateTime").toLocalDateTime());
-        event.setLocation(rs.getString("Location"));
-        event.setImageUrl(rs.getString("ImageURL"));
-        event.setEventStatusTypeId(rs.getInt("EventStatusTypeID"));
-        event.setOrganizerId(rs.getInt("OrganizerID"));
-        event.setMaxAttendees(rs.getInt("MaxAttendees"));
-        event.setCurrentAttendees(rs.getInt("CurrentAttendees"));
-        event.setEventType(rs.getString("EventType"));
-        event.setCreatedAt(rs.getTimestamp("CreatedAt").toLocalDateTime());
-        event.setUpdatedAt(rs.getTimestamp("UpdatedAt").toLocalDateTime());
+        
+        // Map StartDate/EndDate to StartDateTime/EndDateTime
+        event.setStartDateTime(rs.getTimestamp("StartDate").toLocalDateTime());
+        event.setEndDateTime(rs.getTimestamp("EndDate").toLocalDateTime());
+        
+        // For location, we'll use a placeholder since your schema doesn't have Location
+        event.setLocation("Conference Center"); // Default location
+        
+        // Set default values for missing columns
+        event.setImageUrl(null);
+        event.setEventStatusTypeId(rs.getInt("StatusTypeID"));
+        event.setOrganizerId(rs.getInt("CreatedByUserID"));
+        event.setMaxAttendees(0); // Default unlimited
+        event.setCurrentAttendees(0);
+        event.setEventType("Conference");
+        
+        // Set timestamps
+        event.setCreatedAt(rs.getTimestamp("CreatedAt") != null ? 
+                          rs.getTimestamp("CreatedAt").toLocalDateTime() : 
+                          java.time.LocalDateTime.now());
+        event.setUpdatedAt(rs.getTimestamp("UpdatedAt") != null ? 
+                          rs.getTimestamp("UpdatedAt").toLocalDateTime() : 
+                          java.time.LocalDateTime.now());
         return event;
     }
 } 

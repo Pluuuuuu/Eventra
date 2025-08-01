@@ -11,9 +11,10 @@ public class PresenterDAO {
     public List<Presenter> getPresentersByEventId(int eventId) {
         List<Presenter> presenters = new ArrayList<>();
         String sql = "SELECT DISTINCT p.* FROM Presenter p " +
-                    "INNER JOIN Session s ON p.PresenterID = s.PresenterID " +
-                    "WHERE s.EventID = ? AND s.SessionStatusTypeID = 2 " +
-                    "ORDER BY p.Name ASC";
+                    "INNER JOIN SessionPresenter sp ON p.PresenterID = sp.PresenterID " +
+                    "INNER JOIN SessionM s ON sp.SessionID = s.SessionID " +
+                    "WHERE s.EventID = ? AND s.StatusTypeID = 1 " +
+                    "ORDER BY p.FirstName ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -54,16 +55,34 @@ public class PresenterDAO {
     private Presenter mapResultSetToPresenter(ResultSet rs) throws SQLException {
         Presenter presenter = new Presenter();
         presenter.setPresenterId(rs.getInt("PresenterID"));
-        presenter.setName(rs.getString("Name"));
-        presenter.setTitle(rs.getString("Title"));
-        presenter.setCompany(rs.getString("Company"));
+        
+        // Combine FirstName and LastName into Name
+        String firstName = rs.getString("FirstName");
+        String lastName = rs.getString("LastName");
+        String fullName = (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
+        presenter.setName(fullName.trim());
+        
+        presenter.setTitle("Speaker"); // Default title
+        presenter.setCompany(rs.getString("Bio")); // Use Bio as company for now
         presenter.setBio(rs.getString("Bio"));
-        presenter.setImageUrl(rs.getString("ImageURL"));
+        presenter.setImageUrl(null);
         presenter.setEmail(rs.getString("Email"));
-        presenter.setLinkedinUrl(rs.getString("LinkedinURL"));
-        presenter.setTwitterUrl(rs.getString("TwitterURL"));
-        presenter.setCreatedAt(rs.getTimestamp("CreatedAt").toLocalDateTime());
-        presenter.setUpdatedAt(rs.getTimestamp("UpdatedAt").toLocalDateTime());
+        presenter.setLinkedinUrl(null);
+        presenter.setTwitterUrl(null);
+        
+        // Set timestamps if they exist
+        if (rs.getTimestamp("CreatedAt") != null) {
+            presenter.setCreatedAt(rs.getTimestamp("CreatedAt").toLocalDateTime());
+        } else {
+            presenter.setCreatedAt(java.time.LocalDateTime.now());
+        }
+        
+        if (rs.getTimestamp("UpdatedAt") != null) {
+            presenter.setUpdatedAt(rs.getTimestamp("UpdatedAt").toLocalDateTime());
+        } else {
+            presenter.setUpdatedAt(java.time.LocalDateTime.now());
+        }
+        
         return presenter;
     }
 } 
