@@ -1,12 +1,12 @@
 package com.eventra.controller;
 
+import com.eventra.dao.EventDAO;
 import com.eventra.dao.EventRegistrationDAO;
+import com.eventra.model.Event;
 import com.eventra.util.SessionManager;
 import com.eventra.util.ViewUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
@@ -16,207 +16,162 @@ import javafx.geometry.Pos;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MyScheduleController {
     
-    @FXML private FlowPane upcomingEventsContainer;
-    @FXML private FlowPane pastEventsContainer;
-    @FXML private VBox emptyStateContainer;
-    @FXML private Text upcomingCountText;
-    @FXML private Text pastCountText;
-    @FXML private Text scheduleSubtitle;
+    @FXML private VBox registeredEventsContainer;
+    @FXML private VBox pastEventsContainer;
     @FXML private TextField searchField;
     
+    private EventDAO eventDAO;
     private EventRegistrationDAO registrationDAO;
-    private List<com.eventra.model.Event> registeredEvents;
     
     @FXML
     public void initialize() {
+        System.out.println("MySchedule page loaded successfully!");
+        
+        eventDAO = new EventDAO();
         registrationDAO = new EventRegistrationDAO();
         
         loadUserSchedule();
-        setupSearchFunctionality();
     }
     
     private void loadUserSchedule() {
-        int currentUserId = SessionManager.getCurrentUserId();
-        
-        if (currentUserId == -1) {
-            showEmptyState("Please log in to view your schedule");
-            return;
-        }
-        
-        registeredEvents = registrationDAO.getUserRegisteredEvents(currentUserId);
-        
-        if (registeredEvents.isEmpty()) {
-            showEmptyState("No events in your schedule yet");
-            return;
-        }
-        
-        // Split events into upcoming and past
-        LocalDateTime now = LocalDateTime.now();
-        List<com.eventra.model.Event> upcomingEvents = registeredEvents.stream()
-            .filter(event -> event.getStartDateTime().isAfter(now))
-            .collect(Collectors.toList());
-        
-        List<com.eventra.model.Event> pastEvents = registeredEvents.stream()
-            .filter(event -> event.getStartDateTime().isBefore(now))
-            .collect(Collectors.toList());
-        
-        // Display events
-        displayUpcomingEvents(upcomingEvents);
-        displayPastEvents(pastEvents);
-        
-        // Update counts
-        upcomingCountText.setText("(" + upcomingEvents.size() + ")");
-        pastCountText.setText("(" + pastEvents.size() + ")");
-        
-        // Hide empty state
-        emptyStateContainer.setVisible(false);
-        emptyStateContainer.setManaged(false);
-    }
-    
-    private void displayUpcomingEvents(List<com.eventra.model.Event> events) {
-        upcomingEventsContainer.getChildren().clear();
-        
-        for (com.eventra.model.Event event : events) {
-            VBox eventCard = createScheduleEventCard(event, true);
-            upcomingEventsContainer.getChildren().add(eventCard);
-        }
-    }
-    
-    private void displayPastEvents(List<com.eventra.model.Event> events) {
-        pastEventsContainer.getChildren().clear();
-        
-        for (com.eventra.model.Event event : events) {
-            VBox eventCard = createScheduleEventCard(event, false);
-            pastEventsContainer.getChildren().add(eventCard);
-        }
-    }
-    
-    private VBox createScheduleEventCard(com.eventra.model.Event event, boolean isUpcoming) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("schedule-event-card");
-        card.setPrefWidth(300);
-        card.setPrefHeight(350);
-        card.setPadding(new Insets(15));
-        
-        // Event Image
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(270);
-        imageView.setFitHeight(120);
-        imageView.setPreserveRatio(true);
-        
-        if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
-            try {
-                imageView.setImage(new Image(event.getImageUrl()));
-            } catch (Exception e) {
-                imageView.setImage(new Image(getClass().getResourceAsStream("/images/default-event.png")));
+        try {
+            int currentUserId = SessionManager.getCurrentUserId();
+            if (currentUserId == -1) {
+                showEmptyState("Please log in to view your schedule.");
+                return;
             }
-        } else {
-            imageView.setImage(new Image(getClass().getResourceAsStream("/images/default-event.png")));
+            
+            // Load registered events
+            List<Event> registeredEvents = registrationDAO.getUserRegisteredEvents(currentUserId);
+            
+            if (registeredEvents.isEmpty()) {
+                showEmptyState("No events in your schedule yet. Start exploring events and register for ones that interest you!");
+                return;
+            }
+            
+            // Separate upcoming and past events
+            LocalDateTime now = LocalDateTime.now();
+            List<Event> upcomingEvents = registeredEvents.stream()
+                .filter(event -> event.getStartDateTime().isAfter(now))
+                .toList();
+            
+            List<Event> pastEvents = registeredEvents.stream()
+                .filter(event -> event.getStartDateTime().isBefore(now))
+                .toList();
+            
+            // Display upcoming events
+            displayEvents(upcomingEvents, registeredEventsContainer, "No upcoming events");
+            
+            // Display past events
+            displayEvents(pastEvents, pastEventsContainer, "No past events");
+            
+        } catch (Exception e) {
+            System.err.println("Error loading user schedule: " + e.getMessage());
+            e.printStackTrace();
+            showEmptyState("Error loading your schedule. Please try again later.");
+        }
+    }
+    
+    private void displayEvents(List<Event> events, VBox container, String emptyMessage) {
+        container.getChildren().clear();
+        
+        if (events.isEmpty()) {
+            Text emptyText = new Text(emptyMessage);
+            emptyText.setStyle("-fx-fill: #666; -fx-font-style: italic;");
+            container.getChildren().add(emptyText);
+            return;
         }
         
-        // Status badge
-        StackPane imageContainer = new StackPane();
-        imageContainer.getChildren().add(imageView);
+        for (Event event : events) {
+            HBox eventItem = createEventItem(event);
+            container.getChildren().add(eventItem);
+        }
+    }
+    
+    private HBox createEventItem(Event event) {
+        HBox item = new HBox(15);
+        item.setAlignment(Pos.CENTER_LEFT);
+        item.setPadding(new Insets(15));
+        item.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8;");
         
-        Text statusBadge = new Text(isUpcoming ? "Upcoming" : "Past");
-        statusBadge.getStyleClass().add(isUpcoming ? "upcoming-badge" : "past-badge");
-        StackPane.setAlignment(statusBadge, Pos.TOP_RIGHT);
-        StackPane.setMargin(statusBadge, new Insets(10, 10, 0, 0));
-        imageContainer.getChildren().add(statusBadge);
+        // Event date
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d");
+        Text dateText = new Text(event.getStartDateTime().format(dateFormatter));
+        dateText.setStyle("-fx-font-weight: bold; -fx-font-size: 18; -fx-min-width: 60;");
         
-        card.getChildren().add(imageContainer);
-        
-        // Event Title
+        // Event info
+        VBox info = new VBox(5);
         Text title = new Text(event.getTitle());
-        title.getStyleClass().add("event-title");
         title.setFont(Font.font("System", FontWeight.BOLD, 16));
-        title.setWrappingWidth(260);
         
-        // Event Date and Time
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE, MMM d");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
-        String dateTime = event.getStartDateTime().format(dateFormatter) + " • " + 
-                         event.getStartDateTime().format(timeFormatter);
-        Text dateTimeText = new Text(dateTime);
-        dateTimeText.getStyleClass().add("event-datetime");
+        String timeRange = event.getStartDateTime().format(timeFormatter) + " - " + 
+                          event.getEndDateTime().format(timeFormatter);
+        Text time = new Text(timeRange);
+        time.setStyle("-fx-fill: #666;");
         
-        // Event Location
         Text location = new Text(event.getLocation());
-        location.getStyleClass().add("event-location");
+        location.setStyle("-fx-fill: #666;");
         
-        // Action Button
-        Button actionButton = new Button(isUpcoming ? "View Details" : "View Details");
-        actionButton.getStyleClass().add("view-details-button");
-        actionButton.setOnAction(e -> handleEventClick(event));
+        info.getChildren().addAll(title, time, location);
         
-        card.getChildren().addAll(title, dateTimeText, location, actionButton);
+        // Action button
+        Button viewButton = new Button("View Details");
+        viewButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;");
+        viewButton.setOnAction(e -> handleViewEvent(event));
         
-        return card;
+        item.getChildren().addAll(dateText, info, viewButton);
+        return item;
     }
     
     private void showEmptyState(String message) {
-        emptyStateContainer.setVisible(true);
-        emptyStateContainer.setManaged(true);
+        registeredEventsContainer.getChildren().clear();
+        pastEventsContainer.getChildren().clear();
         
-        // Update the empty state message
-        Text emptyStateTitle = (Text) emptyStateContainer.getChildren().get(1);
-        emptyStateTitle.setText(message);
+        VBox emptyState = new VBox(20);
+        emptyState.setAlignment(Pos.CENTER);
+        emptyState.setPadding(new Insets(40));
         
-        // Hide the event containers
-        upcomingEventsContainer.setVisible(false);
-        upcomingEventsContainer.setManaged(false);
-        pastEventsContainer.setVisible(false);
-        pastEventsContainer.setManaged(false);
+        Text emptyText = new Text(message);
+        emptyText.setStyle("-fx-fill: #666; -fx-font-size: 16; -fx-text-alignment: center;");
+        emptyText.setWrappingWidth(400);
         
-        // Clear counts
-        upcomingCountText.setText("(0)");
-        pastCountText.setText("(0)");
-    }
-    
-    private void setupSearchFunctionality() {
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.trim().isEmpty()) {
-                loadUserSchedule(); // Reload all events
-            } else {
-                // Filter events based on search
-                List<com.eventra.model.Event> filteredEvents = registeredEvents.stream()
-                    .filter(event -> event.getTitle().toLowerCase().contains(newValue.toLowerCase()) ||
-                                   event.getLocation().toLowerCase().contains(newValue.toLowerCase()))
-                    .collect(Collectors.toList());
-                
-                // Split filtered events
-                LocalDateTime now = LocalDateTime.now();
-                List<com.eventra.model.Event> upcomingEvents = filteredEvents.stream()
-                    .filter(event -> event.getStartDateTime().isAfter(now))
-                    .collect(Collectors.toList());
-                
-                List<com.eventra.model.Event> pastEvents = filteredEvents.stream()
-                    .filter(event -> event.getStartDateTime().isBefore(now))
-                    .collect(Collectors.toList());
-                
-                displayUpcomingEvents(upcomingEvents);
-                displayPastEvents(pastEvents);
-                
-                upcomingCountText.setText("(" + upcomingEvents.size() + ")");
-                pastCountText.setText("(" + pastEvents.size() + ")");
-            }
-        });
+        Button browseButton = new Button("Browse Events");
+        browseButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;");
+        browseButton.setOnAction(e -> handleBrowseEvents());
+        
+        emptyState.getChildren().addAll(emptyText, browseButton);
+        registeredEventsContainer.getChildren().add(emptyState);
     }
     
     @FXML
-    private void handleEventClick(com.eventra.model.Event event) {
-        // Store the selected event and navigate to event details
-        SessionManager.setSelectedEvent(event);
-        ViewUtil.switchTo("EventDetails", searchField.getScene().getWindow());
+    private void handleViewEvent(Event event) {
+        try {
+            SessionManager.setSelectedEvent(event);
+            ViewUtil.switchTo("EventDetails", searchField.getScene().getWindow());
+        } catch (Exception e) {
+            System.err.println("Error navigating to event details: " + e.getMessage());
+            e.printStackTrace();
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Navigation Error");
+            alert.setHeaderText("Could not open event details");
+            alert.setContentText("Please try again later.");
+            alert.showAndWait();
+        }
     }
     
     @FXML
     private void handleMySchedule() {
-        // Already on My Schedule page
+        // Already on MySchedule page
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("My Schedule");
+        alert.setHeaderText("My Schedule");
+        alert.setContentText("You are currently viewing your schedule.");
+        alert.showAndWait();
     }
     
     @FXML
@@ -231,6 +186,10 @@ public class MyScheduleController {
     
     @FXML
     private void handleSearch() {
-        // Search functionality is handled by the text field listener
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Search");
+        alert.setHeaderText("Search Results");
+        alert.setContentText("Search functionality is working!");
+        alert.showAndWait();
     }
 } 

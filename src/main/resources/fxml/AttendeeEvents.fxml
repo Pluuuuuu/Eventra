@@ -42,59 +42,61 @@
 
     <!-- Main Content -->
     <center>
-        <HBox spacing="20" styleClass="main-content">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            
-            <!-- Left Sidebar - Date Filter -->
-            <VBox styleClass="sidebar" spacing="15" minWidth="200" maxWidth="200">
-                <Text text="Date" styleClass="sidebar-title"/>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <HBox spacing="20" styleClass="main-content">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
                 
-                <VBox spacing="10">
-                    <RadioButton fx:id="todayRadio" text="Today" selected="true" 
-                                styleClass="filter-radio" onAction="#handleDateFilter"/>
-                    <RadioButton fx:id="tomorrowRadio" text="Tomorrow" 
-                                styleClass="filter-radio" onAction="#handleDateFilter"/>
-                    <RadioButton fx:id="weekendRadio" text="This weekend" 
-                                styleClass="filter-radio" onAction="#handleDateFilter"/>
-                    <RadioButton fx:id="pickDateRadio" text="Pick a date..." 
-                                styleClass="filter-radio" onAction="#handleDateFilter"/>
+                <!-- Left Sidebar - Date Filter -->
+                <VBox styleClass="sidebar" spacing="15" minWidth="200" maxWidth="200">
+                    <Text text="Date" styleClass="sidebar-title"/>
+                    
+                    <VBox spacing="10">
+                        <RadioButton fx:id="todayRadio" text="Today" selected="true" 
+                                    styleClass="filter-radio" onAction="#handleDateFilter"/>
+                        <RadioButton fx:id="tomorrowRadio" text="Tomorrow" 
+                                    styleClass="filter-radio" onAction="#handleDateFilter"/>
+                        <RadioButton fx:id="weekendRadio" text="This weekend" 
+                                    styleClass="filter-radio" onAction="#handleDateFilter"/>
+                        <RadioButton fx:id="pickDateRadio" text="Pick a date..." 
+                                    styleClass="filter-radio" onAction="#handleDateFilter"/>
+                    </VBox>
+                    
+                    <Button text="View more" styleClass="link-button" onAction="#handleViewMore"/>
                 </VBox>
                 
-                <Button text="View more" styleClass="link-button" onAction="#handleViewMore"/>
-            </VBox>
-            
-            <!-- Main Content Area -->
-            <VBox styleClass="content-area" spacing="30" HBox.hgrow="ALWAYS">
-                
-                <!-- Coming Soon Events -->
-                <VBox spacing="15">
-                    <Text text="Coming soon Events" styleClass="section-title"/>
-                    <HBox fx:id="comingSoonContainer" spacing="20" styleClass="event-grid"/>
+                <!-- Main Content Area -->
+                <VBox styleClass="content-area" spacing="30" HBox.hgrow="ALWAYS">
+                    
+                    <!-- Coming Soon Events -->
+                    <VBox spacing="15">
+                        <Text text="Coming soon Events" styleClass="section-title"/>
+                        <HBox fx:id="comingSoonContainer" spacing="20" styleClass="event-grid"/>
+                    </VBox>
+                    
+                    <!-- All Events -->
+                    <VBox spacing="15">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Text text="All Events" styleClass="section-title"/>
+                            <Text fx:id="eventCountText" text="(12)" styleClass="event-count"/>
+                        </HBox>
+                        <FlowPane fx:id="allEventsContainer" hgap="20" vgap="20" styleClass="event-grid"/>
+                    </VBox>
                 </VBox>
                 
-                <!-- All Events -->
-                <VBox spacing="15">
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Text text="All Events" styleClass="section-title"/>
-                        <Text fx:id="eventCountText" text="(12)" styleClass="event-count"/>
-                    </HBox>
-                    <FlowPane fx:id="allEventsContainer" hgap="20" vgap="20" styleClass="event-grid"/>
+                <!-- Right Sidebar - Featured Organizers -->
+                <VBox styleClass="sidebar" spacing="15" minWidth="250" maxWidth="250">
+                    <Text text="Featured Organizers" styleClass="sidebar-title"/>
+                    
+                    <VBox fx:id="organizersContainer" spacing="15">
+                        <!-- Organizers will be loaded dynamically -->
+                    </VBox>
+                    
+                    <Button text="Discover more organizers" styleClass="link-button" onAction="#handleDiscoverOrganizers"/>
                 </VBox>
-            </VBox>
-            
-            <!-- Right Sidebar - Featured Organizers -->
-            <VBox styleClass="sidebar" spacing="15" minWidth="250" maxWidth="250">
-                <Text text="Featured Organizers" styleClass="sidebar-title"/>
-                
-                <VBox fx:id="organizersContainer" spacing="15">
-                    <!-- Organizers will be loaded dynamically -->
-                </VBox>
-                
-                <Button text="Discover more organizers" styleClass="link-button" onAction="#handleDiscoverOrganizers"/>
-            </VBox>
-        </HBox>
+            </HBox>
+        </ScrollPane>
     </center>
 
     <!-- Footer -->

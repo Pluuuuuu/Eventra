@@ -1,7 +1,6 @@
 package com.eventra.dao;
 
 import com.eventra.Db;
-import com.eventra.model.EventRegistration;
 import com.eventra.model.Event;
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,45 +8,34 @@ import java.util.List;
 
 public class EventRegistrationDAO {
     
-    public boolean registerUserForEvent(int eventId, int userId) {
-        // Check if user is already registered
-        if (isUserRegisteredForEvent(eventId, userId)) {
-            return false;
-        }
-        
-        String sql = "INSERT INTO EventRegistration (EventID, UserID, RegistrationStatusTypeID, RegistrationDate, CreatedAt, UpdatedAt) " +
-                    "VALUES (?, ?, 2, GETUTCDATE(), GETUTCDATE(), GETUTCDATE())";
+    public boolean registerUserForEvent(int userId, int eventId) {
+        String sql = "INSERT INTO Registration (AttendeeID, EventID, RegistrationStatusTypeID) VALUES (?, ?, 2)";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, eventId);
-            stmt.setInt(2, userId);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, eventId);
             
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                // Update event attendee count
-                EventDAO eventDAO = new EventDAO();
-                eventDAO.updateEventAttendeeCount(eventId);
-                return true;
-            }
+            return rowsAffected > 0;
         } catch (SQLException e) {
             System.err.println("Error registering user for event: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
     
-    public boolean isUserRegisteredForEvent(int eventId, int userId) {
-        String sql = "SELECT COUNT(*) FROM EventRegistration WHERE EventID = ? AND UserID = ? AND RegistrationStatusTypeID IN (2, 4)";
+    public boolean isUserRegisteredForEvent(int userId, int eventId) {
+        String sql = "SELECT COUNT(*) FROM Registration WHERE AttendeeID = ? AND EventID = ? AND RegistrationStatusTypeID = 2";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, eventId);
-            stmt.setInt(2, userId);
-            ResultSet rs = stmt.executeQuery();
+            stmt.setInt(1, userId);
+            stmt.setInt(2, eventId);
             
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
@@ -60,10 +48,12 @@ public class EventRegistrationDAO {
     
     public List<Event> getUserRegisteredEvents(int userId) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT e.* FROM Event e " +
-                    "INNER JOIN EventRegistration er ON e.EventID = er.EventID " +
-                    "WHERE er.UserID = ? AND er.RegistrationStatusTypeID IN (2, 4) " +
-                    "ORDER BY e.StartDateTime ASC";
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+                    "FROM Registration r " +
+                    "INNER JOIN EventM e ON r.EventID = e.EventID " +
+                    "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "WHERE r.AttendeeID = ? AND r.RegistrationStatusTypeID = 2 " +
+                    "ORDER BY e.StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -82,28 +72,22 @@ public class EventRegistrationDAO {
         return events;
     }
     
-    public boolean cancelRegistration(int eventId, int userId) {
-        String sql = "UPDATE EventRegistration SET RegistrationStatusTypeID = 3, UpdatedAt = GETUTCDATE() " +
-                    "WHERE EventID = ? AND UserID = ? AND RegistrationStatusTypeID = 2";
+    public boolean unregisterUserFromEvent(int userId, int eventId) {
+        String sql = "UPDATE Registration SET RegistrationStatusTypeID = 3 WHERE AttendeeID = ? AND EventID = ?";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, eventId);
-            stmt.setInt(2, userId);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, eventId);
             
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                // Update event attendee count
-                EventDAO eventDAO = new EventDAO();
-                eventDAO.updateEventAttendeeCount(eventId);
-                return true;
-            }
+            return rowsAffected > 0;
         } catch (SQLException e) {
-            System.err.println("Error cancelling registration: " + e.getMessage());
+            System.err.println("Error unregistering user from event: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
     
     private Event mapResultSetToEvent(ResultSet rs) throws SQLException {
@@ -111,17 +95,37 @@ public class EventRegistrationDAO {
         event.setEventId(rs.getInt("EventID"));
         event.setTitle(rs.getString("Title"));
         event.setDescription(rs.getString("Description"));
-        event.setStartDateTime(rs.getTimestamp("StartDateTime").toLocalDateTime());
-        event.setEndDateTime(rs.getTimestamp("EndDateTime").toLocalDateTime());
-        event.setLocation(rs.getString("Location"));
-        event.setImageUrl(rs.getString("ImageURL"));
-        event.setEventStatusTypeId(rs.getInt("EventStatusTypeID"));
-        event.setOrganizerId(rs.getInt("OrganizerID"));
-        event.setMaxAttendees(rs.getInt("MaxAttendees"));
-        event.setCurrentAttendees(rs.getInt("CurrentAttendees"));
-        event.setEventType(rs.getString("EventType"));
-        event.setCreatedAt(rs.getTimestamp("CreatedAt").toLocalDateTime());
-        event.setUpdatedAt(rs.getTimestamp("UpdatedAt").toLocalDateTime());
+        
+        // Map StartDate/EndDate to StartDateTime/EndDateTime
+        event.setStartDateTime(rs.getTimestamp("StartDate").toLocalDateTime());
+        event.setEndDateTime(rs.getTimestamp("EndDate").toLocalDateTime());
+        
+        // Use venue information for location
+        String venueName = rs.getString("VenueName");
+        String venueAddress = rs.getString("VenueAddress");
+        if (venueName != null && venueAddress != null) {
+            event.setLocation(venueName + ", " + venueAddress);
+        } else if (venueName != null) {
+            event.setLocation(venueName);
+        } else {
+            event.setLocation("Conference Center"); // Default location
+        }
+        
+        // Set default values for missing columns
+        event.setImageUrl(null);
+        event.setEventStatusTypeId(rs.getInt("StatusTypeID"));
+        event.setOrganizerId(rs.getInt("CreatedByUserID"));
+        event.setMaxAttendees(0); // Default unlimited
+        event.setCurrentAttendees(0);
+        event.setEventType("Conference");
+        
+        // Set timestamps
+        event.setCreatedAt(rs.getTimestamp("CreatedAt") != null ? 
+                          rs.getTimestamp("CreatedAt").toLocalDateTime() : 
+                          java.time.LocalDateTime.now());
+        event.setUpdatedAt(rs.getTimestamp("UpdatedAt") != null ? 
+                          rs.getTimestamp("UpdatedAt").toLocalDateTime() : 
+                          java.time.LocalDateTime.now());
         return event;
     }
 } 

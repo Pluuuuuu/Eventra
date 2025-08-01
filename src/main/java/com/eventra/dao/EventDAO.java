@@ -11,7 +11,10 @@ public class EventDAO {
     
     public List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM EventM ORDER BY StartDate ASC";
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+                    "FROM EventM e " +
+                    "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "ORDER BY e.StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -30,7 +33,11 @@ public class EventDAO {
     
     public List<Event> getComingSoonEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM EventM WHERE StatusTypeID = 1 AND StartDate > GETUTCDATE() ORDER BY StartDate ASC";
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+                    "FROM EventM e " +
+                    "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "WHERE e.StatusTypeID = 1 AND e.StartDate > GETUTCDATE() " +
+                    "ORDER BY e.StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -48,7 +55,10 @@ public class EventDAO {
     }
     
     public Event getEventById(int eventId) {
-        String sql = "SELECT * FROM EventM WHERE EventID = ?";
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+                    "FROM EventM e " +
+                    "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "WHERE e.EventID = ?";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -68,7 +78,11 @@ public class EventDAO {
     
     public List<Event> getEventsByDate(LocalDateTime date) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM EventM WHERE CAST(StartDate AS DATE) = CAST(? AS DATE) AND StatusTypeID = 1 ORDER BY StartDate ASC";
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+                    "FROM EventM e " +
+                    "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "WHERE CAST(e.StartDate AS DATE) = CAST(? AS DATE) AND e.StatusTypeID = 1 " +
+                    "ORDER BY e.StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -89,7 +103,11 @@ public class EventDAO {
     
     public List<Event> getEventsByOrganizer(int organizerId) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT * FROM EventM WHERE CreatedByUserID = ? AND StatusTypeID = 1 ORDER BY StartDate ASC";
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+                    "FROM EventM e " +
+                    "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "WHERE e.CreatedByUserID = ? AND e.StatusTypeID = 1 " +
+                    "ORDER BY e.StartDate ASC";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -109,7 +127,9 @@ public class EventDAO {
     }
     
     public boolean updateEventAttendeeCount(int eventId) {
-        String sql = "UPDATE Event SET CurrentAttendees = (SELECT COUNT(*) FROM EventRegistration WHERE EventID = ? AND RegistrationStatusTypeID = 2) WHERE EventID = ?";
+        String sql = "UPDATE EventM SET CurrentAttendees = " +
+                    "(SELECT COUNT(*) FROM Registration WHERE EventID = ? AND RegistrationStatusTypeID = 2) " +
+                    "WHERE EventID = ?";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -136,8 +156,16 @@ public class EventDAO {
         event.setStartDateTime(rs.getTimestamp("StartDate").toLocalDateTime());
         event.setEndDateTime(rs.getTimestamp("EndDate").toLocalDateTime());
         
-        // For location, we'll use a placeholder since your schema doesn't have Location
-        event.setLocation("Conference Center"); // Default location
+        // Use venue information for location
+        String venueName = rs.getString("VenueName");
+        String venueAddress = rs.getString("VenueAddress");
+        if (venueName != null && venueAddress != null) {
+            event.setLocation(venueName + ", " + venueAddress);
+        } else if (venueName != null) {
+            event.setLocation(venueName);
+        } else {
+            event.setLocation("Conference Center"); // Default location
+        }
         
         // Set default values for missing columns
         event.setImageUrl(null);

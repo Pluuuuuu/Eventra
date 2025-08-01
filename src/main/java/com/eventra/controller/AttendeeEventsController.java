@@ -263,7 +263,9 @@ public class AttendeeEventsController {
             filterDate = LocalDateTime.now().plusDays(1);
         } else if (weekendRadio.isSelected()) {
             // Get next Saturday
-            filterDate = LocalDateTime.now().plusDays(6 - LocalDateTime.now().getDayOfWeek().getValue());
+            int daysUntilSaturday = 6 - LocalDateTime.now().getDayOfWeek().getValue();
+            if (daysUntilSaturday <= 0) daysUntilSaturday += 7; // If today is Saturday, get next Saturday
+            filterDate = LocalDateTime.now().plusDays(daysUntilSaturday);
         }
         
         if (filterDate != null) {
@@ -271,10 +273,23 @@ public class AttendeeEventsController {
                 List<Event> filteredEvents = eventDAO.getEventsByDate(filterDate);
                 displayAllEvents(filteredEvents);
                 updateEventCount(filteredEvents.size());
+                
+                // Show feedback
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Date Filter Applied");
+                alert.setHeaderText("Events filtered by date");
+                alert.setContentText("Showing events for: " + filterDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
+                alert.showAndWait();
             } catch (Exception e) {
                 System.err.println("Error filtering events by date: " + e.getMessage());
                 displayAllEvents(allEvents);
                 updateEventCount(allEvents.size());
+                
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Filter Error");
+                alert.setHeaderText("Could not filter events");
+                alert.setContentText("Showing all events instead.");
+                alert.showAndWait();
             }
         } else {
             displayAllEvents(allEvents);
@@ -284,9 +299,20 @@ public class AttendeeEventsController {
     
     @FXML
     private void handleEventClick(Event event) {
-        // Store the selected event in session and navigate to event details
-        SessionManager.setSelectedEvent(event);
-        ViewUtil.switchTo("EventDetails", searchField.getScene().getWindow());
+        try {
+            // Store the selected event in session and navigate to event details
+            SessionManager.setSelectedEvent(event);
+            ViewUtil.switchTo("EventDetails", searchField.getScene().getWindow());
+        } catch (Exception e) {
+            System.err.println("Error navigating to event details: " + e.getMessage());
+            e.printStackTrace();
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Navigation Error");
+            alert.setHeaderText("Could not open event details");
+            alert.setContentText("Please try again later.");
+            alert.showAndWait();
+        }
     }
     
     @FXML
@@ -330,10 +356,74 @@ public class AttendeeEventsController {
     
     @FXML
     private void handleDiscoverOrganizers() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Organizers");
-        alert.setHeaderText("All Organizers");
-        alert.setContentText("Complete organizer listing will be implemented in the next version.");
-        alert.showAndWait();
+        try {
+            // Load all organizers (not just featured ones)
+            List<User> allOrganizers = userDAO.getUsersByRole(User.ROLE_ADMIN);
+            
+            if (allOrganizers.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Organizers");
+                alert.setHeaderText("No Organizers Found");
+                alert.setContentText("No additional organizers are available at the moment.");
+                alert.showAndWait();
+                return;
+            }
+            
+            // Create a dialog to show all organizers
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("All Organizers");
+            dialog.setHeaderText("Discover All Event Organizers");
+            
+            // Create content
+            VBox content = new VBox(10);
+            content.setPadding(new Insets(20));
+            content.setPrefWidth(400);
+            content.setPrefHeight(300);
+            
+            ScrollPane scrollPane = new ScrollPane();
+            VBox organizersList = new VBox(10);
+            
+            for (User organizer : allOrganizers) {
+                HBox organizerItem = new HBox(10);
+                organizerItem.setAlignment(Pos.CENTER_LEFT);
+                organizerItem.setPadding(new Insets(10));
+                organizerItem.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 4;");
+                
+                // Organizer avatar
+                ImageView avatar = new ImageView();
+                avatar.setFitWidth(40);
+                avatar.setFitHeight(40);
+                avatar.setStyle("-fx-background-color: #007bff; -fx-background-radius: 20;");
+                
+                // Organizer info
+                VBox info = new VBox(2);
+                Text name = new Text(organizer.getFullName());
+                name.setStyle("-fx-font-weight: bold;");
+                Text email = new Text(organizer.getEmail());
+                email.setStyle("-fx-font-size: 12; -fx-fill: #666;");
+                info.getChildren().addAll(name, email);
+                
+                organizerItem.getChildren().addAll(avatar, info);
+                organizersList.getChildren().add(organizerItem);
+            }
+            
+            scrollPane.setContent(organizersList);
+            content.getChildren().add(scrollPane);
+            
+            dialog.getDialogPane().setContent(content);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            
+            dialog.showAndWait();
+            
+        } catch (Exception e) {
+            System.err.println("Error loading all organizers: " + e.getMessage());
+            e.printStackTrace();
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not load organizers");
+            alert.setContentText("Please try again later.");
+            alert.showAndWait();
+        }
     }
 } 
