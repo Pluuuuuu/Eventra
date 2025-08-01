@@ -54,6 +54,9 @@ public class AttendeeEventsController {
         eventDAO = new EventDAO();
         userDAO = new UserDAO();
         
+        // Debug: Check what users exist in database
+        userDAO.debugPrintAllUsers();
+        
         loadEvents();
         loadFeaturedOrganizers();
         setupSearchFunctionality();
@@ -72,31 +75,12 @@ public class AttendeeEventsController {
         } catch (Exception e) {
             System.err.println("Error loading events: " + e.getMessage());
             e.printStackTrace();
-            // Fallback to demo data
-            showDemoEvents();
+            // No fallback to demo data - show empty state
+            allEvents = new ArrayList<>();
+            displayComingSoonEvents(new ArrayList<>());
+            displayAllEvents(new ArrayList<>());
+            updateEventCount(0);
         }
-    }
-    
-    private void showDemoEvents() {
-        // Create demo events if database fails
-        allEvents = new ArrayList<>();
-        
-        Event demoEvent1 = new Event("Tech Conference 2024", "Annual technology conference", 
-            LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(10).plusHours(8), 
-            "Convention Center", 2);
-        demoEvent1.setEventId(1);
-        
-        Event demoEvent2 = new Event("Startup Networking", "Connect with entrepreneurs", 
-            LocalDateTime.now().plusDays(15), LocalDateTime.now().plusDays(15).plusHours(3), 
-            "Innovation Hub", 2);
-        demoEvent2.setEventId(2);
-        
-        allEvents.add(demoEvent1);
-        allEvents.add(demoEvent2);
-        
-        displayComingSoonEvents(allEvents.subList(0, Math.min(2, allEvents.size())));
-        displayAllEvents(allEvents);
-        updateEventCount(allEvents.size());
     }
     
     private void displayComingSoonEvents(List<Event> events) {
@@ -196,31 +180,7 @@ public class AttendeeEventsController {
             }
         } catch (Exception e) {
             System.err.println("Error loading organizers: " + e.getMessage());
-            // Add demo organizers
-            addDemoOrganizers();
-        }
-    }
-    
-    private void addDemoOrganizers() {
-        // Create demo organizer items
-        for (int i = 1; i <= 3; i++) {
-            HBox item = new HBox(10);
-            item.setAlignment(Pos.CENTER_LEFT);
-            item.setPadding(new Insets(10));
-            item.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 4;");
-            
-            // Demo avatar
-            ImageView avatar = new ImageView();
-            avatar.setFitWidth(40);
-            avatar.setFitHeight(40);
-            avatar.setStyle("-fx-background-color: #007bff; -fx-background-radius: 20;");
-            
-            // Demo name
-            Text name = new Text("Demo Organizer " + i);
-            name.setStyle("-fx-font-weight: bold;");
-            
-            item.getChildren().addAll(avatar, name);
-            organizersContainer.getChildren().add(item);
+            // No demo organizers - show empty state
         }
     }
     

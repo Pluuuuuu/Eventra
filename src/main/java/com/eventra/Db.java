@@ -15,9 +15,14 @@ public class Db {
             cfg.setJdbcUrl(p.getProperty("db.url"));
             cfg.setUsername(p.getProperty("db.user"));
             cfg.setPassword(p.getProperty("db.password"));
-            cfg.setConnectionTimeout(30000); // 30 seconds
-            cfg.setMaximumPoolSize(10);
-            cfg.setMinimumIdle(5);
+            cfg.setConnectionTimeout(60000); // 60 seconds
+            cfg.setMaximumPoolSize(5);
+            cfg.setMinimumIdle(1);
+            cfg.setIdleTimeout(300000); // 5 minutes
+            cfg.setMaxLifetime(1800000); // 30 minutes
+            cfg.setLeakDetectionThreshold(60000); // 1 minute
+            cfg.setValidationTimeout(10000); // 10 seconds
+            cfg.setConnectionTestQuery("SELECT 1");
             ds = new HikariDataSource(cfg);
             System.out.println("Database connection pool initialized successfully");
         } catch (Exception e) {

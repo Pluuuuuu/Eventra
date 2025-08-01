@@ -62,7 +62,7 @@ public class EventDetailsController {
             currentEvent = SessionManager.getSelectedEvent();
             
             if (currentEvent == null) {
-                // Try to get event from URL parameters or fallback to demo
+                // Try to get event from URL parameters
                 showEventNotFoundError();
                 return;
             }
@@ -97,19 +97,6 @@ public class EventDetailsController {
         ViewUtil.switchTo("AttendeeEvents", searchField.getScene().getWindow());
     }
     
-    private Event createDemoEvent() {
-        Event demoEvent = new Event("Tech Conference 2024", 
-            "Annual technology conference featuring the latest innovations in AI, machine learning, and software development. " +
-            "Join industry experts for three days of insightful talks, hands-on workshops, and networking opportunities.",
-            java.time.LocalDateTime.now().plusDays(10), 
-            java.time.LocalDateTime.now().plusDays(10).plusHours(8), 
-            "Convention Center, Downtown", 2);
-        demoEvent.setEventId(1);
-        demoEvent.setMaxAttendees(200);
-        demoEvent.setCurrentAttendees(43);
-        return demoEvent;
-    }
-    
     private void displayEventDetails() {
         eventTitle.setText(currentEvent.getTitle());
         
@@ -134,37 +121,7 @@ public class EventDetailsController {
             }
         } catch (Exception e) {
             System.err.println("Error loading speakers: " + e.getMessage());
-            // Add demo speakers
-            addDemoSpeakers();
-        }
-    }
-    
-    private void addDemoSpeakers() {
-        // Create demo speaker cards
-        for (int i = 1; i <= 3; i++) {
-            VBox speakerCard = new VBox(10);
-            speakerCard.setPrefWidth(200);
-            speakerCard.setPrefHeight(250);
-            speakerCard.setPadding(new Insets(15));
-            speakerCard.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8;");
-            
-            // Speaker avatar
-            ImageView avatar = new ImageView();
-            avatar.setFitWidth(80);
-            avatar.setFitHeight(80);
-            avatar.setStyle("-fx-background-color: #007bff; -fx-background-radius: 40;");
-            
-            // Speaker name
-            Text name = new Text("Demo Speaker " + i);
-            name.setFont(Font.font("System", FontWeight.BOLD, 14));
-            
-            // Speaker bio
-            Text bio = new Text("Expert in technology and innovation with years of experience in the industry.");
-            bio.setWrappingWidth(170);
-            bio.setStyle("-fx-font-size: 12; -fx-fill: #666;");
-            
-            speakerCard.getChildren().addAll(avatar, name, bio);
-            speakersContainer.getChildren().add(speakerCard);
+            // No demo speakers - show empty state
         }
     }
     
@@ -206,33 +163,7 @@ public class EventDetailsController {
             }
         } catch (Exception e) {
             System.err.println("Error loading sessions: " + e.getMessage());
-            // Add demo sessions
-            addDemoSessions();
-        }
-    }
-    
-    private void addDemoSessions() {
-        // Create demo session items
-        for (int i = 1; i <= 3; i++) {
-            HBox sessionItem = new HBox(15);
-            sessionItem.setAlignment(Pos.CENTER_LEFT);
-            sessionItem.setPadding(new Insets(15));
-            sessionItem.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 8;");
-            
-            // Time
-            Text time = new Text("9:00 AM - 10:30 AM");
-            time.setStyle("-fx-font-weight: bold; -fx-min-width: 120;");
-            
-            // Title
-            Text title = new Text("Demo Session " + i);
-            title.setStyle("-fx-font-weight: bold;");
-            
-            // Speaker
-            Text speaker = new Text("Demo Speaker " + i);
-            speaker.setStyle("-fx-fill: #666;");
-            
-            sessionItem.getChildren().addAll(time, title, speaker);
-            sessionsContainer.getChildren().add(sessionItem);
+            // No demo sessions - show empty state
         }
     }
     
@@ -278,32 +209,52 @@ public class EventDetailsController {
             if (organizer != null) {
                 organizerName.setText(organizer.getFullName());
             } else {
-                organizerName.setText("Demo Organizer");
+                organizerName.setText("Unknown Organizer");
             }
         } catch (Exception e) {
             System.err.println("Error loading organizer: " + e.getMessage());
-            organizerName.setText("Demo Organizer");
+            organizerName.setText("Unknown Organizer");
         }
     }
     
     private void updateRegistrationInfo() {
+        // Refresh the event data to get current attendee count
+        try {
+            Event freshEvent = eventDAO.getEventById(currentEvent.getEventId());
+            if (freshEvent != null) {
+                currentEvent = freshEvent;
+            }
+        } catch (Exception e) {
+            System.err.println("Error refreshing event data: " + e.getMessage());
+        }
+        
         int availableSpots = currentEvent.getMaxAttendees() - currentEvent.getCurrentAttendees();
-        if (availableSpots > 0) {
+        
+        // Check if user is already registered
+        User currentUser = SessionManager.getCurrentUser();
+        boolean alreadyRegistered = false;
+        if (currentUser != null) {
+            try {
+                alreadyRegistered = registrationDAO.isUserRegisteredForEvent(
+                    currentUser.getUserId(), currentEvent.getEventId());
+            } catch (Exception e) {
+                System.err.println("Error checking registration status: " + e.getMessage());
+            }
+        }
+        
+        if (alreadyRegistered) {
+            spotsLeftText.setText("You are registered for this event!");
+            registerButton.setText("Already Registered");
+            registerButton.setDisable(true);
+        } else if (availableSpots > 0) {
             spotsLeftText.setText("Only " + availableSpots + " spots left!");
+            registerButton.setText("Register Now");
             registerButton.setDisable(false);
         } else {
             spotsLeftText.setText("Event is full");
+            registerButton.setText("Event Full");
             registerButton.setDisable(true);
         }
-    }
-    
-    private void showDemoEventDetails() {
-        currentEvent = createDemoEvent();
-        displayEventDetails();
-        addDemoSpeakers();
-        addDemoSessions();
-        organizerName.setText("Demo Organizer");
-        updateRegistrationInfo();
     }
     
     @FXML
@@ -315,6 +266,10 @@ public class EventDetailsController {
                 return;
             }
             
+            System.out.println("Attempting registration for user: " + currentUser.getUserId() + 
+                             " (" + currentUser.getEmail() + ") to event: " + currentEvent.getEventId() + 
+                             " (" + currentEvent.getTitle() + ")");
+            
             // Check if already registered
             boolean alreadyRegistered = registrationDAO.isUserRegisteredForEvent(
                 currentUser.getUserId(), currentEvent.getEventId());
@@ -324,22 +279,51 @@ public class EventDetailsController {
                 return;
             }
             
+            // Check if event is full
+            int availableSpots = currentEvent.getMaxAttendees() - currentEvent.getCurrentAttendees();
+            if (availableSpots <= 0) {
+                showAlert("Event Full", "Sorry, this event is already full.");
+                return;
+            }
+            
+            System.out.println("Event capacity: " + currentEvent.getMaxAttendees() + 
+                             ", Current attendees: " + currentEvent.getCurrentAttendees() + 
+                             ", Available spots: " + availableSpots);
+            
+            // Disable button during registration
+            registerButton.setDisable(true);
+            registerButton.setText("Registering...");
+            
             // Register for event
             boolean success = registrationDAO.registerUserForEvent(
                 currentUser.getUserId(), currentEvent.getEventId());
             
             if (success) {
+                System.out.println("Registration successful!");
                 showAlert("Success", "Successfully registered for " + currentEvent.getTitle() + "!");
-                // Update attendee count
-                currentEvent.setCurrentAttendees(currentEvent.getCurrentAttendees() + 1);
+                // Update the UI to reflect the new registration
                 updateRegistrationInfo();
             } else {
-                showAlert("Error", "Failed to register for event. Please try again.");
+                System.out.println("Registration failed!");
+                showAlert("Registration Failed", 
+                    "Failed to register for event. This could be due to:\n" +
+                    "• User not found in database\n" +
+                    "• Event not found in database\n" +
+                    "• Database connection issues\n\n" +
+                    "Please try again or contact support if the problem persists.");
             }
             
         } catch (Exception e) {
             System.err.println("Error registering for event: " + e.getMessage());
-            showAlert("Error", "An error occurred during registration. Please try again.");
+            e.printStackTrace();
+            showAlert("System Error", 
+                "An unexpected error occurred during registration:\n" +
+                e.getMessage() + "\n\n" +
+                "Please try again or contact support if the problem persists.");
+        } finally {
+            // Re-enable button
+            registerButton.setDisable(false);
+            registerButton.setText("Register Now");
         }
     }
     
@@ -353,7 +337,16 @@ public class EventDetailsController {
     
     @FXML
     private void handleMySchedule() {
-        ViewUtil.switchTo("MySchedule", searchField.getScene().getWindow());
+        try {
+            // Switch to MySchedule page
+            ViewUtil.switchTo("MySchedule", searchField.getScene().getWindow());
+            
+            // Get the MyScheduleController and refresh it
+            // Note: This will be handled by the MyScheduleController's initialize method
+        } catch (Exception e) {
+            System.err.println("Error navigating to My Schedule: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @FXML

@@ -330,4 +330,28 @@ public class UserDAO {
         
         return user;
     }
+
+    public void debugPrintAllUsers() {
+        String sql = "SELECT UserID, Username, Email, RoleTypeID FROM UserM";
+        System.out.println("🔍 Checking all users in database...");
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            ResultSet rs = stmt.executeQuery();
+            int count = 0;
+            while (rs.next()) {
+                int userId = rs.getInt("UserID");
+                String username = rs.getString("Username");
+                String email = rs.getString("Email");
+                int roleId = rs.getInt("RoleTypeID");
+                System.out.println("👤 User " + count + ": ID=" + userId + ", Username=" + username + ", Email=" + email + ", Role=" + roleId);
+                count++;
+            }
+            System.out.println("📊 Total users in database: " + count);
+        } catch (SQLException e) {
+            System.err.println("❌ Error checking users: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 } 

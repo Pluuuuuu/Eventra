@@ -11,21 +11,31 @@ public class EventDAO {
     
     public List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
                     "FROM EventM e " +
                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
+                    "WHERE e.StatusTypeID = 1 " +
                     "ORDER BY e.StartDate ASC";
         
+        System.out.println("🔍 Fetching all events from database...");
+        System.out.println("SQL Query: " + sql);
+        
         try (Connection conn = Db.get();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             
+            ResultSet rs = stmt.executeQuery();
+            int count = 0;
             while (rs.next()) {
                 Event event = mapResultSetToEvent(rs);
                 events.add(event);
+                count++;
+                System.out.println("✅ Found event: " + event.getTitle() + " (ID: " + event.getEventId() + ")");
             }
+            System.out.println("📊 Total events fetched: " + count);
         } catch (SQLException e) {
-            System.err.println("Error fetching events: " + e.getMessage());
+            System.err.println("❌ Error fetching all events: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
         return events;
@@ -33,29 +43,38 @@ public class EventDAO {
     
     public List<Event> getComingSoonEvents() {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
                     "FROM EventM e " +
                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
                     "WHERE e.StatusTypeID = 1 AND e.StartDate > GETUTCDATE() " +
                     "ORDER BY e.StartDate ASC";
         
+        System.out.println("🔍 Fetching coming soon events from database...");
+        System.out.println("SQL Query: " + sql);
+        
         try (Connection conn = Db.get();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             
+            ResultSet rs = stmt.executeQuery();
+            int count = 0;
             while (rs.next()) {
                 Event event = mapResultSetToEvent(rs);
                 events.add(event);
+                count++;
+                System.out.println("✅ Found coming soon event: " + event.getTitle() + " (ID: " + event.getEventId() + ")");
             }
+            System.out.println("📊 Total coming soon events fetched: " + count);
         } catch (SQLException e) {
-            System.err.println("Error fetching coming soon events: " + e.getMessage());
+            System.err.println("❌ Error fetching coming soon events: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
         return events;
     }
     
     public Event getEventById(int eventId) {
-        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
                     "FROM EventM e " +
                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
                     "WHERE e.EventID = ?";
@@ -78,7 +97,7 @@ public class EventDAO {
     
     public List<Event> getEventsByDate(LocalDateTime date) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
                     "FROM EventM e " +
                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
                     "WHERE CAST(e.StartDate AS DATE) = CAST(? AS DATE) AND e.StatusTypeID = 1 " +
@@ -103,7 +122,7 @@ public class EventDAO {
     
     public List<Event> getEventsByOrganizer(int organizerId) {
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress " +
+        String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
                     "FROM EventM e " +
                     "LEFT JOIN Venue v ON e.VenueID = v.VenueID " +
                     "WHERE e.CreatedByUserID = ? AND e.StatusTypeID = 1 " +
@@ -171,17 +190,40 @@ public class EventDAO {
         event.setImageUrl(null);
         event.setEventStatusTypeId(rs.getInt("StatusTypeID"));
         event.setOrganizerId(rs.getInt("CreatedByUserID"));
-        event.setMaxAttendees(0); // Default unlimited
-        event.setCurrentAttendees(0);
+        
+        // Get venue capacity for maxAttendees
+        int venueCapacity = rs.getInt("VenueCapacity");
+        event.setMaxAttendees(venueCapacity > 0 ? venueCapacity : 1000); // Default to 1000 if no capacity set
+        
+        // Calculate current attendees from registration count
+        int currentAttendees = getCurrentAttendeeCount(event.getEventId());
+        event.setCurrentAttendees(currentAttendees);
+        
         event.setEventType("Conference");
         
         // Set timestamps
         event.setCreatedAt(rs.getTimestamp("CreatedAt") != null ? 
-                          rs.getTimestamp("CreatedAt").toLocalDateTime() : 
-                          java.time.LocalDateTime.now());
+                          rs.getTimestamp("CreatedAt").toLocalDateTime() : LocalDateTime.now());
         event.setUpdatedAt(rs.getTimestamp("UpdatedAt") != null ? 
-                          rs.getTimestamp("UpdatedAt").toLocalDateTime() : 
-                          java.time.LocalDateTime.now());
+                          rs.getTimestamp("UpdatedAt").toLocalDateTime() : LocalDateTime.now());
+        
         return event;
+    }
+    
+    private int getCurrentAttendeeCount(int eventId) {
+        String sql = "SELECT COUNT(*) FROM Registration WHERE EventID = ? AND RegistrationStatusTypeID = 2";
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, eventId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting attendee count: " + e.getMessage());
+        }
+        return 0;
     }
 } 

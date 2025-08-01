@@ -36,6 +36,10 @@ public class MyScheduleController {
         loadUserSchedule();
     }
     
+    public void refreshSchedule() {
+        loadUserSchedule();
+    }
+    
     private void loadUserSchedule() {
         try {
             int currentUserId = SessionManager.getCurrentUserId();
