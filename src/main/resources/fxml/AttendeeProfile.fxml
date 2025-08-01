@@ -3,43 +3,113 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
+<?import java.time.format.DateTimeFormatter?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.eventra.controller.AttendeeProfileController"
-      alignment="CENTER" spacing="20"
-      stylesheets="@../css/styles.css"
-      styleClass="dashboard-container">
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventra.controller.AttendeeProfileController"
+            stylesheets="@../css/styles.css"
+            styleClass="main-container">
 
     <!-- Header -->
-    <VBox alignment="CENTER" spacing="10" styleClass="dashboard-header">
-        <Text fx:id="titleText" text="My Profile" styleClass="dashboard-title"/>
-        <Text text="Attendee Dashboard" styleClass="dashboard-subtitle"/>
-    </VBox>
-
-    <!-- Content -->
-    <VBox alignment="CENTER" spacing="15" styleClass="dashboard-content">
-        
-        <Text text="Profile Management" styleClass="dashboard-text"/>
-        
-        <!-- Placeholder Content -->
-        <VBox spacing="10" styleClass="user-info">
-            <Text text="This is the Profile page for Attendees" styleClass="info-title"/>
-            <Text text="Here you can manage your personal information" styleClass="info-text"/>
-            <Text text="Features: Edit Profile, Change Password, and View History" styleClass="info-text"/>
-        </VBox>
-
-        <!-- Action Buttons -->
-        <HBox alignment="CENTER" spacing="15">
-            <Button text="Edit Profile"
-                    onAction="#handleEditProfile"
-                    styleClass="primary-button"/>
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
             
-            <Button text="Back to Dashboard"
-                    onAction="#handleBackToDashboard"
-                    styleClass="secondary-button"/>
+            <!-- Logo -->
+            <ImageView fx:id="logoImage" fitHeight="40" fitWidth="120" 
+                      Image="@../images/logo.elon.png" preserveRatio="true"/>
+            
+            <!-- Navigation -->
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <Button text="My Schedule" styleClass="nav-button" onAction="#handleMySchedule"/>
+                <Button text="Browse Events" styleClass="nav-button" onAction="#handleBrowseEvents"/>
+            </HBox>
+            
+            <!-- Search Bar -->
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                <Button styleClass="search-button" onAction="#handleSearch">
+                    <graphic>
+                        <ImageView fitHeight="16" fitWidth="16" Image="@../images/search-icon.png"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            
+            <!-- Profile Icon -->
+            <Button fx:id="profileButton" styleClass="profile-button" onAction="#handleProfile">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32" Image="@../images/profile-icon.png"/>
+                </graphic>
+            </Button>
         </HBox>
-    </VBox>
+    </top>
 
-</VBox> 
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="profile-container" spacing="40" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+            
+            <!-- Profile Header -->
+            <VBox spacing="20" alignment="CENTER">
+                <ImageView fx:id="profileImage" fitHeight="120" fitWidth="120" 
+                          Image="@../images/default-avatar.png" styleClass="profile-avatar"/>
+                <Text fx:id="profileName" text="John Doe" styleClass="profile-name"/>
+                <Text fx:id="profileEmail" text="john.doe@example.com" styleClass="profile-email"/>
+            </VBox>
+            
+            <!-- Profile Form -->
+            <VBox styleClass="profile-form" spacing="25" maxWidth="500">
+                
+                <!-- Username Section -->
+                <VBox spacing="8">
+                    <Text text="Username" styleClass="form-label"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="usernameField" styleClass="form-field" HBox.hgrow="ALWAYS"/>
+                        <Button text="Edit" styleClass="edit-button" onAction="#handleEditUsername"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Email Section -->
+                <VBox spacing="8">
+                    <Text text="Email" styleClass="form-label"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="emailField" styleClass="form-field" HBox.hgrow="ALWAYS"/>
+                        <Button text="Edit" styleClass="edit-button" onAction="#handleEditEmail"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Save Changes Button -->
+                <Button fx:id="saveButton" text="Save Changes" styleClass="primary-button" 
+                        onAction="#handleSaveChanges" disable="true"/>
+                
+                <!-- Cancel Button -->
+                <Button text="Cancel" styleClass="secondary-button" onAction="#handleCancel"/>
+            </VBox>
+            
+            <!-- Additional Profile Info -->
+            <VBox styleClass="profile-info" spacing="15" maxWidth="500">
+                <Text text="Account Information" styleClass="section-title"/>
+                
+                <HBox spacing="20">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Text text="Member Since" styleClass="info-label"/>
+                        <Text fx:id="memberSinceText" text="January 2024" styleClass="info-value"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Text text="Events Attended" styleClass="info-label"/>
+                        <Text fx:id="eventsAttendedText" text="5" styleClass="info-value"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane> 

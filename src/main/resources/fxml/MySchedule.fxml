@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import java.time.format.DateTimeFormatter?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventra.controller.MyScheduleController"
+            stylesheets="@../css/styles.css"
+            styleClass="main-container">
+
+    <!-- Header -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            
+            <!-- Logo -->
+            <ImageView fx:id="logoImage" fitHeight="40" fitWidth="120" 
+                      Image="@../images/logo.elon.png" preserveRatio="true"/>
+            
+            <!-- Navigation -->
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <Button text="My Schedule" styleClass="nav-button" onAction="#handleMySchedule"/>
+                <Button text="Browse Events" styleClass="nav-button" onAction="#handleBrowseEvents"/>
+            </HBox>
+            
+            <!-- Search Bar -->
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                <Button styleClass="search-button" onAction="#handleSearch">
+                    <graphic>
+                        <ImageView fitHeight="16" fitWidth="16" Image="@../images/search-icon.png"/>
+                    </graphic>
+                </Button>
+            </HBox>
+            
+            <!-- Profile Icon -->
+            <Button fx:id="profileButton" styleClass="profile-button" onAction="#handleProfile">
+                <graphic>
+                    <ImageView fitHeight="32" fitWidth="32" Image="@../images/profile-icon.png"/>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="schedule-container" spacing="30">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+            
+            <!-- Page Header -->
+            <VBox spacing="10">
+                <Text text="My Schedule" styleClass="page-title"/>
+                <Text fx:id="scheduleSubtitle" text="Your registered events" styleClass="page-subtitle"/>
+            </VBox>
+            
+            <!-- Schedule Content -->
+            <VBox spacing="20" VBox.vgrow="ALWAYS">
+                
+                <!-- Upcoming Events -->
+                <VBox spacing="15">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Text text="Upcoming Events" styleClass="section-title"/>
+                        <Text fx:id="upcomingCountText" text="(3)" styleClass="event-count"/>
+                    </HBox>
+                    <FlowPane fx:id="upcomingEventsContainer" hgap="20" vgap="20" styleClass="event-grid"/>
+                </VBox>
+                
+                <!-- Past Events -->
+                <VBox spacing="15">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Text text="Past Events" styleClass="section-title"/>
+                        <Text fx:id="pastCountText" text="(2)" styleClass="event-count"/>
+                    </HBox>
+                    <FlowPane fx:id="pastEventsContainer" hgap="20" vgap="20" styleClass="event-grid"/>
+                </VBox>
+                
+                <!-- Empty State -->
+                <VBox fx:id="emptyStateContainer" alignment="CENTER" spacing="20" styleClass="empty-state">
+                    <ImageView fitHeight="120" fitWidth="120" Image="@../images/empty-schedule.png"/>
+                    <Text text="No events in your schedule yet" styleClass="empty-state-title"/>
+                    <Text text="Start exploring events and register for ones that interest you!" styleClass="empty-state-description"/>
+                    <Button text="Browse Events" styleClass="primary-button" onAction="#handleBrowseEvents"/>
+                </VBox>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane> 

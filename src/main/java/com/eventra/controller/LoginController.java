@@ -138,7 +138,7 @@ public class  LoginController {
         try {
             // DEMO MODE: Bypass database for testing
             if (email.equals("demo@eventra.com") && password.equals("demo123")) {
-                // Create demo user
+                // Create demo admin user
                 User demoUser = new User("demo", "Demo", "User", email, "");
                 demoUser.setUserId(1);
                 demoUser.setRoleTypeId(2); // Admin role
@@ -148,26 +148,62 @@ public class  LoginController {
                 return;
             }
             
+            // DEMO MODE: Attendee user for testing
+            if (email.equals("attendee@eventra.com") && password.equals("attendee123")) {
+                // Create demo attendee user
+                User demoAttendee = new User("attendee", "Demo", "Attendee", email, "");
+                demoAttendee.setUserId(5);
+                demoAttendee.setRoleTypeId(4); // Attendee role
+                
+                SessionManager.setCurrentUser(demoAttendee);
+                ViewUtil.switchTo("AttendeeEvents", emailField.getScene().getWindow());
+                return;
+            }
+            
+            // DEMO MODE: User's test account
+            if (email.equals("matcha123@gmail.com") && password.equals("matcha123@gmail.com")) {
+                // Create demo attendee user for testing
+                User testUser = new User("matcha123", "Matcha", "User", email, "");
+                testUser.setUserId(6);
+                testUser.setRoleTypeId(4); // Attendee role
+                
+                SessionManager.setCurrentUser(testUser);
+                ViewUtil.switchTo("AttendeeEvents", emailField.getScene().getWindow());
+                return;
+            }
+            
             // Try real authentication (when database is available)
             try {
+                System.out.println("Attempting to authenticate user: " + email);
                 Optional<User> userOpt = UserDAO.authenticateUser(email, password);
                 
                 if (userOpt.isPresent()) {
                     User user = userOpt.get();
+                    System.out.println("Authentication successful for user: " + user.getEmail() + " with role: " + user.getRoleTypeId());
                     SessionManager.setCurrentUser(user);
-                    ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
+                    
+                    // Redirect based on user role
+                    if (user.getRoleTypeId() == 4) { // Attendee
+                        System.out.println("Redirecting attendee to AttendeeEvents page");
+                        ViewUtil.switchTo("AttendeeEvents", emailField.getScene().getWindow());
+                    } else {
+                        System.out.println("Redirecting user to Dashboard page");
+                        ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
+                    }
                 } else {
+                    System.out.println("Authentication failed - invalid credentials");
                     showError("Invalid email or password. Please try again.");
                 }
             } catch (Exception e) {
                 // Database connection failed, show demo mode message
                 System.err.println("Database connection failed: " + e.getMessage());
-                showError("Database not available. Use demo@eventra.com / demo123 for demo mode.");
+                e.printStackTrace();
+                showError("Database connection failed. Use demo@eventra.com / demo123 for admin or attendee@eventra.com / attendee123 for attendee demo mode.");
             }
             
         } catch (Exception e) {
             System.err.println("Login error: " + e.getMessage());
-            showError("An error occurred. Use demo@eventra.com / demo123 for demo mode.");
+            showError("An error occurred. Use demo@eventra.com / demo123 for admin or attendee@eventra.com / attendee123 for attendee demo mode.");
         } finally {
             // Re-enable button
             signInButton.setDisable(false);

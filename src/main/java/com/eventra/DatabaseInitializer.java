@@ -114,6 +114,81 @@ public class DatabaseInitializer {
             "FOREIGN KEY (UserID) REFERENCES UserM(UserID)" +
             ")"
         );
+        
+        // Event table
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS Event (" +
+            "EventID INT AUTO_INCREMENT PRIMARY KEY," +
+            "Title VARCHAR(255) NOT NULL," +
+            "Description TEXT," +
+            "StartDateTime TIMESTAMP NOT NULL," +
+            "EndDateTime TIMESTAMP NOT NULL," +
+            "Location VARCHAR(255) NOT NULL," +
+            "ImageURL VARCHAR(500)," +
+            "EventStatusTypeID INT NOT NULL DEFAULT 2," +
+            "OrganizerID INT NOT NULL," +
+            "MaxAttendees INT DEFAULT 0," +
+            "CurrentAttendees INT DEFAULT 0," +
+            "EventType VARCHAR(100)," +
+            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (OrganizerID) REFERENCES UserM(UserID)," +
+            "FOREIGN KEY (EventStatusTypeID) REFERENCES EventStatusType(EventStatusTypeID)" +
+            ")"
+        );
+        
+        // Presenter table
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS Presenter (" +
+            "PresenterID INT AUTO_INCREMENT PRIMARY KEY," +
+            "FirstName VARCHAR(100) NOT NULL," +
+            "LastName VARCHAR(100) NOT NULL," +
+            "Email VARCHAR(255) NOT NULL UNIQUE," +
+            "Bio TEXT," +
+            "ProfilePicUrl VARCHAR(500)," +
+            "Organization VARCHAR(255)," +
+            "Expertise VARCHAR(255)," +
+            "StatusTypeID INT NOT NULL DEFAULT 1," +
+            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+            ")"
+        );
+        
+        // Session table
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS Session (" +
+            "SessionID INT AUTO_INCREMENT PRIMARY KEY," +
+            "EventID INT NOT NULL," +
+            "Title VARCHAR(255) NOT NULL," +
+            "Description TEXT," +
+            "StartTime TIMESTAMP NOT NULL," +
+            "EndTime TIMESTAMP NOT NULL," +
+            "PresenterID INT," +
+            "SessionStatusTypeID INT NOT NULL DEFAULT 2," +
+            "Room VARCHAR(100)," +
+            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (EventID) REFERENCES Event(EventID)," +
+            "FOREIGN KEY (PresenterID) REFERENCES Presenter(PresenterID)," +
+            "FOREIGN KEY (SessionStatusTypeID) REFERENCES SessionStatusType(SessionStatusTypeID)" +
+            ")"
+        );
+        
+        // EventRegistration table
+        stmt.execute(
+            "CREATE TABLE IF NOT EXISTS EventRegistration (" +
+            "RegistrationID INT AUTO_INCREMENT PRIMARY KEY," +
+            "EventID INT NOT NULL," +
+            "AttendeeID INT NOT NULL," +
+            "RegistrationStatusTypeID INT NOT NULL DEFAULT 1," +
+            "RegistrationDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+            "FOREIGN KEY (EventID) REFERENCES Event(EventID)," +
+            "FOREIGN KEY (AttendeeID) REFERENCES Attendee(AttendeeID)," +
+            "FOREIGN KEY (RegistrationStatusTypeID) REFERENCES RegistrationStatusType(RegistrationStatusTypeID)" +
+            ")"
+        );
     }
     
     private static void insertInitialData(Statement stmt) throws Exception {
@@ -223,6 +298,16 @@ public class DatabaseInitializer {
             // User already exists, ignore
         }
         
+        // Add the user's preferred test account
+        try {
+            stmt.execute(
+                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                "VALUES ('matcha123', 'Matcha', 'User', 'matcha123@gmail.com', 'matcha123@gmail.com', 4, 1)"
+            );
+        } catch (Exception e) {
+            // User already exists, ignore
+        }
+        
         // Insert demo attendees (password: demo123)
         try {
             stmt.execute(
@@ -242,6 +327,77 @@ public class DatabaseInitializer {
             );
         } catch (Exception e) {
             // User already exists, ignore
+        }
+        
+        // Insert sample events
+        try {
+            stmt.execute(
+                "INSERT INTO Event (Title, Description, StartDateTime, EndDateTime, Location, OrganizerID, EventType) " +
+                "VALUES ('Tech Conference 2024', 'Annual technology conference featuring the latest innovations', " +
+                "'2024-12-15 09:00:00', '2024-12-15 17:00:00', 'Convention Center, Downtown', 2, 'Conference')"
+            );
+        } catch (Exception e) {
+            // Event already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO Event (Title, Description, StartDateTime, EndDateTime, Location, OrganizerID, EventType) " +
+                "VALUES ('Startup Networking', 'Connect with fellow entrepreneurs and investors', " +
+                "'2024-12-20 18:00:00', '2024-12-20 21:00:00', 'Innovation Hub, Tech District', 2, 'Networking')"
+            );
+        } catch (Exception e) {
+            // Event already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO Event (Title, Description, StartDateTime, EndDateTime, Location, OrganizerID, EventType) " +
+                "VALUES ('AI Workshop', 'Hands-on workshop on artificial intelligence and machine learning', " +
+                "'2024-12-25 10:00:00', '2024-12-25 16:00:00', 'Tech Institute, University Campus', 2, 'Workshop')"
+            );
+        } catch (Exception e) {
+            // Event already exists, ignore
+        }
+        
+        // Insert sample presenters
+        try {
+            stmt.execute(
+                "INSERT INTO Presenter (FirstName, LastName, Email, Bio, Organization, Expertise) " +
+                "VALUES ('Dr. Sarah', 'Johnson', 'sarah.johnson@tech.com', 'Leading AI researcher with 15 years of experience', 'TechCorp', 'Artificial Intelligence')"
+            );
+        } catch (Exception e) {
+            // Presenter already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO Presenter (FirstName, LastName, Email, Bio, Organization, Expertise) " +
+                "VALUES ('Mike', 'Chen', 'mike.chen@startup.com', 'Serial entrepreneur and startup mentor', 'StartupHub', 'Entrepreneurship')"
+            );
+        } catch (Exception e) {
+            // Presenter already exists, ignore
+        }
+        
+        // Insert sample sessions
+        try {
+            stmt.execute(
+                "INSERT INTO Session (EventID, Title, Description, StartTime, EndTime, PresenterID, Room) " +
+                "VALUES (1, 'Introduction to AI', 'Overview of artificial intelligence fundamentals', " +
+                "'2024-12-15 09:00:00', '2024-12-15 10:30:00', 1, 'Main Hall')"
+            );
+        } catch (Exception e) {
+            // Session already exists, ignore
+        }
+        
+        try {
+            stmt.execute(
+                "INSERT INTO Session (EventID, Title, Description, StartTime, EndTime, PresenterID, Room) " +
+                "VALUES (1, 'Building Successful Startups', 'Key strategies for startup success', " +
+                "'2024-12-15 11:00:00', '2024-12-15 12:30:00', 2, 'Conference Room A')"
+            );
+        } catch (Exception e) {
+            // Session already exists, ignore
         }
     }
 } 

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import java.time.format.DateTimeFormatter?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.eventra.controller.EventDetailsController"
+            stylesheets="@../css/styles.css"
+            styleClass="main-container">
+
+    <!-- Header -->
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            
+            <!-- Logo -->
+            <Text text="Eventra" styleClass="logo-text" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            
+            <!-- Navigation -->
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <Button text="My Schedule" styleClass="nav-button" onAction="#handleMySchedule"/>
+                <Button text="Browse Events" styleClass="nav-button" onAction="#handleBrowseEvents"/>
+            </HBox>
+            
+            <!-- Search Bar -->
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
+            </HBox>
+            
+            <!-- Profile Icon -->
+            <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox styleClass="event-details-container" spacing="0">
+            
+            <!-- Event Banner -->
+            <VBox fx:id="eventBanner" styleClass="event-banner" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="60" right="40" bottom="60" left="40"/>
+                </padding>
+                
+                <VBox spacing="15">
+                    <Text fx:id="eventTitle" text="Annual Tech Summit 2024" styleClass="event-title"/>
+                    
+                    <HBox spacing="30" alignment="CENTER_LEFT">
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Text text="📅" style="-fx-font-size: 16;"/>
+                            <Text fx:id="eventDate" text="October 26-28, 2024" styleClass="event-detail"/>
+                        </HBox>
+                        
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Text text="🕐" style="-fx-font-size: 16;"/>
+                            <Text fx:id="eventTime" text="9:00 AM - 5:00 PM PDT" styleClass="event-detail"/>
+                        </HBox>
+                        
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Text text="📍" style="-fx-font-size: 16;"/>
+                            <Text fx:id="eventLocation" text="Virtual & San Francisco, CA" styleClass="event-detail"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+            
+            <!-- Content Area -->
+            <HBox spacing="40" styleClass="event-content">
+                <padding>
+                    <Insets top="40" right="40" bottom="40" left="40"/>
+                </padding>
+                
+                <!-- Main Content -->
+                <VBox styleClass="event-main-content" spacing="40" HBox.hgrow="ALWAYS">
+                    
+                    <!-- Speaker Spotlight -->
+                    <VBox spacing="20">
+                        <Text text="Speaker Spotlight" styleClass="section-title"/>
+                        <FlowPane fx:id="speakersContainer" hgap="20" vgap="20" styleClass="speakers-grid"/>
+                    </VBox>
+                    
+                    <!-- Session Schedule -->
+                    <VBox spacing="20">
+                        <Text text="Session Schedule" styleClass="section-title"/>
+                        <VBox fx:id="sessionsContainer" spacing="15" styleClass="sessions-list"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- Right Sidebar -->
+                <VBox styleClass="event-sidebar" spacing="30" minWidth="300" maxWidth="300">
+                    
+                    <!-- Registration Section -->
+                    <VBox styleClass="registration-card" spacing="15">
+                        <Text text="Registration Open!" styleClass="registration-title"/>
+                        <Text fx:id="spotsLeftText" text="Only 157 spots left!" styleClass="spots-left"/>
+                        <Text text="Don't miss out on this incredible opportunity." styleClass="registration-description"/>
+                        <Button fx:id="registerButton" text="Register Now" styleClass="register-button" onAction="#handleRegister"/>
+                    </VBox>
+                    
+                    <!-- Organizer Section -->
+                    <VBox styleClass="organizer-card" spacing="15">
+                        <Text text="Organizer" styleClass="organizer-title"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Text text="👤" style="-fx-font-size: 24; -fx-background-color: #007bff; -fx-background-radius: 20; -fx-padding: 8; -fx-text-fill: white;"/>
+                            <Text fx:id="organizerName" text="AI & Data Science Conference" styleClass="organizer-name"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane> 

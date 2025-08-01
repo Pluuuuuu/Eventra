@@ -7,6 +7,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 public class UserDAO {
     
@@ -216,6 +218,82 @@ public class UserDAO {
             System.err.println("Error updating password to hash: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Update user information
+     */
+    public static boolean updateUser(User user) {
+        String sql = "UPDATE UserM SET Username = ?, FirstName = ?, MiddleName = ?, LastName = ?, " +
+                    "Email = ?, ProfilePicUrl = ?, UpdatedAt = CURRENT_TIMESTAMP WHERE UserID = ?";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getFirstName());
+            stmt.setString(3, user.getMiddleName());
+            stmt.setString(4, user.getLastName());
+            stmt.setString(5, user.getEmail());
+            stmt.setString(6, user.getProfilePicUrl());
+            stmt.setInt(7, user.getUserId());
+            
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error updating user: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Get user by ID
+     */
+    public static User getUserById(int userId) {
+        String sql = "SELECT * FROM UserM WHERE UserID = ?";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting user by ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Get users by role
+     */
+    public static List<User> getUsersByRole(int roleTypeId) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM UserM WHERE RoleTypeID = ? AND StatusTypeID = 1 ORDER BY FirstName, LastName";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, roleTypeId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching users by role: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return users;
     }
     
     /**

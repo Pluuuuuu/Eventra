@@ -1,6 +1,7 @@
 package com.eventra.util;
 
 import com.eventra.model.User;
+import com.eventra.model.Event;
 
 public class SessionManager {
     private static User currentUser;
@@ -45,5 +46,28 @@ public class SessionManager {
      */
     public static String getCurrentUserName() {
         return currentUser != null ? currentUser.getFullName() : "";
+    }
+    
+    private static Event selectedEvent;
+    
+    /**
+     * Set the selected event for navigation
+     */
+    public static void setSelectedEvent(Event event) {
+        selectedEvent = event;
+    }
+    
+    /**
+     * Get the selected event
+     */
+    public static Event getSelectedEvent() {
+        return selectedEvent;
+    }
+    
+    /**
+     * Clear the selected event
+     */
+    public static void clearSelectedEvent() {
+        selectedEvent = null;
     }
 } 
