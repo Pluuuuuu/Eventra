@@ -221,4 +221,9 @@ public class AttendeeProfileController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    
+    @FXML
+    private void handleBackToDashboard() {
+        ViewUtil.switchToRoleDashboard(searchField.getScene().getWindow());
+    }
 } 

@@ -29,6 +29,9 @@ public class DatabaseInitializer {
             
             System.out.println("Database initialization completed successfully!");
             
+            // Clean up any duplicate presenters
+            com.eventra.dao.EventSaveDAO.cleanupDuplicatePresenters();
+            
         } catch (Exception e) {
             System.err.println("Error initializing database: " + e.getMessage());
             e.printStackTrace();
@@ -38,48 +41,54 @@ public class DatabaseInitializer {
     private static void createLookupTables(Statement stmt) throws Exception {
         // StatusType table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StatusType') " +
             "CREATE TABLE StatusType (" +
-            "StatusTypeID TINYINT PRIMARY KEY," +
-            "Name NVARCHAR(20) NOT NULL UNIQUE" +
+            "StatusTypeID INT PRIMARY KEY," +
+            "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
         );
         
         // RoleType table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'RoleType') " +
             "CREATE TABLE RoleType (" +
-            "RoleTypeID TINYINT PRIMARY KEY," +
-            "Name NVARCHAR(20) NOT NULL UNIQUE" +
+            "RoleTypeID INT PRIMARY KEY," +
+            "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
         );
         
         // EventStatusType table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventStatusType') " +
             "CREATE TABLE EventStatusType (" +
-            "EventStatusTypeID TINYINT PRIMARY KEY," +
-            "Name NVARCHAR(20) NOT NULL UNIQUE" +
+            "EventStatusTypeID INT PRIMARY KEY," +
+            "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
         );
         
         // SessionStatusType table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SessionStatusType') " +
             "CREATE TABLE SessionStatusType (" +
-            "SessionStatusTypeID TINYINT PRIMARY KEY," +
-            "Name NVARCHAR(20) NOT NULL UNIQUE" +
+            "SessionStatusTypeID INT PRIMARY KEY," +
+            "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
         );
         
         // RegistrationStatusType table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'RegistrationStatusType') " +
             "CREATE TABLE RegistrationStatusType (" +
-            "RegistrationStatusTypeID TINYINT PRIMARY KEY," +
-            "Name NVARCHAR(20) NOT NULL UNIQUE" +
+            "RegistrationStatusTypeID INT PRIMARY KEY," +
+            "Name VARCHAR(20) NOT NULL UNIQUE" +
             ")"
         );
     }
     
     private static void createMainTables(Statement stmt) throws Exception {
-        // UserM table
+        // UserM table - SQL Server compatible
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'UserM') " +
             "CREATE TABLE UserM (" +
             "UserID INT IDENTITY(1,1) PRIMARY KEY," +
             "Username NVARCHAR(100) NOT NULL UNIQUE," +
@@ -89,17 +98,18 @@ public class DatabaseInitializer {
             "Email NVARCHAR(255) NOT NULL UNIQUE," +
             "PasswordHash NVARCHAR(255) NOT NULL," +
             "ProfilePicUrl NVARCHAR(500)," +
-            "RoleTypeID TINYINT NOT NULL DEFAULT 2," +
-            "StatusTypeID TINYINT NOT NULL DEFAULT 1," +
-            "PeriodCanLoginInMinutes TINYINT NOT NULL DEFAULT 0," +
-            "LastFailedLoginAt DATETIME2," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "RoleTypeID INT NOT NULL DEFAULT 2," +
+            "StatusTypeID INT NOT NULL DEFAULT 1," +
+            "PeriodCanLoginInMinutes INT NOT NULL DEFAULT 0," +
+            "LastFailedLoginAt DATETIME," +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()" +
             ")"
         );
         
         // Attendee table (with UserID field as expected by Java code)
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Attendee') " +
             "CREATE TABLE Attendee (" +
             "AttendeeID INT IDENTITY(1,1) PRIMARY KEY," +
             "UserID INT NOT NULL," +
@@ -113,13 +123,13 @@ public class DatabaseInitializer {
             "Gender NVARCHAR(20)," +
             "DateOfBirth DATE," +
             "ProfilePicUrl NVARCHAR(500)," +
-            "Type NVARCHAR(50) NOT NULL," +
+            "Type NVARCHAR(50) NOT NULL DEFAULT 'Regular'," +
             "PasswordHash NVARCHAR(255) NOT NULL," +
-            "StatusTypeID TINYINT NOT NULL DEFAULT 1," +
-            "PeriodCanLoginInMinutes TINYINT NOT NULL DEFAULT 0," +
-            "LastFailedLoginAt DATETIME2," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
+            "StatusTypeID INT NOT NULL DEFAULT 1," +
+            "PeriodCanLoginInMinutes INT NOT NULL DEFAULT 0," +
+            "LastFailedLoginAt DATETIME," +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
             "CONSTRAINT FK_Attendee_UserM FOREIGN KEY (UserID) REFERENCES UserM(UserID) ON DELETE CASCADE ON UPDATE CASCADE," +
             "CONSTRAINT FK_Attendee_StatusType FOREIGN KEY (StatusTypeID) REFERENCES StatusType(StatusTypeID) ON DELETE NO ACTION ON UPDATE CASCADE" +
             ")"
@@ -127,6 +137,7 @@ public class DatabaseInitializer {
         
         // Venue table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Venue') " +
             "CREATE TABLE Venue (" +
             "VenueID INT IDENTITY(1,1) PRIMARY KEY," +
             "Name NVARCHAR(255) NOT NULL," +
@@ -134,41 +145,46 @@ public class DatabaseInitializer {
             "Capacity INT," +
             "Rooms INT," +
             "MapLink NVARCHAR(500)," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()" +
             ")"
         );
         
         // Room table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Room') " +
             "CREATE TABLE Room (" +
             "RoomID INT IDENTITY(1,1) PRIMARY KEY," +
             "VenueID INT NOT NULL," +
             "Name NVARCHAR(100) NOT NULL," +
             "Capacity INT," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()" +
             ")"
         );
         
         // EventM table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventM') " +
             "CREATE TABLE EventM (" +
             "EventID INT IDENTITY(1,1) PRIMARY KEY," +
             "Title NVARCHAR(255) NOT NULL," +
             "Description NVARCHAR(MAX)," +
-            "StartDate DATETIME2 NOT NULL," +
-            "EndDate DATETIME2 NOT NULL," +
-            "VenueID INT NOT NULL," +
+            "StartDate DATETIME NOT NULL," +
+            "EndDate DATETIME NOT NULL," +
+            "VenueID INT," +
             "CreatedByUserID INT NOT NULL," +
-            "StatusTypeID TINYINT NOT NULL DEFAULT 1," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "StatusTypeID INT NOT NULL DEFAULT 1," +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "CONSTRAINT FK_EventM_CreatedByUser FOREIGN KEY (CreatedByUserID) REFERENCES UserM(UserID)," +
+            "CONSTRAINT FK_EventM_StatusType FOREIGN KEY (StatusTypeID) REFERENCES EventStatusType(EventStatusTypeID)" +
             ")"
         );
         
         // Presenter table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Presenter') " +
             "CREATE TABLE Presenter (" +
             "PresenterID INT IDENTITY(1,1) PRIMARY KEY," +
             "FirstName NVARCHAR(100) NOT NULL," +
@@ -179,13 +195,14 @@ public class DatabaseInitializer {
             "PhotoUrl NVARCHAR(500)," +
             "ContactInfo NVARCHAR(255)," +
             "CreatedByUserID INT NOT NULL," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()" +
             ")"
         );
         
         // SessionM table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SessionM') " +
             "CREATE TABLE SessionM (" +
             "SessionID INT IDENTITY(1,1) PRIMARY KEY," +
             "EventID INT NOT NULL," +
@@ -194,33 +211,43 @@ public class DatabaseInitializer {
             "Role NVARCHAR(50)," +
             "Title NVARCHAR(255) NOT NULL," +
             "Abstract NVARCHAR(MAX)," +
-            "StartAt DATETIME2 NOT NULL," +
-            "EndAt DATETIME2 NOT NULL," +
+            "StartAt DATETIME NOT NULL," +
+            "EndAt DATETIME NOT NULL," +
             "RoomID INT," +
-            "StatusTypeID TINYINT NOT NULL DEFAULT 1," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "StatusTypeID INT NOT NULL DEFAULT 1," +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "CONSTRAINT FK_SessionM_Event FOREIGN KEY (EventID) REFERENCES EventM(EventID)," +
+            "CONSTRAINT FK_SessionM_CreatedByUser FOREIGN KEY (CreatedByUserID) REFERENCES UserM(UserID)," +
+            "CONSTRAINT FK_SessionM_StatusType FOREIGN KEY (StatusTypeID) REFERENCES SessionStatusType(SessionStatusTypeID)" +
             ")"
         );
         
         // SessionPresenter table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SessionPresenter') " +
             "CREATE TABLE SessionPresenter (" +
             "SessionID INT NOT NULL," +
             "PresenterID INT NOT NULL," +
-            "PRIMARY KEY (SessionID, PresenterID)" +
+            "PRIMARY KEY (SessionID, PresenterID)," +
+            "CONSTRAINT FK_SessionPresenter_Session FOREIGN KEY (SessionID) REFERENCES SessionM(SessionID)," +
+            "CONSTRAINT FK_SessionPresenter_Presenter FOREIGN KEY (PresenterID) REFERENCES Presenter(PresenterID)" +
             ")"
         );
         
         // Registration table
         stmt.execute(
+            "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Registration') " +
             "CREATE TABLE Registration (" +
             "RegistrationID INT IDENTITY(1,1) PRIMARY KEY," +
             "AttendeeID INT NOT NULL," +
             "EventID INT NOT NULL," +
-            "RegistrationStatusTypeID TINYINT NOT NULL DEFAULT 1," +
-            "CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()," +
-            "UpdatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()" +
+            "RegistrationStatusTypeID INT NOT NULL DEFAULT 1," +
+            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
+            "CONSTRAINT FK_Registration_Attendee FOREIGN KEY (AttendeeID) REFERENCES Attendee(AttendeeID)," +
+            "CONSTRAINT FK_Registration_Event FOREIGN KEY (EventID) REFERENCES EventM(EventID)," +
+            "CONSTRAINT FK_Registration_StatusType FOREIGN KEY (RegistrationStatusTypeID) REFERENCES RegistrationStatusType(RegistrationStatusTypeID)" +
             ")"
         );
     }
@@ -291,45 +318,32 @@ public class DatabaseInitializer {
             // Data already exists, ignore
         }
         
-        // COMMENTED OUT: Sample data insertion to prevent overwriting Azure data
-        // Uncomment these sections if you need to initialize with sample data
-        
-        /*
-        // Insert sample venues and rooms
+        // Insert or update test user (password: test123)
         try {
-            stmt.execute(
-                "INSERT INTO Venue (Name, Address, Capacity, Rooms, MapLink) " +
-                "VALUES ('Conference Center', '123 Main Street, Downtown', 2000, 10, 'https://maps.example.com/venue1')"
+            // First, try to update existing user
+            int updated = stmt.executeUpdate(
+                "UPDATE UserM SET " +
+                "PasswordHash = '$2a$10$6EtNj6fB6stiRuM.K3Y7FeNUZ/DJ29vqjg9XZiaKeAm4TI4vnj9Ta', " +
+                "RoleTypeID = 2, " +
+                "StatusTypeID = 1 " +
+                "WHERE Email = 'test@eventra.com'"
             );
+            
+            if (updated > 0) {
+                System.out.println("✅ Updated existing test admin user: test@eventra.com");
+            } else {
+                // If no user was updated, insert new one
+                stmt.execute(
+                    "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
+                    "VALUES ('testuser', 'Test', 'User', 'test@eventra.com', " +
+                    "'$2a$10$6EtNj6fB6stiRuM.K3Y7FeNUZ/DJ29vqjg9XZiaKeAm4TI4vnj9Ta', 2, 1)"
+                );
+                System.out.println("✅ Inserted new test admin user: test@eventra.com");
+            }
         } catch (Exception e) {
-            // Venue already exists, ignore
+            System.out.println("❌ Error with test user: " + e.getMessage());
         }
         
-        try {
-            stmt.execute(
-                "INSERT INTO Room (VenueID, Name, Capacity) " +
-                "VALUES (1, 'Main Hall', 1000), (1, 'Conference Room A', 200)"
-            );
-        } catch (Exception e) {
-            // Rooms already exist, ignore
-        }
-        
-        // Insert test user (password: test123)
-        try {
-            stmt.execute(
-                "INSERT INTO UserM (Username, FirstName, LastName, Email, PasswordHash, RoleTypeID, StatusTypeID) " +
-                "VALUES ('testuser', 'Test', 'User', 'test@eventra.com', " +
-                "'$2a$10$TToB9tKSXwz5Ub9mOByFMekz.ygcmX2ZMgiDmpP.QigvnhUtjVXrK', 2, 1)"
-            );
-        } catch (Exception e) {
-            // User already exists, ignore
-        }
-        */
-        
-        // COMMENTED OUT: Sample data insertion to prevent overwriting Azure data
-        // Uncomment these sections if you need to initialize with sample data
-        
-        /*
         // Insert your test users with plain text passwords (as requested)
         // Password for all users: staff@gmail.com (stored as plain text)
         
@@ -384,75 +398,34 @@ public class DatabaseInitializer {
             // User already exists, ignore
         }
         
-        // Insert sample events
-        try {
-            stmt.execute(
-                "INSERT INTO EventM (Title, Description, StartDate, EndDate, VenueID, CreatedByUserID, StatusTypeID) " +
-                "VALUES ('Tech Conference 2024', 'Annual technology conference featuring the latest innovations', " +
-                "'2024-12-15 09:00:00', '2024-12-15 17:00:00', 1, 2, 2)"
-            );
-        } catch (Exception e) {
-            // Event already exists, ignore
+        // Insert multiple sample attendees to get realistic numbers
+        String[] attendeeData = {
+            "('John', 'Doe', 'john.doe@example.com', 'Tech Corp', 'Regular')",
+            "('Jane', 'Smith', 'jane.smith@example.com', 'Business Inc', 'VIP')",
+            "('Alice', 'Johnson', 'alice.johnson@corp.com', 'Corporate Ltd', 'Regular')",
+            "('Bob', 'Brown', 'bob.brown@startup.io', 'Startup Hub', 'Regular')",
+            "('Carol', 'Davis', 'carol.davis@enterprise.com', 'Enterprise Co', 'VIP')",
+            "('David', 'Wilson', 'david.wilson@innovate.net', 'Innovation Labs', 'Regular')",
+            "('Eva', 'Martinez', 'eva.martinez@global.org', 'Global Solutions', 'Regular')",
+            "('Frank', 'Taylor', 'frank.taylor@consulting.biz', 'Consulting Firm', 'VIP')",
+            "('Grace', 'Anderson', 'grace.anderson@design.studio', 'Design Studio', 'Regular')",
+            "('Henry', 'Thomas', 'henry.thomas@finance.group', 'Finance Group', 'Regular')"
+        };
+        
+        for (int i = 0; i < attendeeData.length; i++) {
+            try {
+                stmt.execute(
+                    "INSERT INTO Attendee (UserID, FirstName, LastName, Email, Organization, Type, PasswordHash, StatusTypeID) " +
+                    "VALUES (" + (i + 1) + ", " + attendeeData[i].substring(1, attendeeData[i].length() - 1) + 
+                    ", '$2a$10$7G4gg/2D.5VwHNyXKrRoAODBUyvqZ2mXlhMTi/jKMFxhPRlT54O6e', 1)"
+                );
+            } catch (Exception e) {
+                // Attendee already exists, ignore
+            }
         }
         
-        try {
-            stmt.execute(
-                "INSERT INTO EventM (Title, Description, StartDate, EndDate, VenueID, CreatedByUserID, StatusTypeID) " +
-                "VALUES ('Startup Networking', 'Connect with fellow entrepreneurs and investors', " +
-                "'2024-12-20 18:00:00', '2024-12-20 21:00:00', 1, 2, 2)"
-            );
-        } catch (Exception e) {
-            // Event already exists, ignore
-        }
-        
-        try {
-            stmt.execute(
-                "INSERT INTO EventM (Title, Description, StartDate, EndDate, VenueID, CreatedByUserID, StatusTypeID) " +
-                "VALUES ('AI Workshop', 'Hands-on workshop on artificial intelligence and machine learning', " +
-                "'2024-12-25 10:00:00', '2024-12-25 16:00:00', 1, 2, 2)"
-            );
-        } catch (Exception e) {
-            // Event already exists, ignore
-        }
-        
-        // Insert sample presenters
-        try {
-            stmt.execute(
-                "INSERT INTO Presenter (FirstName, MiddleName, LastName, Bio, Email, PhotoUrl, ContactInfo, CreatedByUserID) " +
-                "VALUES ('Dr. Sarah', 'Johnson', 'Johnson', 'Leading AI researcher with 15 years of experience', 'sarah.johnson@tech.com', 'https://example.com/sarah.jpg', 'sarah.johnson@tech.com', 2)"
-            );
-        } catch (Exception e) {
-            // Presenter already exists, ignore
-        }
-        
-        try {
-            stmt.execute(
-                "INSERT INTO Presenter (FirstName, MiddleName, LastName, Bio, Email, PhotoUrl, ContactInfo, CreatedByUserID) " +
-                "VALUES ('Mike', 'Chen', 'Chen', 'Serial entrepreneur and startup mentor', 'mike.chen@startup.com', 'https://example.com/mike.jpg', 'mike.chen@startup.com', 2)"
-            );
-        } catch (Exception e) {
-            // Presenter already exists, ignore
-        }
-        
-        // Insert sample sessions
-        try {
-            stmt.execute(
-                "INSERT INTO SessionM (EventID, CreatedByUserID, Track, Role, Title, Abstract, StartAt, EndAt, RoomID, StatusTypeID) " +
-                "VALUES (1, 2, 'AI & Machine Learning', 'Speaker', 'Introduction to AI', 'Overview of artificial intelligence fundamentals', '2024-12-15 09:00:00', '2024-12-15 10:30:00', 1, 2)"
-            );
-        } catch (Exception e) {
-            // Session already exists, ignore
-        }
-        
-        try {
-            stmt.execute(
-                "INSERT INTO SessionM (EventID, CreatedByUserID, Track, Role, Title, Abstract, StartAt, EndAt, RoomID, StatusTypeID) " +
-                "VALUES (1, 2, 'Startup Strategies', 'Panel', 'Building Successful Startups', 'Key strategies for startup success', '2024-12-15 11:00:00', '2024-12-15 12:30:00', 2, 2)"
-            );
-        } catch (Exception e) {
-            // Session already exists, ignore
-        }
-        */
+        // NOTE: Removed automatic sample data creation (venues, events, registrations)
+        // These should be created manually through the application interface
     }
     
     private static void ensureMatchaUserExists(Statement stmt) throws Exception {

@@ -136,6 +136,32 @@ public class  LoginController {
         
         try {
             System.out.println("Attempting to authenticate user: " + email);
+            
+            // DEMO MODE: Bypass database for testing
+            if (email.equals("demo@eventra.com") && password.equals("demo123")) {
+                // Create demo user
+                User demoUser = new User("demo", "Demo", "User", email, "");
+                demoUser.setUserId(1);
+                demoUser.setRoleTypeId(2); // Admin role
+                
+                SessionManager.setCurrentUser(demoUser);
+                ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
+                return;
+            }
+            
+            // SUPER ADMIN DEMO MODE: Direct access to SuperAdmin Dashboard
+            if (email.equals("superadmin@eventra.com") && password.equals("admin123")) {
+                // Create demo super admin user
+                User superAdminUser = new User("superadmin", "Super", "Admin", email, "");
+                superAdminUser.setUserId(0);
+                superAdminUser.setRoleTypeId(1); // SuperAdmin role
+                
+                SessionManager.setCurrentUser(superAdminUser);
+                ViewUtil.switchTo("SuperAdminDashboard", emailField.getScene().getWindow());
+                return;
+            }
+            
+            // Try real authentication
             Optional<User> userOpt = UserDAO.authenticateUser(email, password);
             
             if (userOpt.isPresent()) {
@@ -144,10 +170,20 @@ public class  LoginController {
                 SessionManager.setCurrentUser(user);
                 
                 // Redirect based on user role
-                if (user.getRoleTypeId() == 4) { // Attendee
+                if (user.getRoleTypeId() == 1) {
+                    // SuperAdmin gets the specialized dashboard
+                    System.out.println("Redirecting SuperAdmin to SuperAdminDashboard page");
+                    ViewUtil.switchTo("SuperAdminDashboard", emailField.getScene().getWindow());
+                } else if (user.getRoleTypeId() == 2) {
+                    // Admin gets the admin dashboard
+                    System.out.println("Redirecting Admin to AdminDashboard page");
+                    ViewUtil.switchTo("AdminDashboard", emailField.getScene().getWindow());
+                } else if (user.getRoleTypeId() == 4) {
+                    // Attendee
                     System.out.println("Redirecting attendee to AttendeeEvents page");
                     ViewUtil.switchTo("AttendeeEvents", emailField.getScene().getWindow());
                 } else {
+                    // Staff and other roles get the generic dashboard
                     System.out.println("Redirecting user to Dashboard page");
                     ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
                 }
@@ -159,7 +195,7 @@ public class  LoginController {
         } catch (Exception e) {
             System.err.println("Login error: " + e.getMessage());
             e.printStackTrace();
-            showError("An error occurred during login. Please try again.");
+            showError("An error occurred during login. Please try again. Use demo@eventra.com / demo123 for demo mode.");
         } finally {
             // Re-enable button
             signInButton.setDisable(false);

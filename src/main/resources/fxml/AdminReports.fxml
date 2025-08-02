@@ -14,7 +14,7 @@
 
     <!-- Header -->
     <VBox alignment="CENTER" spacing="10" styleClass="dashboard-header">
-        <Text fx:id="titleText" text="Reports & Analytics" styleClass="dashboard-title"/>
+        <Text fx:id="titleText" text="Reports &amp; Analytics" styleClass="dashboard-title"/>
         <Text text="Administrator Dashboard" styleClass="dashboard-subtitle"/>
     </VBox>
 

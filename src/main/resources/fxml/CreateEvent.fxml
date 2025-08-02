@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.eventra.controller.CreateEventController"
+           fitToWidth="true"
+           stylesheets="@../css/styles.css"
+           styleClass="create-event-scroll">
+
+    <VBox spacing="20" styleClass="create-event-container">
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="create-event-header">
+            <VBox spacing="5">
+                <Text text="Create Event" styleClass="create-event-title"/>
+                <Text text="Fill in the details to create a new event" styleClass="create-event-subtitle"/>
+            </VBox>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Button text="Cancel" 
+                    onAction="#handleCancel"
+                    styleClass="cancel-button"/>
+            
+            <Button text="Save as Draft" 
+                    onAction="#handleSaveDraft"
+                    styleClass="draft-button"/>
+            
+            <Button text="Publish Event" 
+                    onAction="#handlePublishEvent"
+                    styleClass="publish-button"/>
+        </HBox>
+
+        <!-- Main Content Area -->
+        <HBox spacing="30" VBox.vgrow="ALWAYS">
+            
+            <!-- Left Side - Event Details -->
+            <VBox spacing="20" styleClass="event-details-section" prefWidth="400">
+                
+                <Text text="Event Details" styleClass="section-title"/>
+                
+                <VBox spacing="15">
+                    <!-- Event Name -->
+                    <VBox spacing="5">
+                        <Label text="Event Name *" styleClass="form-label"/>
+                        <TextField fx:id="eventNameField" 
+                                  text="Annual Tech Summit 2024"
+                                  styleClass="form-input"/>
+                    </VBox>
+                    
+                    <!-- Description -->
+                    <VBox spacing="5">
+                        <Label text="Description" styleClass="form-label"/>
+                        <TextArea fx:id="descriptionArea" 
+                                 text="This Annual Tech Summit features keynote speeches from industry leaders and innovation showcases by top-tier startups. Attendees will gain insights into cutting-edge technologies, network with industry professionals, and participate in hands-on workshops designed to enhance their technical skills and knowledge."
+                                 styleClass="form-textarea"
+                                 prefRowCount="4"
+                                 wrapText="true"/>
+                    </VBox>
+                    
+                    <!-- Start Date & Time -->
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Start Date *" styleClass="form-label"/>
+                            <DatePicker fx:id="startDatePicker" 
+                                       styleClass="form-date"/>
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="Start Time *" styleClass="form-label"/>
+                            <TextField fx:id="startTimeField" 
+                                      text="09:00 AM"
+                                      styleClass="form-time"
+                                      prefWidth="100"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- End Date & Time -->
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="End Date *" styleClass="form-label"/>
+                            <DatePicker fx:id="endDatePicker" 
+                                       styleClass="form-date"/>
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="End Time *" styleClass="form-label"/>
+                            <TextField fx:id="endTimeField" 
+                                      text="05:00 PM"
+                                      styleClass="form-time"
+                                      prefWidth="100"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Location -->
+                    <VBox spacing="5">
+                        <Label text="Location *" styleClass="form-label"/>
+                        <TextField fx:id="locationField" 
+                                  text="Grand Conference Center"
+                                  styleClass="form-input"/>
+                    </VBox>
+                    
+                    <!-- Capacity -->
+                    <VBox spacing="5">
+                        <Label text="Capacity" styleClass="form-label"/>
+                        <TextField fx:id="capacityField" 
+                                  text="500"
+                                  styleClass="form-input"
+                                  prefWidth="150"/>
+                    </VBox>
+                    
+                    <!-- Tags -->
+                    <VBox spacing="5">
+                        <Label text="Tags" styleClass="form-label"/>
+                        <TextField fx:id="tagsField" 
+                                  text="Technology, Innovation, Networking"
+                                  styleClass="form-input"/>
+                    </VBox>
+                    
+                </VBox>
+            </VBox>
+            
+            <!-- Right Side - Sessions -->
+            <VBox spacing="20" styleClass="sessions-section" HBox.hgrow="ALWAYS">
+                
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Text text="Sessions" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="+ Add Session" 
+                            onAction="#handleAddSession"
+                            styleClass="add-session-button"/>
+                </HBox>
+                
+                <!-- Sessions Table -->
+                <TableView fx:id="sessionsTable" styleClass="sessions-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="sessionColumn" text="Session" prefWidth="150">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="name"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="date"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="dayColumn" text="Day" prefWidth="80">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="day"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="timeColumn" text="Time" prefWidth="100">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="time"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="locationColumn" text="Location" prefWidth="120">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="location"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="presenterColumn" text="Presenter" prefWidth="120">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="presenter"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="status"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        
+                        <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="80" sortable="false">
+                        </TableColumn>
+                    </columns>
+                    
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="10" styleClass="table-placeholder">
+                            <Text text="📋" styleClass="placeholder-icon"/>
+                            <Text text="No sessions added yet" styleClass="placeholder-title"/>
+                            <Text text="Click 'Add Session' to create your first session" styleClass="placeholder-subtitle"/>
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </HBox>
+
+        <!-- Presenters Section -->
+        <VBox spacing="15" styleClass="presenters-section">
+            
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Text text="Presenters" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="+ Add Presenter" 
+                        onAction="#handleAddPresenter"
+                        styleClass="add-presenter-button"/>
+            </HBox>
+            
+            <!-- Presenters Grid -->
+            <GridPane fx:id="presentersGrid" hgap="20" vgap="15" styleClass="presenters-grid">
+                
+                <!-- Sample Presenter Cards (will be dynamically generated) -->
+                <VBox spacing="10" styleClass="presenter-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Text text="👤" styleClass="presenter-avatar"/>
+                        <VBox spacing="2">
+                            <Text text="John Smith" styleClass="presenter-name"/>
+                            <Text text="CEO of TechCorp" styleClass="presenter-title"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="✎" styleClass="edit-presenter-button" onAction="#handleEditPresenter"/>
+                    </HBox>
+                    <Text text="Technology expert with 15+ years of experience" styleClass="presenter-bio"/>
+                </VBox>
+                
+                <VBox spacing="10" styleClass="presenter-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Text text="👤" styleClass="presenter-avatar"/>
+                        <VBox spacing="2">
+                            <Text text="Mike Johnson" styleClass="presenter-name"/>
+                            <Text text="Senior Director at InnovateLab" styleClass="presenter-title"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="✎" styleClass="edit-presenter-button" onAction="#handleEditPresenter"/>
+                    </HBox>
+                    <Text text="Innovation strategist and startup mentor" styleClass="presenter-bio"/>
+                </VBox>
+                
+                <VBox spacing="10" styleClass="presenter-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Text text="👤" styleClass="presenter-avatar"/>
+                        <VBox spacing="2">
+                            <Text text="Carol Williams" styleClass="presenter-name"/>
+                            <Text text="VP of Engineering at NextGen" styleClass="presenter-title"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="✎" styleClass="edit-presenter-button" onAction="#handleEditPresenter"/>
+                    </HBox>
+                    <Text text="Software engineering leader and tech evangelist" styleClass="presenter-bio"/>
+                </VBox>
+                
+            </GridPane>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

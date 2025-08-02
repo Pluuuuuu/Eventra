@@ -27,6 +27,6 @@ public class AdminReportsController {
     
     @FXML
     private void handleBackToDashboard() {
-        ViewUtil.switchTo("Dashboard", titleText.getScene().getWindow());
+        ViewUtil.switchToRoleDashboard(titleText.getScene().getWindow());
     }
 } 

@@ -43,8 +43,9 @@ public class DashboardController {
         
         switch (roleTypeId) {
             case 1: // SuperAdmin
-                createSuperAdminContent();
-                break;
+                // Navigate directly to the new SuperAdmin Dashboard
+                navigateToSuperAdminDashboard();
+                return;
             case 2: // Admin
                 createAdminContent();
                 break;
@@ -59,16 +60,19 @@ public class DashboardController {
         }
     }
     
+    private void navigateToSuperAdminDashboard() {
+        System.out.println("Navigating to SuperAdmin Dashboard");
+        ViewUtil.switchTo("SuperAdminDashboard", welcomeText.getScene().getWindow());
+    }
+    
     private void createSuperAdminContent() {
-        Button manageUsersBtn = new Button("Manage Users");
-        manageUsersBtn.setOnAction(e -> handleManageUsers());
-        manageUsersBtn.getStyleClass().add("primary-button");
+        // This method is now only kept for backward compatibility
+        // SuperAdmins are redirected to the new dashboard view
+        Button dashboardBtn = new Button("Go to Dashboard");
+        dashboardBtn.setOnAction(e -> navigateToSuperAdminDashboard());
+        dashboardBtn.getStyleClass().add("primary-button");
         
-        Button systemSettingsBtn = new Button("System Settings");
-        systemSettingsBtn.setOnAction(e -> handleSystemSettings());
-        systemSettingsBtn.getStyleClass().add("secondary-button");
-        
-        roleSpecificContent.getChildren().addAll(manageUsersBtn, systemSettingsBtn);
+        roleSpecificContent.getChildren().add(dashboardBtn);
     }
     
     private void createAdminContent() {

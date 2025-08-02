@@ -479,4 +479,9 @@ public class AttendeeEventsController {
             alert.showAndWait();
         }
     }
+    
+    @FXML
+    private void handleBackToDashboard() {
+        ViewUtil.switchToRoleDashboard(searchField.getScene().getWindow());
+    }
 } 

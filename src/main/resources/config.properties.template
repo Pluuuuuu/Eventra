@@ -1,10 +1,15 @@
 ﻿# Database Configuration
 # Copy this file to config.properties and update with your database details
 
-# SQL Server connection
-db.url=jdbc:sqlserver://localhost:1433;databaseName=EventPlannerDB;encrypt=true;trustServerCertificate=true
-db.user=your_username
-db.password=your_password
+# SQLite Database (for demo - no server required)
+db.url=jdbc:sqlite:eventra.db
+db.user=
+db.password=
+
+# SQL Server connection (alternative)
+# db.url=jdbc:sqlserver://localhost:1433;databaseName=EventPlannerDB;encrypt=true;trustServerCertificate=true
+# db.user=your_username
+# db.password=your_password
 
 # Connection pool settings (optional - defaults are used if not specified)
 # db.connectionTimeout=30000
