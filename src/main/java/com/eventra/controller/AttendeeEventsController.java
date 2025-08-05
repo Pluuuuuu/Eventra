@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -364,6 +365,7 @@ public class AttendeeEventsController {
     private void updateDateSelectionUI() {
         if (selectedDate != null) {
             selectedDateText.setText("Selected: " + selectedDate.format(DateTimeFormatter.ofPattern("MMM d, yyyy")));
+            selectedDateText.setFill(Color.web("#f2c33a")); // Set text color to #f2c33a
             selectedDateContainer.setVisible(true);
         } else {
             selectedDateContainer.setVisible(false);

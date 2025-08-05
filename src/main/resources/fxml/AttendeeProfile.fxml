@@ -26,8 +26,8 @@
             
             <!-- Navigation -->
             <HBox spacing="30" alignment="CENTER_LEFT">
-                <Button text="My Schedule" styleClass="nav-button" onAction="#handleMySchedule"/>
-                <Button text="Browse Events" styleClass="nav-button" onAction="#handleBrowseEvents"/>
+                <Button text="My Schedule" styleClass="attendee-nav-button" onAction="#handleMySchedule"/>
+                <Button text="Browse Events" styleClass="attendee-nav-button" onAction="#handleBrowseEvents"/>
             </HBox>
             
             <!-- Search Bar -->

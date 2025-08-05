@@ -33,7 +33,7 @@ public class  LoginController {
     public void initialize() {
         // Set up logo
         try {
-            Image logo = new Image(getClass().getResourceAsStream("/images/logo.png.png"));
+            Image logo = new Image(getClass().getResourceAsStream("/images/logo.png"));
             logoImage.setImage(logo);
         } catch (Exception e) {
             System.err.println("Could not load logo: " + e.getMessage());

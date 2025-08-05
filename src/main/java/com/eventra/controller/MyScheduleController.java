@@ -166,7 +166,7 @@ public class MyScheduleController {
         emptyState.getChildren().addAll(emptyText, browseButton);
         registeredEventsContainer.getChildren().add(emptyState);
     }
-    
+
     @FXML
     private void handleViewEvent(Event event) {
         try {

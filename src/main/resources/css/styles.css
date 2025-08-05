@@ -134,11 +134,12 @@
     -fx-background-color: #fafafa;
     -fx-padding: 60px 40px;
     -fx-pref-width: 600px;
-    -fx-alignment: top-left;
+    -fx-alignment: center;
 }
 
 .branding-content {
     -fx-padding: 20px;
+    -fx-alignment: center;
 }
 
 .logo-image {
@@ -152,9 +153,9 @@
 }
 
 .branding-title {
-    -fx-font-size: 32px;
+    -fx-font-size: 48px;
     -fx-font-weight: bold;
-    -fx-fill: #4f46e5;
+    -fx-fill: #4B398B;
 }
 
 .branding-tagline {
@@ -206,6 +207,7 @@
     -fx-border-radius: 6px;
     -fx-cursor: hand;
     -fx-min-width: 100%;
+    -fx-max-width: Infinity;
     -fx-min-height: 45px;
 }
 
@@ -1773,4 +1775,45 @@ Button:hover {
     -fx-effect: dropshadow(gaussian, rgba(157, 122, 191, 0.4), 8, 0, 0, 4);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
+}
+
+/* ============================================
+   ATTENDEE EVENTS NAVIGATION BUTTONS
+   ============================================ */
+
+/* Default state for AttendeeEvents navigation buttons */
+.attendee-nav-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #4b3a8c;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8px;
+    -fx-transition: all 0.3s ease;
+}
+
+.attendee-nav-button:hover {
+    -fx-text-fill: #9d7abf;
+    -fx-background-color: rgba(157, 122, 191, 0.1);
+    -fx-effect: dropshadow(gaussian, rgba(75, 58, 140, 0.2), 4, 0, 0, 2);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Active state for AttendeeEvents navigation buttons */
+.attendee-nav-button:selected,
+.attendee-nav-button.active {
+    -fx-text-fill: #f2c33a;
+    -fx-background-color: rgba(242, 195, 58, 0.15);
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(242, 195, 58, 0.3), 6, 0, 0, 3);
+}
+
+.attendee-nav-button:selected:hover,
+.attendee-nav-button.active:hover {
+    -fx-text-fill: #f2c33a;
+    -fx-background-color: rgba(242, 195, 58, 0.25);
+    -fx-effect: dropshadow(gaussian, rgba(242, 195, 58, 0.4), 8, 0, 0, 4);
 }

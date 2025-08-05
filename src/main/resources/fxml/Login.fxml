@@ -15,14 +15,14 @@
 
     <!-- Left Section - Branding -->
     <VBox styleClass="branding-section" HBox.hgrow="ALWAYS">
-        <VBox styleClass="branding-content" alignment="TOP_LEFT" spacing="20">
+        <VBox styleClass="branding-content" alignment="CENTER" spacing="20">
             <!-- Logo and Brand -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <ImageView fx:id="logoImage" styleClass="logo-image" fitHeight="60" fitWidth="60" preserveRatio="true"/>
-                <VBox spacing="5">
-                    <Text text="Welcome to" styleClass="branding-subtitle"/>
-                    <Text text="Eventra" styleClass="branding-title"/>
+            <HBox spacing="15" alignment="CENTER">
+                <ImageView fx:id="logoImage" styleClass="logo-image" fitHeight="120" fitWidth="120" preserveRatio="true"/>
+                <VBox spacing="5" alignment="CENTER">
+                    <Text text="Welcome to Eventra" styleClass="branding-title"/>
                 </VBox>
+                <ImageView fx:id="logoImage2" styleClass="logo-image" fitHeight="120" fitWidth="120" preserveRatio="true" visible="false"/>
             </HBox>
             
             <!-- Tagline -->
