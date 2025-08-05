@@ -22,7 +22,7 @@
             
             <!-- Logo -->
             <ImageView fx:id="logoImage" fitHeight="40" fitWidth="120" 
-                      Image="@../images/logo.elon.png" preserveRatio="true"/>
+                      preserveRatio="true"/>
             
             <!-- Navigation -->
             <HBox spacing="30" alignment="CENTER_LEFT">
@@ -35,7 +35,7 @@
                 <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
                 <Button styleClass="search-button" onAction="#handleSearch">
                     <graphic>
-                        <ImageView fitHeight="16" fitWidth="16" Image="@../images/search-icon.png"/>
+                        <ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16"/>
                     </graphic>
                 </Button>
             </HBox>
@@ -43,7 +43,7 @@
             <!-- Profile Icon -->
             <Button fx:id="profileButton" styleClass="profile-button" onAction="#handleProfile">
                 <graphic>
-                    <ImageView fitHeight="32" fitWidth="32" Image="@../images/profile-icon.png"/>
+                    <ImageView fx:id="profileIcon" fitHeight="32" fitWidth="32"/>
                 </graphic>
             </Button>
         </HBox>
@@ -59,7 +59,7 @@
             <!-- Profile Header -->
             <VBox spacing="20" alignment="CENTER">
                 <ImageView fx:id="profileImage" fitHeight="120" fitWidth="120" 
-                          Image="@../images/default-avatar.png" styleClass="profile-avatar"/>
+                          styleClass="profile-avatar"/>
                 <Text fx:id="profileName" text="John Doe" styleClass="profile-name"/>
                 <Text fx:id="profileEmail" text="john.doe@example.com" styleClass="profile-email"/>
             </VBox>

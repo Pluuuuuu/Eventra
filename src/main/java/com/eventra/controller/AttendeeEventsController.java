@@ -159,8 +159,16 @@ public class AttendeeEventsController {
         
         // Button
         Button actionButton = new Button(isComingSoon ? "Learn More" : "View Details");
-        actionButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;");
+        actionButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
         actionButton.setOnAction(e -> handleEventClick(event));
+        
+        // Add hover effect
+        actionButton.setOnMouseEntered(e -> {
+            actionButton.setStyle("-fx-background-color: #9d7abf; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(157, 122, 191, 0.4), 6, 0, 0, 3); -fx-scale-x: 1.05; -fx-scale-y: 1.05;");
+        });
+        actionButton.setOnMouseExited(e -> {
+            actionButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
+        });
         
         card.getChildren().addAll(title, dateTimeText, location, actionButton);
         
@@ -194,7 +202,7 @@ public class AttendeeEventsController {
         ImageView avatar = new ImageView();
         avatar.setFitWidth(40);
         avatar.setFitHeight(40);
-        avatar.setStyle("-fx-background-color: #007bff; -fx-background-radius: 20;");
+        avatar.setStyle("-fx-background-color: #4b3a8c; -fx-background-radius: 20;");
         
         // Organizer name
         Text name = new Text(organizer.getFullName());
@@ -446,7 +454,7 @@ public class AttendeeEventsController {
                 ImageView avatar = new ImageView();
                 avatar.setFitWidth(40);
                 avatar.setFitHeight(40);
-                avatar.setStyle("-fx-background-color: #007bff; -fx-background-radius: 20;");
+                avatar.setStyle("-fx-background-color: #4b3a8c; -fx-background-radius: 20;");
                 
                 // Organizer info
                 VBox info = new VBox(2);

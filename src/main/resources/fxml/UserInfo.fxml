@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventra.controller.UserInfoController"
+      alignment="CENTER" spacing="20"
+      stylesheets="@../css/styles.css"
+      styleClass="user-info-container">
+
+    <!-- Header -->
+    <VBox alignment="CENTER" spacing="10" styleClass="user-info-header">
+        <Text text="User Information" styleClass="user-info-title"/>
+    </VBox>
+
+    <!-- Profile Picture Section -->
+    <VBox alignment="CENTER" spacing="15" styleClass="profile-picture-section">
+        <ImageView fx:id="profileImageView" 
+                   fitWidth="120" 
+                   fitHeight="120" 
+                   styleClass="profile-picture"
+                   onMouseClicked="#handleProfilePictureClick"/>
+        <Text text="Click to change profile picture" styleClass="profile-hint"/>
+    </VBox>
+
+    <!-- User Details -->
+    <VBox alignment="CENTER" spacing="15" styleClass="user-details">
+        <VBox spacing="10" styleClass="user-info-item">
+            <Text text="Username:" styleClass="info-label"/>
+            <Text fx:id="usernameText" text="" styleClass="info-value"/>
+        </VBox>
+        
+        <VBox spacing="10" styleClass="user-info-item">
+            <Text text="Email:" styleClass="info-label"/>
+            <Text fx:id="emailText" text="" styleClass="info-value"/>
+        </VBox>
+        
+        <VBox spacing="10" styleClass="user-info-item">
+            <Text text="Full Name:" styleClass="info-label"/>
+            <Text fx:id="fullNameText" text="" styleClass="info-value"/>
+        </VBox>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <VBox alignment="CENTER" spacing="15" styleClass="action-buttons">
+        <Button text="✏️ Edit Profile"
+                onAction="#handleEditProfile"
+                styleClass="edit-button"/>
+        
+        <Button text="🚪 Logout"
+                onAction="#handleLogout"
+                styleClass="logout-button"/>
+        
+        <Button text="⬅️ Back to Dashboard"
+                onAction="#handleBackToDashboard"
+                styleClass="back-button"/>
+    </VBox>
+
+</VBox> 

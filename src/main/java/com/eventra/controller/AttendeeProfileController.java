@@ -19,6 +19,9 @@ import java.time.format.DateTimeFormatter;
 public class AttendeeProfileController {
     
     @FXML private ImageView profileImage;
+    @FXML private ImageView logoImage;
+    @FXML private ImageView searchIcon;
+    @FXML private ImageView profileIcon;
     @FXML private Text profileName;
     @FXML private Text profileEmail;
     @FXML private TextField usernameField;
@@ -33,8 +36,40 @@ public class AttendeeProfileController {
     
     @FXML
     public void initialize() {
+        loadImages();
         loadUserProfile();
         setupFieldListeners();
+    }
+    
+    private void loadImages() {
+        try {
+            // Load logo
+            String logoPath = getClass().getResource("/images/logo.elon.png").toExternalForm();
+            Image logoImage = new Image(logoPath);
+            this.logoImage.setImage(logoImage);
+            
+            // Load search icon (use logo as fallback if search-icon.png doesn't exist)
+            try {
+                String searchIconPath = getClass().getResource("/images/search-icon.png").toExternalForm();
+                Image searchImage = new Image(searchIconPath);
+                this.searchIcon.setImage(searchImage);
+            } catch (Exception e) {
+                // Use logo as fallback
+                this.searchIcon.setImage(logoImage);
+            }
+            
+            // Load profile icon (use logo as fallback if profile-icon.png doesn't exist)
+            try {
+                String profileIconPath = getClass().getResource("/images/profile-icon.png").toExternalForm();
+                Image profileImage = new Image(profileIconPath);
+                this.profileIcon.setImage(profileImage);
+            } catch (Exception e) {
+                // Use logo as fallback
+                this.profileIcon.setImage(logoImage);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading images: " + e.getMessage());
+        }
     }
     
     private void loadUserProfile() {

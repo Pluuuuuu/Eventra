@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns="http://javafx.com/javafx"
@@ -11,6 +12,21 @@
       alignment="CENTER" spacing="20"
       stylesheets="@../css/styles.css"
       styleClass="dashboard-container">
+
+    <!-- Top Bar with Logo and Profile Picture -->
+    <HBox alignment="CENTER_RIGHT" styleClass="top-bar">
+        <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+            <ImageView fx:id="logoImageView" 
+                       fitWidth="40" 
+                       fitHeight="40" 
+                       styleClass="logo-image"/>
+        </HBox>
+        <ImageView fx:id="profileImageView" 
+                   fitWidth="50" 
+                   fitHeight="50" 
+                   styleClass="profile-picture-small"
+                   onMouseClicked="#handleProfilePictureClick"/>
+    </HBox>
 
     <!-- Header -->
     <VBox alignment="CENTER" spacing="10" styleClass="dashboard-header">

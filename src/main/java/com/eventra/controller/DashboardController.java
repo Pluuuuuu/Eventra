@@ -7,6 +7,11 @@ import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class DashboardController {
     
@@ -14,9 +19,14 @@ public class DashboardController {
     @FXML private Text emailText;
     @FXML private Text roleText;
     @FXML private VBox roleSpecificContent;
+    @FXML private ImageView logoImageView;
+    @FXML private ImageView profileImageView;
     
     @FXML
     public void initialize() {
+        // Load logo
+        loadLogo();
+        
         // Get current user
         User currentUser = SessionManager.getCurrentUser();
         
@@ -28,6 +38,9 @@ public class DashboardController {
             // Map role ID to role name
             String roleName = getRoleName(currentUser.getRoleTypeId());
             roleText.setText("Role: " + roleName);
+            
+            // Load profile picture
+            loadProfilePicture(currentUser);
             
             // Show role-specific content
             showRoleSpecificContent(currentUser.getRoleTypeId());
@@ -183,5 +196,56 @@ public class DashboardController {
             default:
                 return "Unknown";
         }
+    }
+    
+    private void loadLogo() {
+        try {
+            // Load logo from resources
+            String logoPath = getClass().getResource("/images/logo.png.png").toExternalForm();
+            Image logoImage = new Image(logoPath);
+            logoImageView.setImage(logoImage);
+        } catch (Exception e) {
+            System.err.println("Error loading logo: " + e.getMessage());
+        }
+    }
+    
+    private void loadProfilePicture(User user) {
+        try {
+            if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().trim().isEmpty()) {
+                // Load user's profile picture
+                File profilePicFile = new File(user.getProfilePicUrl());
+                if (profilePicFile.exists()) {
+                    Image profileImage = new Image(new FileInputStream(profilePicFile));
+                    profileImageView.setImage(profileImage);
+                } else {
+                    loadDefaultProfilePicture();
+                }
+            } else {
+                loadDefaultProfilePicture();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("Profile picture file not found: " + e.getMessage());
+            loadDefaultProfilePicture();
+        } catch (Exception e) {
+            System.err.println("Error loading profile picture: " + e.getMessage());
+            loadDefaultProfilePicture();
+        }
+    }
+    
+    private void loadDefaultProfilePicture() {
+        try {
+            // Load default profile picture from resources
+            String defaultImagePath = getClass().getResource("/images/logo.png.png").toExternalForm();
+            Image defaultImage = new Image(defaultImagePath);
+            profileImageView.setImage(defaultImage);
+        } catch (Exception e) {
+            System.err.println("Error loading default profile picture: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void handleProfilePictureClick() {
+        // Navigate to user info page
+        ViewUtil.switchTo("UserInfo", profileImageView.getScene().getWindow());
     }
 } 

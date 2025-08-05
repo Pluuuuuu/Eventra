@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.eventra.controller.EditProfileController"
+      alignment="CENTER" spacing="20"
+      stylesheets="@../css/styles.css"
+      styleClass="edit-profile-container">
+
+    <!-- Header -->
+    <VBox alignment="CENTER" spacing="10" styleClass="edit-profile-header">
+        <Text text="Edit Profile" styleClass="edit-profile-title"/>
+    </VBox>
+
+    <!-- Edit Form -->
+    <VBox alignment="CENTER" spacing="20" styleClass="edit-form">
+        <VBox spacing="10" styleClass="form-field">
+            <Text text="Username:" styleClass="form-label"/>
+            <TextField fx:id="usernameField" styleClass="form-input"/>
+        </VBox>
+        
+        <VBox spacing="10" styleClass="form-field">
+            <Text text="First Name:" styleClass="form-label"/>
+            <TextField fx:id="firstNameField" styleClass="form-input"/>
+        </VBox>
+        
+        <VBox spacing="10" styleClass="form-field">
+            <Text text="Middle Name:" styleClass="form-label"/>
+            <TextField fx:id="middleNameField" styleClass="form-input"/>
+        </VBox>
+        
+        <VBox spacing="10" styleClass="form-field">
+            <Text text="Last Name:" styleClass="form-label"/>
+            <TextField fx:id="lastNameField" styleClass="form-input"/>
+        </VBox>
+        
+        <VBox spacing="10" styleClass="form-field">
+            <Text text="Email:" styleClass="form-label"/>
+            <TextField fx:id="emailField" styleClass="form-input"/>
+        </VBox>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <VBox alignment="CENTER" spacing="15" styleClass="action-buttons">
+        <Button text="💾 Save Changes"
+                onAction="#handleSaveChanges"
+                styleClass="save-button"/>
+        
+        <Button text="❌ Cancel"
+                onAction="#handleCancel"
+                styleClass="cancel-button"/>
+        
+        <Button text="⬅️ Back to Profile"
+                onAction="#handleBackToProfile"
+                styleClass="back-button"/>
+    </VBox>
+
+</VBox> 

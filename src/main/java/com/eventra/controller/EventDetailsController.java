@@ -136,7 +136,7 @@ public class EventDetailsController {
         ImageView avatar = new ImageView();
         avatar.setFitWidth(80);
         avatar.setFitHeight(80);
-        avatar.setStyle("-fx-background-color: #007bff; -fx-background-radius: 40;");
+        avatar.setStyle("-fx-background-color: #4b3a8c; -fx-background-radius: 40;");
         
         // Speaker name
         Text name = new Text(presenter.getName());

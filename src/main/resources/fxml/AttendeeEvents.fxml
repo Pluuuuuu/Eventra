@@ -68,8 +68,6 @@
                         <Text fx:id="selectedDateText" style="-fx-font-weight: bold; -fx-fill: #007bff;"/>
                         <Button text="Clear Date" styleClass="link-button" onAction="#handleClearDate"/>
                     </VBox>
-                    
-                    <Button text="View more" styleClass="link-button" onAction="#handleViewMore"/>
                 </VBox>
                 
                 <!-- Main Content Area -->

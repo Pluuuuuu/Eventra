@@ -124,8 +124,16 @@ public class MyScheduleController {
         
         // Action button
         Button viewButton = new Button("View Details");
-        viewButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;");
+        viewButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
         viewButton.setOnAction(e -> handleViewEvent(event));
+        
+        // Add hover effect
+        viewButton.setOnMouseEntered(e -> {
+            viewButton.setStyle("-fx-background-color: #9d7abf; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(157, 122, 191, 0.4), 6, 0, 0, 3); -fx-scale-x: 1.05; -fx-scale-y: 1.05;");
+        });
+        viewButton.setOnMouseExited(e -> {
+            viewButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
+        });
         
         item.getChildren().addAll(dateText, info, viewButton);
         return item;
@@ -144,8 +152,16 @@ public class MyScheduleController {
         emptyText.setWrappingWidth(400);
         
         Button browseButton = new Button("Browse Events");
-        browseButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;");
+        browseButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
         browseButton.setOnAction(e -> handleBrowseEvents());
+        
+        // Add hover effect
+        browseButton.setOnMouseEntered(e -> {
+            browseButton.setStyle("-fx-background-color: #9d7abf; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(157, 122, 191, 0.4), 6, 0, 0, 3); -fx-scale-x: 1.05; -fx-scale-y: 1.05;");
+        });
+        browseButton.setOnMouseExited(e -> {
+            browseButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
+        });
         
         emptyState.getChildren().addAll(emptyText, browseButton);
         registeredEventsContainer.getChildren().add(emptyState);
