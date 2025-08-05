@@ -320,14 +320,14 @@
 }
 
 .primary-button:hover {
-    -fx-background-color: #3d2f70;
-    -fx-effect: dropshadow(gaussian, rgba(75, 58, 140, 0.4), 8, 0, 0, 4);
+    -fx-background-color: #f2c33a;
+    -fx-effect: dropshadow(gaussian, rgba(242, 195, 58, 0.4), 8, 0, 0, 4);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
 
 .primary-button:pressed {
-    -fx-background-color: #2f2340;
+    -fx-background-color: #f2c33a;
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
@@ -488,9 +488,9 @@ Button:hover {
 }
 
 .nav-button:hover {
-    -fx-text-fill: #9d7abf;
-    -fx-background-color: rgba(157, 122, 191, 0.1);
-    -fx-effect: dropshadow(gaussian, rgba(75, 58, 140, 0.2), 4, 0, 0, 2);
+    -fx-text-fill: #f2c33a;
+    -fx-background-color: rgba(242, 195, 58, 0.1);
+    -fx-effect: dropshadow(gaussian, rgba(242, 195, 58, 0.2), 4, 0, 0, 2);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
