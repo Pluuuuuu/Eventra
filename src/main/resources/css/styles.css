@@ -538,15 +538,20 @@ Button:hover {
 }
 
 .profile-button {
-    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #4b3a8c;
     -fx-border-color: transparent;
+    -fx-background-color: transparent;
     -fx-cursor: hand;
-    -fx-padding: 4px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8px;
+    -fx-transition: all 0.3s ease;
 }
 
 .profile-button:hover {
-    -fx-background-color: rgba(75, 58, 140, 0.1);
-    -fx-background-radius: 20px;
+    -fx-text-fill: #9d7abf;
+    -fx-background-color: rgba(157, 122, 191, 0.1);
     -fx-effect: dropshadow(gaussian, rgba(75, 58, 140, 0.2), 4, 0, 0, 2);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;

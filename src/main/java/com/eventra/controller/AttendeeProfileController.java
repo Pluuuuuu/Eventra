@@ -20,8 +20,6 @@ public class AttendeeProfileController {
     
     @FXML private ImageView profileImage;
     @FXML private ImageView logoImage;
-    @FXML private ImageView searchIcon;
-    @FXML private ImageView profileIcon;
     @FXML private Text profileName;
     @FXML private Text profileEmail;
     @FXML private TextField usernameField;
@@ -47,28 +45,10 @@ public class AttendeeProfileController {
             String logoPath = getClass().getResource("/images/logo.elon.png").toExternalForm();
             Image logoImage = new Image(logoPath);
             this.logoImage.setImage(logoImage);
-            
-            // Load search icon (use logo as fallback if search-icon.png doesn't exist)
-            try {
-                String searchIconPath = getClass().getResource("/images/search-icon.png").toExternalForm();
-                Image searchImage = new Image(searchIconPath);
-                this.searchIcon.setImage(searchImage);
-            } catch (Exception e) {
-                // Use logo as fallback
-                this.searchIcon.setImage(logoImage);
-            }
-            
-            // Load profile icon (use logo as fallback if profile-icon.png doesn't exist)
-            try {
-                String profileIconPath = getClass().getResource("/images/profile-icon.png").toExternalForm();
-                Image profileImage = new Image(profileIconPath);
-                this.profileIcon.setImage(profileImage);
-            } catch (Exception e) {
-                // Use logo as fallback
-                this.profileIcon.setImage(logoImage);
-            }
         } catch (Exception e) {
-            System.err.println("Error loading images: " + e.getMessage());
+            System.err.println("Error loading logo: " + e.getMessage());
+            // Set logo to null if it can't be loaded
+            this.logoImage.setImage(null);
         }
     }
     
@@ -85,10 +65,22 @@ public class AttendeeProfileController {
             try {
                 profileImage.setImage(new Image(currentUser.getProfilePicUrl()));
             } catch (Exception e) {
-                profileImage.setImage(new Image(getClass().getResourceAsStream("/images/default-avatar.png")));
+                // Try to load default avatar, if not available, set to null
+                try {
+                    profileImage.setImage(new Image(getClass().getResourceAsStream("/images/default-avatar.png")));
+                } catch (Exception ex) {
+                    // If no default avatar, just leave the image view empty
+                    profileImage.setImage(null);
+                }
             }
         } else {
-            profileImage.setImage(new Image(getClass().getResourceAsStream("/images/default-avatar.png")));
+            // Try to load default avatar, if not available, set to null
+            try {
+                profileImage.setImage(new Image(getClass().getResourceAsStream("/images/default-avatar.png")));
+            } catch (Exception e) {
+                // If no default avatar, just leave the image view empty
+                profileImage.setImage(null);
+            }
         }
         
         // Load user information

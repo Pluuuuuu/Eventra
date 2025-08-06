@@ -35,7 +35,7 @@
                 <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
             </HBox>
             
-            <!-- Profile Icon -->
+            <!-- Profile Button -->
             <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
         </HBox>
     </top>

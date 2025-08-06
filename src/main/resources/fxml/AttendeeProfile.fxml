@@ -33,19 +33,11 @@
             <!-- Search Bar -->
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                 <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
-                <Button styleClass="search-button" onAction="#handleSearch">
-                    <graphic>
-                        <ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16"/>
-                    </graphic>
-                </Button>
+                <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
             </HBox>
             
             <!-- Profile Icon -->
-            <Button fx:id="profileButton" styleClass="profile-button" onAction="#handleProfile">
-                <graphic>
-                    <ImageView fx:id="profileIcon" fitHeight="32" fitWidth="32"/>
-                </graphic>
-            </Button>
+            <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
         </HBox>
     </top>
 
