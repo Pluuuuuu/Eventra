@@ -312,7 +312,7 @@
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-background-color: #4b3a8c;
-    -fx-text-fill: white;
+    -fx-text-fill: #f2c33a;
     -fx-padding: 12px 30px;
     -fx-background-radius: 25px;
     -fx-border-radius: 25px;
@@ -322,14 +322,16 @@
 }
 
 .primary-button:hover {
-    -fx-background-color: #3d2f70;
-    -fx-effect: dropshadow(gaussian, rgba(75, 58, 140, 0.4), 8, 0, 0, 4);
+    -fx-background-color: #f2c33a;
+    -fx-text-fill: #4b3a8c;
+    -fx-effect: dropshadow(gaussian, rgba(242, 195, 58, 0.4), 8, 0, 0, 4);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
 
 .primary-button:pressed {
-    -fx-background-color: #2f2340;
+    -fx-background-color: #f2c33a;
+    -fx-text-fill: #4b3a8c;
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
 }
@@ -477,7 +479,7 @@ Button:hover {
     -fx-border-width: 0 0 1 0;
 }
 
-.nav-button {
+.header .nav-button {
     -fx-font-size: 14px;
     -fx-font-weight: 600;
     -fx-text-fill: #4b3a8c;
@@ -489,15 +491,15 @@ Button:hover {
     -fx-transition: all 0.3s ease;
 }
 
-.nav-button:hover {
-    -fx-text-fill: #9d7abf;
-    -fx-background-color: rgba(157, 122, 191, 0.1);
-    -fx-effect: dropshadow(gaussian, rgba(75, 58, 140, 0.2), 4, 0, 0, 2);
+.header .nav-button:hover {
+    -fx-text-fill: #f2c33a;
+    -fx-background-color: rgba(242, 195, 58, 0.1);
+    -fx-effect: dropshadow(gaussian, rgba(242, 195, 58, 0.2), 4, 0, 0, 2);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
 
-.nav-button:selected {
+.header .nav-button:selected {
     -fx-text-fill: #f2c33a;
     -fx-background-color: rgba(242, 195, 58, 0.15);
     -fx-font-weight: bold;
@@ -631,7 +633,7 @@ Button:hover {
     -fx-spacing: 5;
 }
 
-.nav-button {
+.sidebar-nav .nav-button {
     -fx-background-color: transparent;
     -fx-text-fill: rgba(255, 255, 255, 0.9);
     -fx-font-size: 14px;
@@ -643,18 +645,18 @@ Button:hover {
     -fx-cursor: hand;
 }
 
-.nav-button:hover {
+.sidebar-nav .nav-button:hover {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-text-fill: white;
 }
 
-.nav-button-active {
+.sidebar-nav .nav-button-active {
     -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-text-fill: white;
     -fx-font-weight: 600;
 }
 
-.nav-button-active:hover {
+.sidebar-nav .nav-button-active:hover {
     -fx-background-color: rgba(255, 255, 255, 0.25);
 }
 
