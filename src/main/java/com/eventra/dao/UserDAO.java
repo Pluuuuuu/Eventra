@@ -101,6 +101,8 @@ public class UserDAO {
             
         } catch (SQLException e) {
             System.err.println("Error creating user: " + e.getMessage());
+            System.err.println("SQL State: " + e.getSQLState());
+            System.err.println("Error Code: " + e.getErrorCode());
             e.printStackTrace();
         }
         

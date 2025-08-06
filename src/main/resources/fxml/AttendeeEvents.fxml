@@ -106,7 +106,7 @@
     <!-- Footer -->
     <bottom>
         <HBox styleClass="footer" alignment="CENTER" spacing="20">
-            <Text text="© 2023 Eventify Inc.. All rights reserved." styleClass="footer-text"/>
+                            <Text text="© 2025 Eventra Inc.. All rights reserved." styleClass="footer-text"/>
             <HBox spacing="15" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                 <Text text="LinkedIn" styleClass="footer-link"/>
                 <Text text="Instagram" styleClass="footer-link"/>

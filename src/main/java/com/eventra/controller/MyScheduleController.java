@@ -135,7 +135,11 @@ public class MyScheduleController {
             viewButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
         });
         
-        item.getChildren().addAll(dateText, info, viewButton);
+        // Create a spacer to push the button to the right
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        
+        item.getChildren().addAll(dateText, info, spacer, viewButton);
         return item;
     }
     

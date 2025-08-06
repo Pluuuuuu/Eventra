@@ -28,6 +28,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
 
         <!-- HikariCP connection pool -->
         <dependency>
@@ -83,7 +88,7 @@
                     <mainClass>com.eventra.App</mainClass>
                     <options>
                         <option>--add-modules</option>
-                        <option>javafx.controls,javafx.fxml</option>
+                        <option>javafx.controls,javafx.fxml,javafx.swing</option>
                         <option>--add-opens</option>
                         <option>javafx.graphics/javafx.scene=ALL-UNNAMED</option>
                     </options>
@@ -115,7 +120,7 @@
                 <version>3.0.0</version>
                 <configuration>
                     <argLine>
-                        --add-modules javafx.controls,javafx.fxml
+                        --add-modules javafx.controls,javafx.fxml,javafx.swing
                         --add-opens javafx.graphics/javafx.scene=ALL-UNNAMED
                     </argLine>
                 </configuration>

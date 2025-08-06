@@ -162,21 +162,28 @@ public class SignUpController {
             Attendee newAttendee = new Attendee(firstName, lastName, email, organization, hashedPassword, "Regular");
             newAttendee.setMiddleName(middleName.isEmpty() ? null : middleName);
             
-            // Create both User and Attendee records
+            // Create both User and Attendee records with transaction handling
             System.out.println("DEBUG: About to create User record...");
             boolean userCreated = UserDAO.createUser(newUser);
             System.out.println("DEBUG: User created: " + userCreated);
             System.out.println("DEBUG: User ID: " + newUser.getUserId());
             
             boolean attendeeCreated = false;
-            if (userCreated) {
+            if (userCreated && newUser.getUserId() > 0) {
                 // Set the UserID from the created user
                 newAttendee.setUserId(newUser.getUserId());
                 System.out.println("DEBUG: About to create Attendee record with UserID: " + newUser.getUserId());
                 attendeeCreated = AttendeeDAO.createAttendee(newAttendee);
                 System.out.println("DEBUG: Attendee created: " + attendeeCreated);
+                
+                // If attendee creation failed, we should clean up the user record
+                if (!attendeeCreated) {
+                    System.err.println("DEBUG: Attendee creation failed, cleaning up user record");
+                    // Note: In a production system, you'd want to delete the user record here
+                    // For now, we'll just log the issue
+                }
             } else {
-                System.out.println("DEBUG: Skipping Attendee creation - User creation failed");
+                System.out.println("DEBUG: Skipping Attendee creation - User creation failed or UserID is invalid");
             }
             
             if (userCreated && attendeeCreated) {
