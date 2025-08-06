@@ -239,6 +239,37 @@ public class EventDAO {
     }
     
     /**
+     * Debug method to check what events exist for a specific user ID
+     */
+    public static void debugCheckEventsForUser(int userId) {
+        String sql = "SELECT EventID, Title, CreatedByUserID, StatusTypeID FROM EventM WHERE CreatedByUserID = ?";
+        
+        try (Connection conn = Db.get();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            
+            System.out.println("🔍 Debug: Events for user ID " + userId + ":");
+            int count = 0;
+            while (rs.next()) {
+                count++;
+                int eventId = rs.getInt("EventID");
+                String title = rs.getString("Title");
+                int createdBy = rs.getInt("CreatedByUserID");
+                int status = rs.getInt("StatusTypeID");
+                System.out.println("  - Event ID: " + eventId + ", Title: " + title + 
+                                 ", CreatedBy: " + createdBy + ", Status: " + status);
+            }
+            System.out.println("📊 Found " + count + " events for user ID " + userId);
+            
+        } catch (SQLException e) {
+            System.err.println("❌ Error checking events for user " + userId + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
      * Get all events (for SuperAdmin or system-wide view)
      */
     public static List<EventItem> getAllEventsForAdmin() {

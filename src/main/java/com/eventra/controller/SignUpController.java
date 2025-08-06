@@ -93,6 +93,9 @@ public class SignUpController {
     private void handleSignUp() {
         System.out.println("=== DEBUG: handleSignUp method called ===");
         
+        // Clear any existing error messages when starting signup process
+        hideError();
+        
         String firstName = firstNameField.getText() != null ? firstNameField.getText().trim() : "";
         String middleName = middleNameField.getText() != null ? middleNameField.getText().trim() : "";
         String lastName = lastNameField.getText() != null ? lastNameField.getText().trim() : "";
@@ -189,20 +192,28 @@ public class SignUpController {
             if (userCreated && attendeeCreated) {
                 System.out.println("DEBUG: Both records created successfully! Navigating to login...");
                 // Registration successful
-                showSuccess("Account created successfully! Please sign in.");
                 
-                // Clear form
-                clearForm();
+                // Clear any existing error messages first
+                hideError();
                 
-                // Navigate to login immediately after showing success message
+                // Use Platform.runLater to ensure UI updates happen on the JavaFX thread
                 javafx.application.Platform.runLater(() -> {
-                    try {
-                        Thread.sleep(1500); // Short delay to show success message
-                        ViewUtil.switchTo("Login", firstNameField.getScene().getWindow());
-                        System.out.println("DEBUG: Successfully navigated to Login page");
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
+                    // Show success message
+                    showSuccess("Account created successfully! Please sign in.");
+                    
+                    // Clear form
+                    clearForm();
+                    
+                    // Navigate to login after a short delay
+                    javafx.application.Platform.runLater(() -> {
+                        try {
+                            Thread.sleep(1500); // Short delay to show success message
+                            ViewUtil.switchTo("Login", firstNameField.getScene().getWindow());
+                            System.out.println("DEBUG: Successfully navigated to Login page");
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    });
                 });
                 
             } else {
@@ -324,6 +335,7 @@ public class SignUpController {
     }
     
     private void showError(String message) {
+        System.out.println("DEBUG: Showing error message: " + message);
         errorLabel.setText(message);
         errorLabel.setStyle("-fx-text-fill: #d32f2f;");
         errorLabel.setVisible(true);
@@ -331,6 +343,7 @@ public class SignUpController {
     }
     
     private void showSuccess(String message) {
+        System.out.println("DEBUG: Showing success message: " + message);
         errorLabel.setText(message);
         errorLabel.setStyle("-fx-text-fill: #388e3c;");
         errorLabel.setVisible(true);
@@ -338,6 +351,7 @@ public class SignUpController {
     }
     
     private void hideError() {
+        System.out.println("DEBUG: Hiding error message");
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
     }

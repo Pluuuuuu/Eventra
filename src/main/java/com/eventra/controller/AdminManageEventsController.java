@@ -122,11 +122,21 @@ public class AdminManageEventsController {
             // Get current admin user
             User currentUser = SessionManager.getCurrentUser();
             if (currentUser != null) {
+                System.out.println("🔍 Loading events for admin user ID: " + currentUser.getUserId() + 
+                                 " (Email: " + currentUser.getEmail() + ")");
+                
                 // Load events created by this admin from database
                 List<EventItem> events = EventDAO.getEventsForAdmin(currentUser.getUserId());
                 eventsList.addAll(events);
                 
                 System.out.println("✅ Loaded " + events.size() + " events for admin " + currentUser.getEmail());
+                
+                // Debug: Check what events exist in the database
+                debugCheckAllEvents();
+                
+                // Debug: Check events for this specific user
+                EventDAO.debugCheckEventsForUser(currentUser.getUserId());
+                
             } else {
                 System.err.println("❌ No current user found, cannot load events");
             }
@@ -235,5 +245,27 @@ public class AdminManageEventsController {
     private void handleBackToDashboard() {
         System.out.println("Back to Dashboard clicked");
         ViewUtil.switchToRoleDashboard(eventsTable.getScene().getWindow());
+    }
+    
+    /**
+     * Debug method to check all events in the database
+     */
+    private void debugCheckAllEvents() {
+        try {
+            System.out.println("🔍 Debug: Checking all events in database...");
+            
+            // Get all events for debugging
+            List<EventItem> allEvents = EventDAO.getAllEventsForAdmin();
+            System.out.println("📊 Total events in database: " + allEvents.size());
+            
+            for (EventItem event : allEvents) {
+                System.out.println("  - Event: " + event.getTitle() + " (ID: " + event.getEventId() + 
+                                 ", Status: " + event.getStatus() + ")");
+            }
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error in debug check: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

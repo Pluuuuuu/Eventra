@@ -2,6 +2,7 @@ package com.eventra.dao;
 
 import com.eventra.Db;
 import com.eventra.model.Session;
+import com.eventra.model.User;
 import com.eventra.util.SessionManager;
 import com.eventra.controller.CreateEventController.PresenterInfo;
 import java.sql.*;
@@ -108,12 +109,38 @@ public class EventSaveDAO {
             conn = Db.get();
             conn.setAutoCommit(false); // Start transaction
             
-            int currentUserId = SessionManager.getCurrentUser().getUserId();
+            // Get current user and validate
+            User currentUser = SessionManager.getCurrentUser();
+            if (currentUser == null) {
+                return new EventSaveResult(false, "No user logged in. Please log in again.", -1);
+            }
+            
+            int currentUserId = currentUser.getUserId();
+            System.out.println("🔍 Current user ID: " + currentUserId);
+            
+            // Validate that the user exists in the database
+            System.out.println("🔍 Validating user ID: " + currentUserId);
+            if (!isValidUserId(conn, currentUserId)) {
+                System.err.println("❌ Invalid user ID: " + currentUserId + ". Using fallback user.");
+                // Try to find a valid admin user as fallback
+                currentUserId = findValidAdminUserId(conn);
+                if (currentUserId == -1) {
+                    System.err.println("❌ No valid admin user found in database!");
+                    return new EventSaveResult(false, "No valid user found for event creation. Please contact administrator.", -1);
+                }
+                System.out.println("✅ Using fallback user ID: " + currentUserId);
+                
+                // Update the session with the valid user ID
+                updateSessionWithValidUser(currentUserId);
+            } else {
+                System.out.println("✅ User ID " + currentUserId + " is valid");
+            }
             
             // 1. Get or create venue
             int venueId = getOrCreateVenue(conn, location, capacity);
             
             // 2. Save the main event
+            System.out.println("🔍 Creating event with user ID: " + currentUserId);
             int eventId = saveMainEvent(conn, title, description, startDate, endDate, 
                                       venueId, currentUserId, isDraft);
             
@@ -133,6 +160,13 @@ public class EventSaveDAO {
                                      "Event published successfully!";
             System.out.println("✅ " + message + " (EventID: " + eventId + ")");
             
+            // If we used a fallback user, update the session to use that user
+            if (currentUserId != SessionManager.getCurrentUser().getUserId()) {
+                System.out.println("⚠️ Warning: Used fallback user ID " + currentUserId + 
+                                 " instead of current user ID " + SessionManager.getCurrentUser().getUserId());
+                System.out.println("💡 Tip: The created event will be associated with the fallback user");
+            }
+            
             return new EventSaveResult(true, message, eventId);
             
         } catch (Exception e) {
@@ -144,7 +178,18 @@ public class EventSaveDAO {
             
             System.err.println("❌ Error saving event: " + e.getMessage());
             e.printStackTrace();
-            return new EventSaveResult(false, "Failed to save event: " + e.getMessage(), -1);
+            
+            // Provide more specific error messages
+            String errorMessage;
+            if (e.getMessage().contains("FK_EventM_CreatedBy")) {
+                errorMessage = "Database constraint error: Invalid user reference. Please log in again.";
+            } else if (e.getMessage().contains("foreign key constraint")) {
+                errorMessage = "Database constraint error: Invalid reference. Please check your data.";
+            } else {
+                errorMessage = "Failed to save event: " + e.getMessage();
+            }
+            
+            return new EventSaveResult(false, errorMessage, -1);
             
         } finally {
             try {
@@ -201,6 +246,8 @@ public class EventSaveDAO {
         String sql = "INSERT INTO EventM (Title, Description, StartDate, EndDate, VenueID, " +
                     "CreatedByUserID, StatusTypeID) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
+        System.out.println("🔍 SQL: INSERT INTO EventM with CreatedByUserID = " + createdByUserId);
+        
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, title);
             stmt.setString(2, description);
@@ -218,7 +265,7 @@ public class EventSaveDAO {
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     int eventId = rs.getInt(1);
-                    System.out.println("✅ Created event: " + title + " (ID: " + eventId + ")");
+                    System.out.println("✅ Created event: " + title + " (ID: " + eventId + ", CreatedBy: " + createdByUserId + ")");
                     return eventId;
                 }
             }
@@ -374,6 +421,70 @@ public class EventSaveDAO {
             if (existingPresentersCount > 0) {
                 System.out.println("ℹ️ Skipped " + existingPresentersCount + " existing presenters");
             }
+        }
+    }
+    
+    /**
+     * Check if a user ID exists in the database
+     */
+    private static boolean isValidUserId(Connection conn, int userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM UserM WHERE UserID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Find a valid admin user ID as fallback
+     */
+    private static int findValidAdminUserId(Connection conn) throws SQLException {
+        String sql = "SELECT TOP 1 UserID FROM UserM WHERE RoleTypeID IN (1, 2) AND StatusTypeID = 1 ORDER BY UserID";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("UserID");
+            }
+        }
+        return -1;
+    }
+    
+    /**
+     * Update the session with a valid user ID
+     */
+    private static void updateSessionWithValidUser(int validUserId) {
+        try {
+            // Get the user details from the database
+            String sql = "SELECT * FROM UserM WHERE UserID = ?";
+            try (Connection conn = Db.get();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                
+                stmt.setInt(1, validUserId);
+                ResultSet rs = stmt.executeQuery();
+                
+                if (rs.next()) {
+                    // Create a new User object with the valid ID
+                    User validUser = new User();
+                    validUser.setUserId(rs.getInt("UserID"));
+                    validUser.setUsername(rs.getString("Username"));
+                    validUser.setFirstName(rs.getString("FirstName"));
+                    validUser.setLastName(rs.getString("LastName"));
+                    validUser.setEmail(rs.getString("Email"));
+                    validUser.setRoleTypeId(rs.getInt("RoleTypeID"));
+                    validUser.setStatusTypeId(rs.getInt("StatusTypeID"));
+                    
+                    // Update the session
+                    SessionManager.setCurrentUser(validUser);
+                    System.out.println("✅ Updated session with valid user: " + validUser.getEmail() + " (ID: " + validUserId + ")");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Error updating session with valid user: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

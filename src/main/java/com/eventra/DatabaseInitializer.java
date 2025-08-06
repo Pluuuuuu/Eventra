@@ -32,6 +32,9 @@ public class DatabaseInitializer {
             // Clean up any duplicate presenters
             com.eventra.dao.EventSaveDAO.cleanupDuplicatePresenters();
             
+            // Validate database structure
+            com.eventra.dao.DatabaseValidator.validateDatabase();
+            
         } catch (Exception e) {
             System.err.println("Error initializing database: " + e.getMessage());
             e.printStackTrace();
