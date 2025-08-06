@@ -122,12 +122,16 @@ public class MyScheduleController {
         
         info.getChildren().addAll(title, time, location);
         
-        // Action button
+        // Action buttons container
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.setAlignment(Pos.CENTER_RIGHT);
+        
+        // View Details button
         Button viewButton = new Button("View Details");
         viewButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
         viewButton.setOnAction(e -> handleViewEvent(event));
         
-        // Add hover effect
+        // Add hover effect for View Details button
         viewButton.setOnMouseEntered(e -> {
             viewButton.setStyle("-fx-background-color: #9d7abf; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(157, 122, 191, 0.4), 6, 0, 0, 3); -fx-scale-x: 1.05; -fx-scale-y: 1.05;");
         });
@@ -135,11 +139,26 @@ public class MyScheduleController {
             viewButton.setStyle("-fx-background-color: #4b3a8c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
         });
         
-        // Create a spacer to push the button to the right
+        // Unenroll button
+        Button unenrollButton = new Button("Unenroll");
+        unenrollButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
+        unenrollButton.setOnAction(e -> handleUnenrollEvent(event));
+        
+        // Add hover effect for Unenroll button
+        unenrollButton.setOnMouseEntered(e -> {
+            unenrollButton.setStyle("-fx-background-color: #c82333; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.4), 6, 0, 0, 3); -fx-scale-x: 1.05; -fx-scale-y: 1.05;");
+        });
+        unenrollButton.setOnMouseExited(e -> {
+            unenrollButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4; -fx-transition: all 0.3s ease; -fx-cursor: hand;");
+        });
+        
+        buttonContainer.getChildren().addAll(unenrollButton, viewButton);
+        
+        // Create a spacer to push the buttons to the right
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         
-        item.getChildren().addAll(dateText, info, spacer, viewButton);
+        item.getChildren().addAll(dateText, info, spacer, buttonContainer);
         return item;
     }
     
@@ -186,6 +205,57 @@ public class MyScheduleController {
             alert.setContentText("Please try again later.");
             alert.showAndWait();
         }
+    }
+    
+    private void handleUnenrollEvent(Event event) {
+        try {
+            int currentUserId = SessionManager.getCurrentUserId();
+            if (currentUserId == -1) {
+                showError("Please log in to unenroll from events.");
+                return;
+            }
+            
+            // Show confirmation dialog
+            Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmDialog.setTitle("Confirm Unenrollment");
+            confirmDialog.setHeaderText("Unenroll from Event");
+            confirmDialog.setContentText("Are you sure you want to unenroll from '" + event.getTitle() + "'? This action cannot be undone.");
+            
+            ButtonType result = confirmDialog.showAndWait().orElse(ButtonType.CANCEL);
+            
+            if (result == ButtonType.OK) {
+                // Perform unenrollment
+                boolean success = registrationDAO.unregisterUserFromEvent(currentUserId, event.getEventId());
+                
+                if (success) {
+                    showSuccess("Successfully unenrolled from '" + event.getTitle() + "'");
+                    // Refresh the schedule to reflect the change
+                    refreshSchedule();
+                } else {
+                    showError("Failed to unenroll from event. Please try again.");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error unenrolling from event: " + e.getMessage());
+            e.printStackTrace();
+            showError("An error occurred while trying to unenroll from the event. Please try again.");
+        }
+    }
+    
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText("Unenrollment Successful");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Unenrollment Failed");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
     
     @FXML

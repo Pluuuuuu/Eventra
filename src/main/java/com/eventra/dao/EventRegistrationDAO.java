@@ -207,15 +207,23 @@ public class EventRegistrationDAO {
     }
     
     public boolean unregisterUserFromEvent(int userId, int eventId) {
+        // Get attendee ID for this user
+        int attendeeId = getOrCreateAttendeeForUser(userId);
+        if (attendeeId == -1) {
+            System.err.println("Could not get attendee ID for user: " + userId);
+            return false;
+        }
+        
         String sql = "UPDATE Registration SET RegistrationStatusTypeID = 3 WHERE AttendeeID = ? AND EventID = ?";
         
         try (Connection conn = Db.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, userId);
+            stmt.setInt(1, attendeeId);
             stmt.setInt(2, eventId);
             
             int rowsAffected = stmt.executeUpdate();
+            System.out.println("Unregistered user " + userId + " (attendee " + attendeeId + ") from event " + eventId + " (rows affected: " + rowsAffected + ")");
             return rowsAffected > 0;
         } catch (SQLException e) {
             System.err.println("Error unregistering user from event: " + e.getMessage());
