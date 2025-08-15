@@ -1,18 +1,100 @@
+/**
+ * Event Data Access Object (EventDAO.java)
+ * 
+ * This class handles ALL database operations related to events in the Eventra system.
+ * Think of it as the "database manager" for events - it's responsible for creating,
+ * reading, updating, and deleting event information in the database.
+ * 
+ * WHAT THIS CLASS DOES:
+ * - Retrieves events for attendees to browse and register
+ * - Manages event creation and updates by organizers
+ * - Handles event status changes (draft, published, cancelled)
+ * - Provides event search and filtering capabilities
+ * - Manages event capacity and attendance tracking
+ * - Handles venue information and event relationships
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - DAO Pattern: Data Access Object - separates database logic from business logic
+ * - Prepared Statements: Prevents SQL injection attacks
+ * - Connection Pooling: Uses the Db class to get database connections
+ * - SQL JOINs: Combines data from multiple tables (events + venues)
+ * - Result Set Mapping: Converts database results to Java objects
+ * - Error Handling: Gracefully handles database errors with logging
+ * 
+ * DATABASE OPERATIONS:
+ * - SELECT: Retrieve events with various filters and sorting
+ * - INSERT: Create new events
+ * - UPDATE: Modify existing event information
+ * - DELETE: Remove events (if needed)
+ * 
+ * EVENT CATEGORIES HANDLED:
+ * - All Events: Complete list of available events
+ * - Coming Soon: Future events that are published
+ * - Event Details: Complete information for a specific event
+ * - User Events: Events created by a specific organizer
+ * - Search Results: Events matching specific criteria
+ */
 package com.eventra.dao;
 
-import com.eventra.Db;
-import com.eventra.model.Event;
-import com.eventra.controller.CreateEventController.PresenterInfo;
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.time.format.DateTimeFormatter;
+// These imports give us access to the tools we need:
+import com.eventra.Db;                    // Database connection manager (our custom class)
+import com.eventra.model.Event;            // Event data model class
+import com.eventra.controller.CreateEventController.PresenterInfo;  // Presenter information for events
 
+// Java standard library imports for database and utility operations:
+import java.sql.*;                         // Database operations (Connection, PreparedStatement, ResultSet, etc.)
+import java.time.LocalDateTime;            // Modern date/time handling
+import java.util.ArrayList;                // Collection for storing multiple events
+import java.util.List;                     // Interface for collections
+import java.time.format.DateTimeFormatter; // For formatting dates and times for display
+
+/**
+ * EventDAO class - Data Access Object for Event Management
+ * 
+ * This class implements the DAO (Data Access Object) pattern, which is a design pattern
+ * that separates database access logic from business logic. This makes the code:
+ * - More organized and easier to maintain
+ * - Easier to test (you can test database logic separately)
+ * - More flexible (you can change how data is stored without changing business logic)
+ * 
+ * The class is organized into logical sections:
+ * - Attendee-focused methods (browsing and viewing events)
+ * - Admin-focused methods (creating and managing events)
+ * - Utility methods (data conversion and helper functions)
+ */
 public class EventDAO {
     
     // ===== ATTENDEE-FOCUSED METHODS (from tfkk branch) =====
+    // These methods are designed for regular users (attendees) to browse and view events
     
+    /**
+     * getAllEvents() method - Retrieves all published events for attendees to browse
+     * 
+     * This method is used on the main events page where attendees can see all available
+     * events they can register for. It only shows events that are published and active.
+     * 
+     * HOW IT WORKS:
+     * 1. Executes a SQL query that joins EventM and Venue tables
+     * 2. Filters for only active events (StatusTypeID = 1)
+     * 3. Orders events by start date (earliest first)
+     * 4. Includes venue information (name, address, capacity)
+     * 5. Converts database results to Event objects
+     * 6. Provides detailed logging for debugging
+     * 
+     * SQL QUERY EXPLANATION:
+     * - SELECT e.*: Gets all fields from the EventM table
+     * - LEFT JOIN Venue v: Includes venue information if available
+     * - WHERE e.StatusTypeID = 1: Only shows active/published events
+     * - ORDER BY e.StartDate ASC: Shows events in chronological order
+     * 
+     * SECURITY FEATURES:
+     * - Uses prepared statements to prevent SQL injection
+     * - Only shows events that are meant to be public
+     * - Filters out draft, cancelled, or private events
+     * 
+     * @return List<Event> - List of all available events for attendees
+     * @throws SQLException - If there's a database error during retrieval
+     */
     public List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
         String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
@@ -45,6 +127,39 @@ public class EventDAO {
         return events;
     }
     
+    /**
+     * getComingSoonEvents() method - Retrieves future events that are published and coming soon
+     * 
+     * This method is used to show attendees what events are coming up in the future.
+     * It's perfect for the "Coming Soon" or "Upcoming Events" section of the application.
+     * 
+     * HOW IT WORKS:
+     * 1. Executes a SQL query similar to getAllEvents but with additional time filtering
+     * 2. Filters for active events (StatusTypeID = 1)
+     * 3. Filters for future events (StartDate > current time)
+     * 4. Orders events by start date (earliest first)
+     * 5. Includes venue information for complete event details
+     * 
+     * SQL QUERY EXPLANATION:
+     * - SELECT e.*: Gets all fields from the EventM table
+     * - LEFT JOIN Venue v: Includes venue information if available
+     * - WHERE e.StatusTypeID = 1: Only shows active/published events
+     * - AND e.StartDate > GETUTCDATE(): Only shows events that haven't started yet
+     * - ORDER BY e.StartDate ASC: Shows events in chronological order
+     * 
+     * BUSINESS LOGIC:
+     * - "Coming Soon" means the event is published AND in the future
+     * - Past events are automatically excluded
+     * - Events are sorted so users see the next upcoming event first
+     * 
+     * USE CASES:
+     * - Homepage "Coming Soon" section
+     * - Event discovery for new users
+     * - Planning future attendance
+     * 
+     * @return List<Event> - List of upcoming events that are published
+     * @throws SQLException - If there's a database error during retrieval
+     */
     public List<Event> getComingSoonEvents() {
         List<Event> events = new ArrayList<>();
         String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
@@ -77,6 +192,41 @@ public class EventDAO {
         return events;
     }
     
+    /**
+     * getEventById() method - Retrieves detailed information for a specific event
+     * 
+     * This method is used when a user clicks on an event to see its full details.
+     * It's perfect for the event details page where users can see everything about
+     * an event before deciding to register.
+     * 
+     * HOW IT WORKS:
+     * 1. Takes an event ID as a parameter (unique identifier for the event)
+     * 2. Executes a SQL query to find the specific event
+     * 3. Includes venue information through a JOIN with the Venue table
+     * 4. Returns the complete Event object with all details
+     * 5. Returns null if no event is found with that ID
+     * 
+     * SQL QUERY EXPLANATION:
+     * - SELECT e.*: Gets all fields from the EventM table
+     * - LEFT JOIN Venue v: Includes venue information if available
+     * - WHERE e.EventID = ?: Finds the specific event by its unique ID
+     * - The ? is a placeholder that gets replaced with the actual eventId
+     * 
+     * SECURITY FEATURES:
+     * - Uses prepared statements to prevent SQL injection
+     * - Parameterized queries ensure safe data handling
+     * - No status filtering - can retrieve any event by ID (useful for admins)
+     * 
+     * USE CASES:
+     * - Event details page when user clicks on an event
+     * - Admin event management (viewing any event)
+     * - Event editing and updating
+     * - Registration confirmation
+     * 
+     * @param eventId - The unique identifier of the event to retrieve
+     * @return Event - Complete event information, or null if not found
+     * @throws SQLException - If there's a database error during retrieval
+     */
     public Event getEventById(int eventId) {
         String sql = "SELECT e.*, v.Name as VenueName, v.Address as VenueAddress, v.Capacity as VenueCapacity " +
                     "FROM EventM e " +
