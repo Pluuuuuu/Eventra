@@ -1,41 +1,188 @@
+/**
+ * Attendee Profile Controller (AttendeeProfileController.java)
+ * 
+ * This class controls the ATTENDEE PROFILE SCREEN of the Eventra application. Think of it as the
+ * "personal profile page" where attendees can view and edit their account information,
+ * see their profile picture, and manage their personal details.
+ * 
+ * WHAT THIS CLASS DOES:
+ * - Displays the attendee's profile picture and personal information
+ * - Shows account details like username, email, and member since date
+ * - Allows editing of profile information with save functionality
+ * - Loads and displays the Eventra logo and branding
+ * - Tracks changes to profile fields for unsaved changes detection
+ * - Provides search functionality within the profile
+ * - Shows statistics like events attended and account activity
+ * - Handles profile image loading with fallback to default avatar
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - JavaFX Controller: Connects the FXML UI design with Java code
+ * - FXML Injection: @FXML annotation links UI elements to Java variables
+ * - Profile Management: Personal information display and editing
+ * - Image Loading: Profile pictures and logo with error handling
+ * - Change Tracking: Detects when user has made unsaved changes
+ * - Session Management: Gets current user information for personalization
+ * - Error Handling: Gracefully handles missing images and data
+ * - Date Formatting: Displays dates in user-friendly formats
+ * 
+ * UI COMPONENTS MANAGED:
+ * - Profile picture display with fallback to default avatar
+ * - Logo image display for branding
+ * - Profile information display (name, email, username)
+ * - Editable fields for profile updates
+ * - Save button for applying changes
+ * - Member since date and statistics display
+ * - Search field for profile content
+ * 
+ * PROFILE FEATURES:
+ * - Personal information management
+ * - Profile picture handling
+ * - Account statistics display
+ * - Change tracking and save functionality
+ * - Professional branding integration
+ * - User-friendly date formatting
+ * 
+ * COMPLEXITY LEVEL:
+ * This controller demonstrates several important concepts:
+ * - Image resource management with fallbacks
+ * - Form change detection and validation
+ * - User session management and personalization
+ * - Professional UI design with branding
+ * - Robust error handling for missing resources
+ */
 package com.eventra.controller;
 
-import com.eventra.dao.UserDAO;
-import com.eventra.model.User;
-import com.eventra.util.SessionManager;
-import com.eventra.util.ViewUtil;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import java.time.format.DateTimeFormatter;
+// These imports give us access to the tools we need:
+import com.eventra.dao.UserDAO;                       // For updating user profile information in database
+import com.eventra.model.User;                          // User data model for current attendee
 
+// Utility classes for application functionality:
+import com.eventra.util.SessionManager;                 // For managing user sessions and getting current user
+import com.eventra.util.ViewUtil;                       // For navigating between screens
+
+// JavaFX imports for the user interface:
+import javafx.fxml.FXML;                                // Links this class to FXML UI elements
+import javafx.scene.control.*;                          // UI controls (buttons, text fields, labels, etc.)
+import javafx.scene.image.Image;                        // For loading and displaying image files
+import javafx.scene.image.ImageView;                    // For displaying images in the UI
+import javafx.scene.layout.*;                           // Layout containers (VBox, HBox, etc.)
+import javafx.scene.text.Text;                          // For displaying text content
+import javafx.scene.text.Font;                          // For customizing text appearance
+import javafx.scene.text.FontWeight;                    // For making text bold, normal, etc.
+
+// JavaFX geometry and positioning:
+import javafx.geometry.Insets;                          // For adding spacing around UI elements
+import javafx.geometry.Pos;                             // For aligning content (left, center, right)
+
+// Java time classes for date formatting:
+import java.time.format.DateTimeFormatter;              // For formatting dates in user-friendly ways
+
+/**
+ * AttendeeProfileController class - Controls the Attendee Profile Screen
+ * 
+ * This class implements the MVC (Model-View-Controller) pattern:
+ * - MODEL: User model, DAO classes for database operations
+ * - VIEW: FXML file defines the visual layout of the profile page
+ * - CONTROLLER: This class connects the model and view, handles all profile logic
+ * 
+ * The @FXML annotation tells JavaFX that this class should be connected
+ * to the AttendeeProfile.fxml file, allowing us to control the UI elements.
+ * 
+ * PERSONALIZED EXPERIENCE:
+ * This controller creates a personalized profile experience for each attendee,
+ * demonstrating how to handle user-specific data, profile management, and
+ * professional UI design with proper error handling.
+ */
 public class AttendeeProfileController {
     
-    @FXML private ImageView profileImage;
-    @FXML private ImageView logoImage;
-    @FXML private Text profileName;
-    @FXML private Text profileEmail;
-    @FXML private TextField usernameField;
-    @FXML private TextField emailField;
-    @FXML private Button saveButton;
-    @FXML private Text memberSinceText;
-    @FXML private Text eventsAttendedText;
-    @FXML private TextField searchField;
+    /**
+     * FXML INJECTED FIELDS - These are automatically connected to UI elements
+     * 
+     * The @FXML annotation tells JavaFX to automatically connect these Java variables
+     * to the corresponding elements in the AttendeeProfile.fxml file. This is called "dependency injection"
+     * and it's how we control the UI from our Java code.
+     * 
+     * Think of it like having remote controls for each UI element:
+     * - You can read what's displayed (getText())
+     * - You can change what's displayed (setText())
+     * - You can show/hide elements (setVisible())
+     * - You can respond to user actions (setOnAction())
+     */
     
-    private User currentUser;
-    private boolean hasChanges = false;
+    // IMAGE COMPONENTS - Display profile picture and branding
+    @FXML private ImageView profileImage;              // Shows the attendee's profile picture
+    @FXML private ImageView logoImage;                  // Displays the Eventra logo for branding
     
+    // PROFILE INFORMATION DISPLAY - Show current user details
+    @FXML private Text profileName;                     // Displays the attendee's full name
+    @FXML private Text profileEmail;                    // Shows the attendee's email address
+    
+    // EDITABLE PROFILE FIELDS - Allow user to update their information
+    @FXML private TextField usernameField;              // Editable field for username
+    @FXML private TextField emailField;                  // Editable field for email address
+    @FXML private Button saveButton;                    // Button to save profile changes
+    
+    // ACCOUNT STATISTICS - Show user activity and membership information
+    @FXML private Text memberSinceText;                 // Shows when the user joined (e.g., "January 2024")
+    @FXML private Text eventsAttendedText;              // Shows how many events the user has attended
+    
+    // SEARCH FUNCTIONALITY - Allow searching within profile content
+    @FXML private TextField searchField;                // Input field for searching profile information
+    
+    /**
+     * INSTANCE VARIABLES - Store state and data for this controller
+     * 
+     * These variables keep track of the current state of the profile screen
+     * and store references to the current user and form state.
+     * 
+     * STATE MANAGEMENT:
+     * These variables help manage the profile editing experience and
+     * track whether the user has made unsaved changes.
+     */
+    private User currentUser;                           // Stores the currently logged-in user's data
+    private boolean hasChanges = false;                 // Tracks whether user has made unsaved changes to profile
+    
+    /**
+     * initialize() method - Sets up the attendee profile screen when it first loads
+     * 
+     * This method is automatically called by JavaFX when the AttendeeProfile screen is displayed.
+     * Think of it as the "setup crew" that prepares everything before the user sees the screen.
+     * 
+     * WHAT IT DOES:
+     * 1. Loads and displays the Eventra logo and branding images
+     * 2. Loads the current user's profile information and displays it
+     * 3. Sets up listeners to track changes in profile fields
+     * 4. Establishes the complete personalized profile experience
+     * 
+     * COMPREHENSIVE SETUP:
+     * This method handles the complete initialization of the profile management interface:
+     * - Branding and logo display
+     * - User profile data loading and display
+     * - Change tracking for form validation
+     * - Professional profile management experience
+     * 
+     * PERSONALIZED EXPERIENCE:
+     * Unlike general screens, this provides a completely personalized view:
+     * - User's own profile picture and information
+     * - Personal account statistics and history
+     * - Customizable profile fields
+     * - Individual branding and preferences
+     * 
+     * USER EXPERIENCE:
+     * By setting up everything in advance, users can immediately view and edit
+     * their profile without waiting for components to load or configure.
+     * 
+     * @FXML annotation means this method is automatically called by JavaFX
+     */
     @FXML
     public void initialize() {
+        // STEP 1: Load and display branding images (logo, etc.)
         loadImages();
+        
+        // STEP 2: Load and display current user's profile information
         loadUserProfile();
+        
+        // STEP 3: Set up listeners to track changes in profile fields
         setupFieldListeners();
     }
     
