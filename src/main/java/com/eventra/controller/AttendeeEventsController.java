@@ -1,82 +1,258 @@
+/**
+ * Attendee Events Controller (AttendeeEventsController.java)
+ * 
+ * This class controls the MAIN EVENTS BROWSING SCREEN for attendees in the Eventra application.
+ * Think of it as the "events catalog" where users can browse, search, and discover events
+ * they might want to attend.
+ * 
+ * WHAT THIS CLASS DOES:
+ * - Displays "Coming Soon" events prominently at the top
+ * - Shows all available events in a browseable grid layout
+ * - Provides search functionality to find specific events
+ * - Offers date filtering (today, tomorrow, weekend, custom date)
+ * - Shows featured organizers and their events
+ * - Creates interactive event cards with click-to-view functionality
+ * - Updates event counts and availability in real-time
+ * - Handles navigation to event details when events are clicked
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - JavaFX Controller: Connects the FXML UI design with Java code
+ * - FXML Injection: @FXML annotation links UI elements to Java variables
+ * - Dynamic UI Generation: Creates event cards programmatically based on data
+ * - Search and Filtering: Real-time search and date-based filtering
+ * - Event Cards: Custom UI components created for each event
+ * - Responsive Layout: Adapts to different screen sizes and content
+ * - Data Binding: Connects search results to display automatically
+ * - Navigation: Routes users to detailed event views
+ * 
+ * UI COMPONENTS MANAGED:
+ * - Coming Soon events container (prominent display)
+ * - All events grid with searchable content
+ * - Featured organizers showcase
+ * - Search field with real-time filtering
+ * - Date filter radio buttons (today, tomorrow, weekend, custom)
+ * - Event count display
+ * - Date picker for custom date selection
+ * 
+ * USER EXPERIENCE FEATURES:
+ * - "Coming Soon" section highlights upcoming events
+ * - Search works across event titles, descriptions, and organizers
+ * - Date filtering helps users find events on specific days
+ * - Event cards show key information at a glance
+ * - Responsive design works on different screen sizes
+ * - Clear navigation to event details
+ */
 package com.eventra.controller;
 
-import com.eventra.dao.EventDAO;
-import com.eventra.dao.UserDAO;
-import com.eventra.model.Event;
-import com.eventra.model.User;
-import com.eventra.util.SessionManager;
-import com.eventra.util.ViewUtil;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.paint.Color;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
-import com.eventra.util.RouteManager;
+// These imports give us access to the tools we need:
+import com.eventra.dao.EventDAO;                   // For retrieving events from the database
+import com.eventra.dao.UserDAO;                     // For getting organizer information
+import com.eventra.model.Event;                      // Event data model
+import com.eventra.model.User;                       // User data model (for organizers)
 
+// Utility classes for application functionality:
+import com.eventra.util.SessionManager;              // For managing user sessions
+import com.eventra.util.ViewUtil;                    // For navigating between screens
+import com.eventra.util.RouteManager;                // For advanced routing functionality
+
+// JavaFX imports for the user interface:
+import javafx.fxml.FXML;                             // Links this class to FXML UI elements
+import javafx.scene.control.*;                       // UI controls (buttons, text fields, labels, etc.)
+import javafx.scene.image.Image;                     // For loading image files
+import javafx.scene.image.ImageView;                 // For displaying images
+import javafx.scene.layout.*;                        // Layout containers (VBox, HBox, FlowPane, etc.)
+import javafx.scene.text.Text;                       // For displaying text content
+import javafx.scene.text.Font;                       // For customizing text appearance
+import javafx.scene.text.FontWeight;                 // For making text bold, normal, etc.
+
+// JavaFX geometry and styling:
+import javafx.geometry.Insets;                       // For adding spacing around UI elements
+import javafx.geometry.Pos;                          // For aligning content (left, center, right)
+import javafx.scene.paint.Color;                     // For custom colors and styling
+
+// Java time classes for date and time handling:
+import java.time.LocalDateTime;                      // Modern Java date and time class
+import java.time.LocalDate;                          // Modern Java date class
+import java.time.format.DateTimeFormatter;           // For formatting dates and times nicely
+
+// Java standard library imports:
+import java.util.List;                               // For handling collections of data
+import java.util.ArrayList;                          // For creating and managing lists
+import java.util.Optional;                           // Modern Java way to handle "maybe exists" values
+
+/**
+ * AttendeeEventsController class - Controls the Main Events Browsing Screen
+ * 
+ * This class implements the MVC (Model-View-Controller) pattern:
+ * - MODEL: Event and User models, DAO classes for database operations
+ * - VIEW: FXML file defines the visual layout of the events browsing page
+ * - CONTROLLER: This class connects the model and view, handles all events browsing logic
+ * 
+ * The @FXML annotation tells JavaFX that this class should be connected
+ * to the AttendeeEvents.fxml file, allowing us to control the UI elements.
+ * 
+ * COMPLEX UI MANAGEMENT:
+ * This controller demonstrates advanced JavaFX concepts:
+ * - Dynamic creation of event cards based on database data
+ * - Real-time search and filtering functionality
+ * - Responsive layout management
+ * - Custom date filtering with radio buttons
+ * - Interactive event browsing experience
+ */
 public class AttendeeEventsController {
     
-    @FXML private HBox comingSoonContainer;
-    @FXML private FlowPane allEventsContainer;
-    @FXML private VBox organizersContainer;
-    @FXML private Text eventCountText;
-    @FXML private TextField searchField;
+    /**
+     * FXML INJECTED FIELDS - These are automatically connected to UI elements
+     * 
+     * The @FXML annotation tells JavaFX to automatically connect these Java variables
+     * to the corresponding elements in the AttendeeEvents.fxml file. This is called "dependency injection"
+     * and it's how we control the UI from our Java code.
+     * 
+     * Think of it like having remote controls for each UI element:
+     * - You can read what's displayed (getText())
+     * - You can change what's displayed (setText())
+     * - You can show/hide elements (setVisible())
+     * - You can add/remove child elements (getChildren().add())
+     */
     
-    @FXML private RadioButton todayRadio;
-    @FXML private RadioButton tomorrowRadio;
-    @FXML private RadioButton weekendRadio;
-    @FXML private RadioButton pickDateRadio;
+    // MAIN CONTAINERS - Hold different sections of the events page
+    @FXML private HBox comingSoonContainer;         // Horizontal container for "Coming Soon" events (prominent display)
+    @FXML private FlowPane allEventsContainer;      // Flow layout for all events (automatically wraps to new rows)
+    @FXML private VBox organizersContainer;         // Vertical container for featured organizers showcase
+    @FXML private Text eventCountText;              // Shows total number of available events
+    @FXML private TextField searchField;            // Input field for searching events by title, description, or organizer
     
-    @FXML private VBox selectedDateContainer;
-    @FXML private Text selectedDateText;
+    // DATE FILTER RADIO BUTTONS - Allow users to filter events by date
+    @FXML private RadioButton todayRadio;           // Filter to show only today's events
+    @FXML private RadioButton tomorrowRadio;        // Filter to show only tomorrow's events
+    @FXML private RadioButton weekendRadio;         // Filter to show only weekend events
+    @FXML private RadioButton pickDateRadio;        // Allow user to pick a custom date
     
-    private EventDAO eventDAO;
-    private UserDAO userDAO;
-    private List<Event> allEvents;
-    private List<User> organizers;
-    private LocalDateTime selectedDate = null;
-    private boolean isSearching = false;
+    // CUSTOM DATE SELECTION - Appears when user selects "Pick Date" option
+    @FXML private VBox selectedDateContainer;       // Container that holds the custom date picker
+    @FXML private Text selectedDateText;            // Text showing the currently selected custom date
     
+    /**
+     * INSTANCE VARIABLES - Store state and data for this controller
+     * 
+     * These variables keep track of the current state of the events browsing screen
+     * and store references to the data access objects (DAOs) and current data.
+     * 
+     * DAO OBJECTS:
+     * These are like "database assistants" that help us retrieve and manage data
+     * from different tables in the database. Each DAO handles a specific type of data.
+     * 
+     * STATE VARIABLES:
+     * These track what the user is currently doing (searching, filtering, etc.)
+     * and help maintain the correct display state.
+     */
+    private EventDAO eventDAO;                       // Handles all event-related database operations
+    private UserDAO userDAO;                         // Handles user/organizer database operations
+    private List<Event> allEvents;                   // Stores all available events from the database
+    private List<User> organizers;                   // Stores featured organizers for the showcase
+    private LocalDateTime selectedDate = null;       // Tracks the currently selected date for filtering
+    private boolean isSearching = false;             // Tracks whether user is currently searching (for UI state management)
+    
+    /**
+     * initialize() method - Sets up the events browsing screen when it first loads
+     * 
+     * This method is automatically called by JavaFX when the AttendeeEvents screen is displayed.
+     * Think of it as the "setup crew" that prepares everything before the user sees the screen.
+     * 
+     * WHAT IT DOES:
+     * 1. Logs successful page loading for debugging purposes
+     * 2. Creates new instances of DAO classes for database access
+     * 3. Runs debug check to verify database connectivity and data
+     * 4. Loads all events and displays them in the appropriate containers
+     * 5. Loads featured organizers for the showcase section
+     * 6. Sets up search functionality with real-time filtering
+     * 
+     * COMPREHENSIVE SETUP:
+     * This method handles the complete initialization of the events browsing experience:
+     * - Database connectivity and data loading
+     * - UI population with event data
+     * - Search and filtering system setup
+     * - Featured content loading
+     * 
+     * DEBUG FUNCTIONALITY:
+     * The debugPrintAllUsers() call helps developers verify that the database
+     * connection is working and contains the expected data.
+     * 
+     * USER EXPERIENCE:
+     * By loading everything upfront, users can immediately start browsing
+     * events without waiting for components to load or configure.
+     * 
+     * @FXML annotation means this method is automatically called by JavaFX
+     */
     @FXML
     public void initialize() {
         System.out.println("AttendeeEvents page loaded successfully!");
         
+        // STEP 1: Create new instances of DAO classes for fresh database access
         eventDAO = new EventDAO();
         userDAO = new UserDAO();
         
-        // Debug: Check what users exist in database
+        // STEP 2: Debug check to verify database connectivity and data
         userDAO.debugPrintAllUsers();
         
+        // STEP 3: Load and display all events in the appropriate containers
         loadEvents();
+        
+        // STEP 4: Load featured organizers for the showcase section
         loadFeaturedOrganizers();
+        
+        // STEP 5: Set up search functionality with real-time filtering
         setupSearchFunctionality();
     }
     
+    /**
+     * loadEvents() method - Main method that loads all events from the database
+     * 
+     * This is the CORE method that retrieves and displays all events for attendees to browse.
+     * It loads both "Coming Soon" events (prominently displayed) and all available events.
+     * 
+     * HOW IT WORKS:
+     * 1. Loads "Coming Soon" events (events happening soon) and displays them prominently
+     * 2. Loads all available events and displays them in the main grid
+     * 3. Updates the event count display to show total available events
+     * 4. Handles errors gracefully by showing empty state instead of crashing
+     * 
+     * TWO-TIER DISPLAY SYSTEM:
+     * - Coming Soon Events: Displayed prominently at the top for immediate attention
+     * - All Events: Complete catalog available in the main browsing area
+     * This helps users discover both urgent and general events effectively.
+     * 
+     * ERROR HANDLING:
+     * If anything goes wrong (database error, network issue, etc.), the method:
+     * - Logs the error for debugging
+     * - Shows empty containers instead of crashing
+     * - Updates event count to 0 to indicate no events available
+     * - Continues running so the app remains functional
+     * 
+     * PERFORMANCE CONSIDERATION:
+     * Events are loaded once during initialization and stored in memory.
+     * This provides fast browsing experience, though it means events won't
+     * automatically update if changed elsewhere (would need refresh).
+     */
     private void loadEvents() {
         try {
-            // Load coming soon events
+            // STEP 1: Load and display "Coming Soon" events prominently
             List<Event> comingSoonEvents = eventDAO.getComingSoonEvents();
             displayComingSoonEvents(comingSoonEvents);
             
-            // Load all events
+            // STEP 2: Load and display all available events in the main grid
             allEvents = eventDAO.getAllEvents();
             displayAllEvents(allEvents);
+            
+            // STEP 3: Update the event count display
             updateEventCount(allEvents.size());
+            
         } catch (Exception e) {
+            // STEP 4: Handle any errors that occur during loading
             System.err.println("Error loading events: " + e.getMessage());
-            e.printStackTrace();
-            // No fallback to demo data - show empty state
+            e.printStackTrace(); // Log full error details for debugging
+            
+            // STEP 5: Show empty state instead of crashing
             allEvents = new ArrayList<>();
             displayComingSoonEvents(new ArrayList<>());
             displayAllEvents(new ArrayList<>());
