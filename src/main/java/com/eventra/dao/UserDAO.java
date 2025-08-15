@@ -1,19 +1,90 @@
+/**
+ * User Data Access Object (UserDAO.java)
+ * 
+ * This class handles ALL database operations related to users in the Eventra system.
+ * Think of it as the "database manager" for user accounts - it's responsible for
+ * creating, reading, updating, and deleting user information in the database.
+ * 
+ * WHAT THIS CLASS DOES:
+ * - User authentication (login verification)
+ * - User creation and registration
+ * - User information updates
+ * - Password management and security
+ * - User search and retrieval
+ * - Failed login tracking for security
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - DAO Pattern: Data Access Object - separates database logic from business logic
+ * - Prepared Statements: Prevents SQL injection attacks
+ * - Connection Pooling: Uses the Db class to get database connections
+ * - BCrypt Hashing: Secure password storage and verification
+ * - Optional Pattern: Modern Java way to handle "maybe exists" scenarios
+ * - Transaction Management: Ensures database operations are atomic
+ * 
+ * SECURITY FEATURES:
+ * - BCrypt password hashing with salt
+ * - SQL injection prevention
+ * - Failed login attempt tracking
+ * - Automatic password upgrade from plain text to hashed
+ * 
+ * DATABASE OPERATIONS:
+ * - SELECT: Retrieve user information
+ * - INSERT: Create new user accounts
+ * - UPDATE: Modify existing user data
+ * - DELETE: Remove user accounts (if needed)
+ */
 package com.eventra.dao;
 
-import com.eventra.Db;
-import com.eventra.model.User;
-import org.mindrot.jbcrypt.BCrypt;
+// These imports give us access to the tools we need:
+import com.eventra.Db;                    // Database connection manager (our custom class)
+import com.eventra.model.User;             // User data model class
+import org.mindrot.jbcrypt.BCrypt;        // Secure password hashing library
 
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.List;
-import java.util.ArrayList;
+// Java standard library imports for database and utility operations:
+import java.sql.*;                         // Database operations (Connection, PreparedStatement, ResultSet, etc.)
+import java.time.LocalDateTime;            // Modern date/time handling
+import java.util.Optional;                 // Modern Java way to handle "maybe exists" values
+import java.util.List;                     // Collection for storing multiple users
+import java.util.ArrayList;                // Specific type of List implementation
 
+/**
+ * UserDAO class - Data Access Object for User Management
+ * 
+ * This class implements the DAO (Data Access Object) pattern, which is a design pattern
+ * that separates database access logic from business logic. This makes the code:
+ * - More organized and easier to maintain
+ * - Easier to test (you can test database logic separately)
+ * - More flexible (you can change how data is stored without changing business logic)
+ * 
+ * All methods are static, which means you don't need to create a UserDAO object
+ * to use them. You can call them directly like: UserDAO.authenticateUser(email, password)
+ */
 public class UserDAO {
     
     /**
-     * Authenticate user by email and password
+     * authenticateUser() method - Verifies user login credentials
+     * 
+     * This is the CORE method for user authentication. When someone tries to log in,
+     * this method checks if their email and password are correct.
+     * 
+     * HOW IT WORKS:
+     * 1. Look up the user by email in the database
+     * 2. Check if the password matches (using secure BCrypt hashing)
+     * 3. If password was plain text, automatically upgrade it to hashed version
+     * 4. Track failed login attempts for security monitoring
+     * 5. Return the user if authentication succeeds, or empty if it fails
+     * 
+     * SECURITY FEATURES:
+     * - Uses prepared statements to prevent SQL injection
+     * - BCrypt password verification (industry standard)
+     * - Automatic password upgrade from plain text to hashed
+     * - Failed login attempt tracking
+     * - Only allows active users to log in (StatusTypeID = 1)
+     * 
+     * @param email - The email address the user is trying to log in with
+     * @param password - The plain text password the user entered
+     * @return Optional<User> - Contains user data if login succeeds, empty if it fails
+     * @throws SQLException - If there's a database error during authentication
      */
     public static Optional<User> authenticateUser(String email, String password) {
         String sql = "SELECT * FROM UserM WHERE Email = ? AND StatusTypeID = 1";
@@ -68,7 +139,32 @@ public class UserDAO {
     }
     
     /**
-     * Create a new user
+     * createUser() method - Creates a new user account in the database
+     * 
+     * This method is used when someone signs up for a new account. It takes all the
+     * user information and stores it securely in the database.
+     * 
+     * HOW IT WORKS:
+     * 1. Prepare an INSERT SQL statement with placeholders (?) for security
+     * 2. Set all the user data (name, email, password hash, role, etc.)
+     * 3. Execute the statement to create the user record
+     * 4. Get the auto-generated user ID from the database
+     * 5. Return true if successful, false if something goes wrong
+     * 
+     * SECURITY FEATURES:
+     * - Uses prepared statements to prevent SQL injection
+     * - Stores encrypted passwords (never plain text)
+     * - Sets default role and status for new users
+     * - Automatically sets creation and update timestamps
+     * 
+     * DATABASE OPERATION:
+     * - INSERT: Creates a new row in the UserM table
+     * - Statement.RETURN_GENERATED_KEYS: Gets the auto-generated user ID
+     * - CURRENT_TIMESTAMP: Sets creation time automatically
+     * 
+     * @param user - User object containing all the account information
+     * @return boolean - true if user was created successfully, false otherwise
+     * @throws SQLException - If there's a database error during creation
      */
     public static boolean createUser(User user) {
         String sql = "INSERT INTO UserM (Username, FirstName, MiddleName, LastName, Email, PasswordHash, " +
