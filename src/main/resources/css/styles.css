@@ -1,15 +1,77 @@
-/* Global Styles */
+/*
+ * Eventra Application Stylesheet (styles.css)
+ * 
+ * This file contains ALL the visual styling for the Eventra application.
+ * Think of it as the "design guide" that makes the app look professional and attractive.
+ * 
+ * WHAT THIS FILE DOES:
+ * - Defines the overall look and feel of the application
+ * - Sets colors, fonts, spacing, and visual effects
+ * - Provides consistent styling across all screens
+ * - Makes the app responsive and user-friendly
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - CSS: Cascading Style Sheets - defines how things look
+ * - JavaFX CSS: Special CSS syntax for JavaFX applications
+ * - Selectors: Target specific UI elements for styling
+ * - Properties: Define colors, sizes, fonts, etc.
+ * - Pseudo-classes: Style elements in different states (hover, focused, etc.)
+ * 
+ * CSS SYNTAX EXPLAINED:
+ * - /* comment */ - Comments that explain the code
+ * - .class-name - Targets elements with a specific CSS class
+ * - -fx-property: value; - JavaFX-specific CSS properties
+ * - { } - Contains the styling rules for a selector
+ * 
+ * COLOR SCHEME:
+ * - Primary: #6c5ce7 (Purple) - Main brand color
+ * - Secondary: #74b9ff (Blue) - Links and accents
+ * - Background: #f8f9fa (Light Gray) - Page backgrounds
+ * - Text: #2d3436 (Dark Gray) - Main text color
+ * - Borders: #e9ecef (Light Gray) - Input field borders
+ */
+
+/* 
+ * GLOBAL STYLES - Applied to the entire application
+ * 
+ * These styles affect the root container and provide default styling
+ * that other elements inherit unless overridden.
+ */
 .root {
-    -fx-font-family: 'Segoe UI', Arial, sans-serif;
-    -fx-background-color: #f5f5f5;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;  /* Sets the default font for the entire app */
+    -fx-background-color: #f5f5f5;                   /* Sets the default background color */
 }
 
-/* New Signup Page - Horizontal Layout with Logo */
+/* 
+ * SIGNUP PAGE STYLES - Horizontal Layout with Logo
+ * 
+ * This section styles the signup page, which has a modern horizontal layout
+ * with the logo on the left and the signup form on the right.
+ * 
+ * LAYOUT EXPLANATION:
+ * - The page is divided into two main sections
+ * - Left side: Logo and branding
+ * - Right side: Signup form in a card
+ * - This creates a professional, balanced appearance
+ */
+
+/* 
+ * Signup Page Container - Main wrapper for the entire signup page
+ * 
+ * This is the outermost container that holds both the logo section
+ * and the signup form section.
+ * 
+ * PROPERTIES EXPLAINED:
+ * - -fx-background-color: #f8f9fa - Light gray background for the entire page
+ * - -fx-padding: 40px - Adds 40 pixels of space around all content
+ * - -fx-min-width: 1200px - Ensures the page is wide enough for the horizontal layout
+ * - -fx-min-height: 700px - Ensures the page is tall enough for the content
+ */
 .signup-page-container {
-    -fx-background-color: #f8f9fa;
-    -fx-padding: 40px;
-    -fx-min-width: 1200px;
-    -fx-min-height: 700px;
+    -fx-background-color: #f8f9fa;  /* Light gray background */
+    -fx-padding: 40px;              /* Space around all content */
+    -fx-min-width: 1200px;          /* Minimum width for horizontal layout */
+    -fx-min-height: 700px;          /* Minimum height for content */
 }
 
 /* Logo Section */

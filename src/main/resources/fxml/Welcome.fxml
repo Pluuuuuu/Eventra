@@ -1,20 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.VBox?>
+<!-- 
+    Welcome.fxml - Main Entry Point User Interface
+    
+    This file defines the visual layout of the Welcome screen - the first screen
+    users see when they open the Eventra application.
+    
+    WHAT THIS FILE DOES:
+    - Defines the visual structure of the welcome screen
+    - Connects UI elements to the WelcomeController Java class
+    - Sets up the logo display and welcome button
+    - Applies styling and layout properties
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - FXML: JavaFX Markup Language - defines UI layouts in XML format
+    - Controller Binding: Links UI elements to Java code for functionality
+    - Layout Containers: VBox arranges elements vertically
+    - CSS Styling: Applies visual design to UI elements
+    - Event Handling: Connects button clicks to Java methods
+    
+    FILE STRUCTURE:
+    - XML Declaration and imports
+    - Root container (VBox) with properties
+    - UI elements (ImageView, Button)
+    - Styling and event connections
+-->
 
+<!-- Import statements - tell JavaFX which UI components we want to use -->
+<?import javafx.scene.control.Button?>      <!-- Button component for user interaction -->
+<?import javafx.scene.image.ImageView?>     <!-- Image component for displaying the logo -->
+<?import javafx.scene.layout.VBox?>         <!-- Vertical layout container -->
+
+<!-- 
+    Root Container - VBox (Vertical Box)
+    
+    VBox arranges all child elements vertically (top to bottom).
+    Think of it like stacking boxes on top of each other.
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the WelcomeController Java class
+    - alignment="CENTER": Centers all content horizontally
+    - spacing="30": Adds 30 pixels of space between child elements
+    - stylesheets: Links to the CSS file for styling
+-->
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.WelcomeController"
       alignment="CENTER" spacing="30"
       stylesheets="@../css/styles.css">
 
+    <!-- 
+        Logo Image Display
+        
+        This ImageView displays the Eventra logo at the top of the welcome screen.
+        It's the first thing users see when they open the application.
+        
+        PROPERTIES EXPLAINED:
+        - fx:id="logoView": Gives this element a name so the controller can reference it
+        - fitWidth="300": Sets the width to 300 pixels
+        - preserveRatio="true": Keeps the image proportions correct (no stretching)
+        - pickOnBounds="true": Makes the entire image area clickable
+        
+        CONTROLLER CONNECTION:
+        The WelcomeController can access this image using: @FXML private ImageView logoView;
+        This allows the controller to change the image, make it clickable, etc.
+    -->
     <ImageView fx:id="logoView"
                fitWidth="300"
                preserveRatio="true"
                pickOnBounds="true" />
 
-
+    <!-- 
+        Welcome Button
+        
+        This button is what users click to proceed from the welcome screen.
+        It's styled to look attractive and professional.
+        
+        PROPERTIES EXPLAINED:
+        - text="Welcome": The text displayed on the button
+        - fx:id="welcomeBtn": Gives this button a name for the controller
+        - onAction="#onWelcome": Calls the onWelcome() method in the controller when clicked
+        
+        STYLING EXPLAINED:
+        - -fx-font-size: 16px: Sets button text size to 16 pixels
+        - -fx-background-color: #5C4DAA: Sets button background to purple
+        - -fx-text-fill: white: Sets button text color to white
+        - -fx-padding: 10 20: Adds 10px vertical and 20px horizontal padding
+        - -fx-background-radius: 5: Makes button corners rounded (5px radius)
+        
+        CONTROLLER CONNECTION:
+        When clicked, this button calls the onWelcome() method in WelcomeController.
+        That method handles what happens next (probably navigating to the main menu).
+    -->
     <Button text="Welcome"
             fx:id="welcomeBtn"
             onAction="#onWelcome"
