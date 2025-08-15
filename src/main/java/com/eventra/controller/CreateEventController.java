@@ -1,71 +1,194 @@
+/**
+ * Create Event Controller (CreateEventController.java)
+ * 
+ * This class controls the EVENT CREATION SCREEN of the Eventra application. Think of it as the
+ * "event planning desk" where administrators and organizers can create comprehensive events
+ * with multiple sessions, presenters, and detailed scheduling information.
+ * 
+ * WHAT THIS CLASS DOES:
+ * - Provides a comprehensive form for creating new events
+ * - Manages event details (name, description, dates, times, location, capacity)
+ * - Handles multiple event sessions with individual scheduling
+ * - Manages event presenters and speakers
+ * - Provides real-time validation and error checking
+ * - Offers a table view for managing sessions with edit/delete capabilities
+ * - Handles complex event scheduling and capacity management
+ * - Saves events to the database with all related information
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - JavaFX Controller: Connects the FXML UI design with Java code
+ * - FXML Injection: @FXML annotation links UI elements to Java variables
+ * - TableView Management: Complex table with custom cell factories and actions
+ * - Observable Collections: JavaFX lists that automatically update the UI
+ * - Form Validation: Real-time input checking and error prevention
+ * - Dynamic UI Generation: Creates and manages UI elements programmatically
+ * - Data Binding: Connects form fields to data models automatically
+ * - Session Management: Handles multiple related data entities (Event + Sessions)
+ * 
+ * UI COMPONENTS MANAGED:
+ * - Event details form (name, description, dates, times, location, capacity)
+ * - Sessions table with edit/delete actions
+ * - Presenters grid for managing speakers
+ * - Validation feedback and error messages
+ * - Save/cancel buttons with confirmation dialogs
+ * 
+ * COMPLEXITY LEVEL:
+ * This is one of the most complex controllers in the application because it handles:
+ * - Multiple form fields with validation
+ * - Dynamic table management
+ * - Complex data relationships (Event → Sessions → Presenters)
+ * - Real-time UI updates
+ * - Database transactions with multiple tables
+ */
 package com.eventra.controller;
 
-import com.eventra.dao.EventDAO;
-import com.eventra.dao.EventSaveDAO;
-import com.eventra.model.Session;
-import com.eventra.util.ViewUtil;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+// These imports give us access to the tools we need:
+import com.eventra.dao.EventDAO;                   // For saving events to the database
+import com.eventra.dao.EventSaveDAO;                // For specialized event saving operations
+import com.eventra.model.Session;                   // Session data model for event sessions
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+// Utility classes for application functionality:
+import com.eventra.util.ViewUtil;                   // For navigating between screens
 
+// JavaFX collections for reactive data management:
+import javafx.collections.FXCollections;            // Creates observable lists from regular lists
+import javafx.collections.ObservableList;           // Lists that automatically update the UI
+
+// JavaFX imports for the user interface:
+import javafx.fxml.FXML;                            // Links this class to FXML UI elements
+import javafx.scene.Node;                           // Base class for all UI elements
+import javafx.scene.control.*;                      // UI controls (buttons, text fields, labels, etc.)
+import javafx.scene.control.Alert.AlertType;        // Types of alert dialogs (ERROR, WARNING, INFO)
+import javafx.scene.control.cell.PropertyValueFactory; // Connects table columns to data properties
+
+// JavaFX layout containers:
+import javafx.scene.layout.GridPane;                // Grid layout for organizing presenters
+import javafx.scene.layout.HBox;                    // Horizontal layout container
+import javafx.scene.layout.Region;                  // Base class for layout containers
+import javafx.scene.layout.VBox;                    // Vertical layout container
+import javafx.scene.text.Text;                      // For displaying text content
+
+// Java standard library imports:
+import java.time.LocalDate;                         // Modern Java date class
+import java.util.List;                              // For handling collections of data
+import java.util.Optional;                          // Modern Java way to handle "maybe exists" values
+
+/**
+ * CreateEventController class - Controls the Event Creation Screen
+ * 
+ * This class implements the MVC (Model-View-Controller) pattern:
+ * - MODEL: Session model, DAO classes for database operations
+ * - VIEW: FXML file defines the visual layout of the event creation form
+ * - CONTROLLER: This class connects the model and view, handles all event creation logic
+ * 
+ * The @FXML annotation tells JavaFX that this class should be connected
+ * to the CreateEvent.fxml file, allowing us to control the UI elements.
+ * 
+ * ADVANCED FEATURES:
+ * This controller demonstrates several advanced JavaFX concepts:
+ * - Custom table cell factories with action buttons
+ * - Observable collections for reactive UI updates
+ * - Dynamic form validation and error handling
+ * - Complex data relationships and management
+ * - Professional-grade form design and user experience
+ */
 public class CreateEventController {
     
-    // Event Details Fields
-    @FXML private TextField eventNameField;
-    @FXML private TextArea descriptionArea;
-    @FXML private DatePicker startDatePicker;
-    @FXML private TextField startTimeField;
-    @FXML private DatePicker endDatePicker;
-    @FXML private TextField endTimeField;
-    @FXML private TextField locationField;
-    @FXML private TextField capacityField;
-    @FXML private TextField tagsField;
+    /**
+     * FXML INJECTED FIELDS - These are automatically connected to UI elements
+     * 
+     * The @FXML annotation tells JavaFX to automatically connect these Java variables
+     * to the corresponding elements in the CreateEvent.fxml file. This is called "dependency injection"
+     * and it's how we control the UI from our Java code.
+     * 
+     * Think of it like having remote controls for each UI element:
+     * - You can read what the user typed (getText())
+     * - You can change what's displayed (setText())
+     * - You can show/hide elements (setVisible())
+     * - You can add/remove child elements (getChildren().add())
+     */
     
-    // Sessions Components
-    @FXML private TableView<Session> sessionsTable;
-    @FXML private TableColumn<Session, String> sessionColumn;
-    @FXML private TableColumn<Session, String> dateColumn;
-    @FXML private TableColumn<Session, String> dayColumn;
-    @FXML private TableColumn<Session, String> timeColumn;
-    @FXML private TableColumn<Session, String> locationColumn;
-    @FXML private TableColumn<Session, String> presenterColumn;
-    @FXML private TableColumn<Session, String> statusColumn;
-    @FXML private TableColumn<Session, Void> actionsColumn;
+    // EVENT DETAILS FIELDS - Basic event information
+    @FXML private TextField eventNameField;         // Where user types the event name/title
+    @FXML private TextArea descriptionArea;         // Large text area for event description
+    @FXML private DatePicker startDatePicker;       // Calendar picker for event start date
+    @FXML private TextField startTimeField;         // Text field for event start time (e.g., "2:30 PM")
+    @FXML private DatePicker endDatePicker;         // Calendar picker for event end date
+    @FXML private TextField endTimeField;           // Text field for event end time
+    @FXML private TextField locationField;          // Where user types the event venue/location
+    @FXML private TextField capacityField;          // Maximum number of attendees allowed
+    @FXML private TextField tagsField;              // Keywords/tags to help people find the event
     
-    // Presenters Components
-    @FXML private GridPane presentersGrid;
+    // SESSIONS COMPONENTS - Table for managing event sessions
+    @FXML private TableView<Session> sessionsTable; // Main table showing all event sessions
+    @FXML private TableColumn<Session, String> sessionColumn;   // Session name column
+    @FXML private TableColumn<Session, String> dateColumn;      // Session date column
+    @FXML private TableColumn<Session, String> dayColumn;       // Day of week column
+    @FXML private TableColumn<Session, String> timeColumn;      // Session time column
+    @FXML private TableColumn<Session, String> locationColumn;  // Session location column
+    @FXML private TableColumn<Session, String> presenterColumn; // Presenter/speaker column
+    @FXML private TableColumn<Session, String> statusColumn;    // Session status column
+    @FXML private TableColumn<Session, Void> actionsColumn;     // Edit/delete buttons column
     
-    // Data lists
-    private ObservableList<Session> sessionsList = FXCollections.observableArrayList();
-    private ObservableList<PresenterInfo> presentersList = FXCollections.observableArrayList();
+    // PRESENTERS COMPONENTS - Grid for managing event speakers
+    @FXML private GridPane presentersGrid;          // Grid layout for organizing presenter information
     
+    /**
+     * DATA LISTS - Store and manage dynamic data for the form
+     * 
+     * These lists use JavaFX's ObservableList which automatically updates the UI
+     * whenever the data changes. This is called "reactive programming" and it's
+     * what makes modern JavaFX applications feel responsive and dynamic.
+     * 
+     * OBSERVABLE LISTS EXPLAINED:
+     * - When you add/remove items from these lists, the UI automatically updates
+     * - No need to manually refresh tables or grids
+     * - JavaFX handles all the synchronization between data and display
+     * - This is much more efficient than manually updating UI elements
+     */
+    private ObservableList<Session> sessionsList = FXCollections.observableArrayList();      // List of event sessions
+    private ObservableList<PresenterInfo> presentersList = FXCollections.observableArrayList(); // List of event presenters
+    
+    /**
+     * initialize() method - Sets up the event creation form when it first loads
+     * 
+     * This method is automatically called by JavaFX when the create event screen is displayed.
+     * Think of it as the "setup crew" that prepares everything before the user sees the screen.
+     * 
+     * WHAT IT DOES:
+     * 1. Logs successful form initialization for debugging purposes
+     * 2. Sets up the sessions table with proper columns and functionality
+     * 3. Clears all form fields to ensure a clean starting state
+     * 4. Adds input validation to prevent errors and improve user experience
+     * 5. Loads existing presenters from the database for reuse
+     * 
+     * COMPREHENSIVE SETUP:
+     * This method handles the most complex initialization in the application:
+     * - Table setup with custom cell factories and action buttons
+     * - Form validation with real-time error checking
+     * - Database integration for presenter management
+     * - Clean state management for new event creation
+     * 
+     * USER EXPERIENCE:
+     * By setting up everything in advance, users can immediately start
+     * creating events without waiting for components to load or configure.
+     * 
+     * @FXML annotation means this method is automatically called by JavaFX
+     */
     @FXML
     public void initialize() {
         System.out.println("Create Event form initialized");
         
-        // Setup sessions table
+        // STEP 1: Setup the sessions table with columns and action buttons
         setupSessionsTable();
         
-        // Set default values
+        // STEP 2: Clear all form fields to ensure clean starting state
         setDefaultValues();
         
-        // Add input validation
+        // STEP 3: Add real-time input validation for better user experience
         setupValidation();
         
-        // Load existing presenters from database
+        // STEP 4: Load existing presenters from database for reuse
         loadPresentersFromDatabase();
     }
     
