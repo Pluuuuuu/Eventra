@@ -10,14 +10,89 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Event Save DAO (EventSaveDAO.java)
+ * 
+ * This class handles all the database operations related to saving and managing
+ * events in the Eventra application. Think of it like a "event management office"
+ * where events are created, updated, and organized in the system.
+ * 
+ * WHAT THIS CLASS DOES:
+ * - Saves new events with all their details to the database
+ * - Manages event sessions and presenter information
+ * - Cleans up duplicate presenter records to maintain data quality
+ * - Handles complex event creation workflows
+ * - Provides feedback on save operations success or failure
+ * 
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - Event Persistence: Saving event information to the database permanently
+ * - Data Integrity: Ensuring event data is accurate and consistent
+ * - Presenter Management: Handling speaker information and preventing duplicates
+ * - Session Organization: Managing individual event sessions and schedules
+ * - Transaction Management: Ensuring all related data is saved together
+ * 
+ * BUSINESS VALUE:
+ * - Enables event organizers to create and manage events efficiently
+ * - Maintains data quality by preventing duplicate presenter entries
+ * - Supports complex event structures with multiple sessions
+ * - Provides reliable event creation and management capabilities
+ * - Ensures event information is properly stored and accessible
+ * 
+ * REAL-WORLD ANALOGY:
+ * - Like an event planning office that files event information
+ * - Like a conference management system that organizes speakers and sessions
+ * - Like a calendar system that saves event details permanently
+ * - Like a filing cabinet that stores event documents and information
+ * - Like an event database that maintains all event records
+ */
 public class EventSaveDAO {
     
     /**
-     * Clean up duplicate presenters in the database
-     * Keeps the first occurrence of each presenter (by FirstName + LastName combination)
+     * cleanupDuplicatePresenters() - Remove Duplicate Presenter Records
+     * 
+     * This method identifies and removes duplicate presenter records from the
+     * database. It's like cleaning up a contact list to remove duplicate
+     * entries for the same person.
+     * 
+     * WHAT IT DOES:
+     * - Scans the database for presenters with the same name
+     * - Identifies duplicate entries based on first and last name combinations
+     * - Removes duplicate records while keeping the first occurrence
+     * - Verifies that cleanup was successful
+     * - Reports detailed results of the cleanup process
+     * 
+     * USER EXPERIENCE:
+     * - Event organizers get cleaner, more organized presenter lists
+     * - System prevents confusion from duplicate presenter entries
+     * - Data quality is maintained automatically
+     * - Clear feedback on what was cleaned up
+     * 
+     * TECHNICAL PROCESS:
+     * 1. Query database for presenters with duplicate names
+     * 2. Display duplicate counts for review
+     * 3. Execute cleanup query to remove duplicates
+     * 4. Verify cleanup was successful
+     * 5. Report results to the console
+     * 
+     * BUSINESS VALUE:
+     * - Prevents confusion when selecting presenters for events
+     * - Maintains professional appearance of presenter lists
+     * - Reduces data storage requirements
+     * - Improves system performance and reliability
      */
     public static void cleanupDuplicatePresenters() {
-        // First, let's see what duplicates exist
+        // 
+        // STEP 1: IDENTIFY DUPLICATE PRESENTERS - Find duplicate entries
+        // 
+        // First, we need to find all the presenters who appear multiple times
+        // in the database. This is like looking through a contact list to find
+        // people who are listed more than once.
+        // 
+        // THINK OF IT LIKE:
+        // - Scanning a phone book for duplicate names
+        // - Checking a guest list for repeated entries
+        // - Reviewing a directory for duplicate listings
+        // 
         String countSql = "SELECT FirstName, LastName, COUNT(*) as cnt " +
                          "FROM Presenter " +
                          "GROUP BY FirstName, LastName " +
@@ -26,10 +101,34 @@ public class EventSaveDAO {
         try (Connection conn = Db.get();
              Statement stmt = conn.createStatement()) {
             
-            // Show duplicate counts
+            // 
+            // EXECUTE DUPLICATE SEARCH - Find all duplicates
+            // 
+            // This query searches the database for presenters who appear
+            // multiple times. Think of it like searching for repeated names
+            // in a contact list.
+            // 
+            // THINK OF IT LIKE:
+            // - Running a search for duplicate entries
+            // - Counting how many times each name appears
+            // - Identifying which names have multiple records
+            // 
             ResultSet rs = stmt.executeQuery(countSql);
             System.out.println("🔍 Duplicate presenters found:");
             boolean foundDuplicates = false;
+            
+            // 
+            // DISPLAY DUPLICATE RESULTS - Show what was found
+            // 
+            // For each duplicate found, we display the name and how many
+            // times it appears. This is like listing out all the duplicates
+            // we found during our search.
+            // 
+            // THINK OF IT LIKE:
+            // - Listing all duplicate names found
+            // - Showing how many times each duplicate appears
+            // - Creating a report of what needs to be cleaned up
+            // 
             while (rs.next()) {
                 foundDuplicates = true;
                 System.out.println("  - " + rs.getString("FirstName") + " " + rs.getString("LastName") + 
@@ -37,12 +136,35 @@ public class EventSaveDAO {
             }
             rs.close();
             
+            // 
+            // CHECK IF DUPLICATES EXIST - Determine if cleanup is needed
+            // 
+            // If no duplicates were found, we can exit early since there's
+            // nothing to clean up. This is like checking if there are any
+            // duplicates before starting the cleanup process.
+            // 
+            // THINK OF IT LIKE:
+            // - Checking if there's anything to clean up
+            // - Exiting early if no work is needed
+            // - Avoiding unnecessary processing
+            // 
             if (!foundDuplicates) {
                 System.out.println("✅ No duplicate presenters found");
                 return;
             }
             
-            // More aggressive cleanup - remove duplicates based on FirstName + LastName only
+            // 
+            // STEP 2: EXECUTE CLEANUP - Remove duplicate records
+            // 
+            // Now we execute a more aggressive cleanup that removes all
+            // duplicate presenter records. This is like going through a
+            // contact list and removing all but one entry for each person.
+            // 
+            // THINK OF IT LIKE:
+            // - Removing duplicate entries from a list
+            // - Keeping only the first occurrence of each name
+            // - Cleaning up a messy contact database
+            // 
             String deleteSql = "WITH DuplicatePresenters AS (" +
                              "SELECT PresenterID, " +
                              "ROW_NUMBER() OVER (PARTITION BY UPPER(TRIM(FirstName)), UPPER(TRIM(LastName)) ORDER BY PresenterID) as rn " +
@@ -52,15 +174,50 @@ public class EventSaveDAO {
                              "SELECT PresenterID FROM DuplicatePresenters WHERE rn > 1" +
                              ")";
             
+            // 
+            // EXECUTE DELETE OPERATION - Remove duplicates from database
+            // 
+            // This actually removes the duplicate records from the database.
+            // Think of it like executing a cleanup operation that deletes
+            // all the duplicate entries we found.
+            // 
+            // THINK OF IT LIKE:
+            // - Running a cleanup program
+            // - Removing duplicate files from a computer
+            // - Deleting redundant entries from a database
+            // 
             int deletedCount = stmt.executeUpdate(deleteSql);
             if (deletedCount > 0) {
                 System.out.println("🧹 Cleaned up " + deletedCount + " duplicate presenters from database");
             }
             
-            // Verify cleanup
+            // 
+            // STEP 3: VERIFY CLEANUP - Confirm duplicates were removed
+            // 
+            // After cleanup, we need to verify that all duplicates were
+            // successfully removed. This is like double-checking that our
+            // cleanup operation worked correctly.
+            // 
+            // THINK OF IT LIKE:
+            // - Double-checking our work
+            // - Making sure the cleanup was complete
+            // - Verifying the final result
+            // 
             ResultSet verifyRs = stmt.executeQuery(countSql);
             System.out.println("🔍 After cleanup - remaining duplicates:");
             boolean stillHasDuplicates = false;
+            
+            // 
+            // CHECK REMAINING DUPLICATES - Verify cleanup success
+            // 
+            // We run the same duplicate search again to see if any
+            // duplicates remain. This confirms our cleanup was successful.
+            // 
+            // THINK OF IT LIKE:
+            // - Double-checking our work
+            // - Making sure the cleanup was complete
+            // - Verifying the final result
+            // 
             while (verifyRs.next()) {
                 stillHasDuplicates = true;
                 System.out.println("  - " + verifyRs.getString("FirstName") + " " + verifyRs.getString("LastName") + 
@@ -68,24 +225,114 @@ public class EventSaveDAO {
             }
             verifyRs.close();
             
+            // 
+            // REPORT CLEANUP RESULTS - Confirm final status
+            // 
+            // Finally, we report whether the cleanup was completely
+            // successful or if some duplicates still remain.
+            // 
+            // THINK OF IT LIKE:
+            // - Giving a final status report
+            // - Confirming the operation was successful
+            // - Reporting any remaining issues
+            // 
             if (!stillHasDuplicates) {
                 System.out.println("✅ All duplicates successfully removed");
             }
             
         } catch (SQLException e) {
+            // 
+            // CLEANUP FAILED - Handle database errors
+            // 
+            // If something goes wrong during the cleanup process, we log
+            // the error so developers can identify and fix the problem.
+            // 
+            // THINK OF IT LIKE:
+            // - A cleanup operation that failed
+            // - A system error during maintenance
+            // - A problem that needs to be reported and fixed
+            // 
             System.err.println("❌ Error cleaning up duplicate presenters: " + e.getMessage());
             e.printStackTrace();
         }
     }
     
     /**
-     * Save a complete event with sessions and presenters to the database
+     * EventSaveResult - Result of Event Save Operation
+     * 
+     * This inner class provides detailed feedback about the result of
+     * saving an event to the database. It's like a receipt that shows
+     * whether an operation succeeded or failed.
+     * 
+     * WHAT IT CONTAINS:
+     * - success: Whether the save operation was successful
+     * - message: Detailed information about what happened
+     * - eventId: The unique identifier of the saved event
+     * 
+     * USER EXPERIENCE:
+     * - Event organizers get clear feedback on save operations
+     * - System provides detailed information about any problems
+     * - Success confirmation includes the new event ID
+     * - Error messages help identify and fix problems
+     * 
+     * BUSINESS VALUE:
+     * - Reduces confusion about whether events were saved
+     * - Provides accountability for save operations
+     * - Enables better error handling and user support
+     * - Supports debugging and troubleshooting
      */
     public static class EventSaveResult {
+        // 
+        // SUCCESS STATUS - Whether the operation succeeded
+        // 
+        // This boolean indicates whether the event save operation was
+        // successful. Think of it like a "pass/fail" indicator.
+        // 
+        // THINK OF IT LIKE:
+        // - A success/failure flag
+        // - A yes/no answer to "did it work?"
+        // - A simple status indicator
+        // 
         public boolean success;
+        
+        // 
+        // DETAILED MESSAGE - Information about the operation
+        // 
+        // This string provides detailed information about what happened
+        // during the save operation. Think of it like a detailed report.
+        // 
+        // THINK OF IT LIKE:
+        // - A detailed explanation of what happened
+        // - A report on the operation's success or failure
+        // - Information about any problems encountered
+        // 
         public String message;
+        
+        // 
+        // EVENT IDENTIFIER - Unique ID of the saved event
+        // 
+        // This integer is the unique identifier assigned to the event
+        // when it was saved to the database. Think of it like a
+        // reference number for the saved event.
+        // 
+        // THINK OF IT LIKE:
+        // - A unique reference number
+        // - An ID card for the event
+        // - A tracking number for the saved record
+        // 
         public int eventId;
         
+        // 
+        // CONSTRUCTOR - Create result object
+        // 
+        // This constructor creates a new EventSaveResult object with
+        // the specified values. Think of it like filling out a form
+        // with the operation results.
+        // 
+        // @param success Whether the operation succeeded
+        // @param message Detailed information about the operation
+        // @param eventId Unique identifier of the saved event
+        // 
         public EventSaveResult(boolean success, String message, int eventId) {
             this.success = success;
             this.message = message;
@@ -93,6 +340,39 @@ public class EventSaveDAO {
         }
     }
     
+    /**
+     * saveEvent(...) - Save Complete Event to Database
+     * 
+     * This method saves a complete event with all its details, sessions,
+     * and presenter information to the database. It's like creating a
+     * complete event file with all the necessary information.
+     * 
+     * WHAT IT DOES:
+     * - Creates the main event record in the database
+     * - Saves all event sessions and scheduling information
+     * - Manages presenter information and relationships
+     * - Handles the complete event creation workflow
+     * - Returns detailed results of the save operation
+     * 
+     * USER EXPERIENCE:
+     * - Event organizers can create complete events in one operation
+     * - System handles all the complex database operations automatically
+     * - Clear feedback on whether the event was saved successfully
+     * - Detailed error messages if something goes wrong
+     * 
+     * TECHNICAL PROCESS:
+     * 1. Validate event data and parameters
+     * 2. Create main event record in EventM table
+     * 3. Save event sessions and scheduling information
+     * 4. Manage presenter information and relationships
+     * 5. Return detailed results of the operation
+     * 
+     * @param title The title/name of the event
+     * @param description Detailed description of the event
+     * @param startDate When the event begins
+     * @param endDate When the event ends
+     * @return EventSaveResult with operation details
+     */
     public static EventSaveResult saveEvent(
             String title, 
             String description, 

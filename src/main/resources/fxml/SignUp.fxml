@@ -1,11 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.*?>
+<!-- 
+    SIGN UP SCREEN (SignUp.fxml)
+    
+    This FXML file defines the user interface for the Sign Up screen in the
+    Eventra application. Think of it like a "new user registration desk"
+    where people can create their accounts to join the platform.
+    
+    WHAT THIS SCREEN DOES:
+    - Displays the Eventra logo for brand recognition and trust
+    - Provides a comprehensive registration form for new users
+    - Collects essential user information (name, email, password, organization)
+    - Handles form validation and displays helpful error messages
+    - Creates new user accounts in the system
+    - Provides navigation back to the login screen
+    - Ensures password security with confirmation requirements
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Two-Column Layout: Logo on left, form on right for balanced design
+    - Form Validation: Real-time validation with clear error messaging
+    - Password Security: Password confirmation for account security
+    - Responsive Design: Adapts to different screen sizes and content
+    - User Experience: Clear labels, helpful placeholder text, and intuitive flow
+    - Brand Presentation: Professional appearance that builds trust
+    
+    BUSINESS VALUE:
+    - Enables new users to join the Eventra platform
+    - Creates a professional first impression for new users
+    - Reduces barriers to user registration and adoption
+    - Maintains brand consistency and recognition
+    - Supports user growth and platform expansion
+    - Ensures data quality through proper validation
+    
+    REAL-WORLD ANALOGY:
+    - Like a membership desk at a professional organization
+    - Like a new account signup form at a bank
+    - Like a registration booth at a conference or event
+    - Like a new user onboarding page for a service
+    - Like a membership application form for a club
+-->
 
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our signup screen. Think of them like importing tools from
+    a toolbox that we'll use to build our registration interface.
+    
+    COMPONENTS EXPLAINED:
+    - TextField: Text input fields for user information
+    - PasswordField: Secure password input fields
+    - Button: Interactive buttons for form submission and navigation
+    - Label: Text elements for displaying information and errors
+    - HBox/VBox: Layout containers that organize content
+    - Text: Text elements for headings and labels
+    - Insets: Utilities for adding spacing and padding
+    - ImageView: Container for displaying the Eventra logo
+-->
+<?import javafx.scene.control.*?>      <!-- Form controls: TextField, PasswordField, Button, Label -->
+<?import javafx.scene.layout.*?>       <!-- Layout containers: HBox, VBox for organization -->
+<?import javafx.scene.text.*?>         <!-- Text elements for headings and labels -->
+<?import javafx.geometry.Insets?>      <!-- Spacing and padding utilities -->
+<?import javafx.scene.image.*?>        <!-- Image components for logo display -->
+
+<!-- 
+    ROOT CONTAINER - Main Layout Structure
+    This HBox creates a two-column layout with the logo on the left
+    and the registration form on the right. Think of it like a
+    registration desk with branding on one side and forms on the other.
+    
+    LAYOUT EXPLANATION:
+    - HBox arranges elements horizontally (left to right)
+    - Think of it like creating two columns side by side
+    - Left column shows the logo, right column shows the form
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the SignUpController Java class
+    - alignment="CENTER": Centers content vertically within each column
+    - spacing="60": Adds 60 pixels of space between left and right columns
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="signup-page-container": Applies signup-specific styling
+-->
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.SignUpController"
@@ -13,34 +89,177 @@
       stylesheets="@../css/styles.css"
       styleClass="signup-page-container">
 
-    <!-- Left Side - Logo Only -->
+    <!-- 
+        LEFT COLUMN - Logo and Branding Section
+        This section displays the Eventra logo prominently to establish
+        brand identity and provide visual appeal to the registration page.
+        Think of it like a company sign that welcomes new members.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges logo elements vertically
+        - alignment="CENTER" centers logo both horizontally and vertically
+        - styleClass="logo-section" applies logo-specific styling
+        - Logo is sized at 300x300 pixels for clear visibility and impact
+        
+        USER EXPERIENCE:
+        - Users immediately see the Eventra brand
+        - Large logo creates a professional, trustworthy impression
+        - Centered layout provides visual balance
+        - Brand recognition helps users feel confident about registration
+    -->
     <VBox alignment="CENTER" styleClass="logo-section">
+        <!-- 
+            LOGO IMAGE - Eventra brand display
+            This displays the main Eventra logo for brand recognition.
+            Think of it like a company sign that establishes trust and identity.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="logoImageView": Gives this image a name for controller access
+            - fitHeight="300": Makes image 300 pixels tall
+            - fitWidth="300": Makes image 300 pixels wide
+            - preserveRatio="true": Keeps image proportions correct (no distortion)
+            - Image source: Loads logo from ../images/logo.png.png
+            
+            USER EXPERIENCE:
+            - Large, clear logo creates professional appearance
+            - Maintains brand consistency with other screens
+            - Builds trust and recognition for new users
+            - Provides visual anchor for the left side of the screen
+            
+            CONTROLLER USAGE:
+            The controller can access this logo using: logoImageView
+        -->
         <ImageView fx:id="logoImageView" fitHeight="300" fitWidth="300" preserveRatio="true">
+            <!-- 
+                IMAGE SOURCE - Logo file reference
+                This specifies which image file to display as the logo.
+                Think of it like pointing to a specific picture file.
+                
+                PROPERTIES EXPLAINED:
+                - url="@../images/logo.png.png": Path to the logo image file
+                - @ symbol indicates relative path from the FXML file location
+            -->
             <image>
                 <Image url="@../images/logo.png.png"/>
             </image>
         </ImageView>
     </VBox>
 
-    <!-- Right Side - Form Card -->
+    <!-- 
+        RIGHT COLUMN - Registration Form Card
+        
+        This section contains the actual registration form where users
+        input their information to create new accounts.
+        
+        LAYOUT EXPLANATION:
+        - VBox container for vertical form organization
+        - alignment="CENTER" centers form content horizontally
+        - spacing="25" provides comfortable spacing between form sections
+        - styleClass applies card-specific styling (background, shadows, etc.)
+        - maxWidth/prefWidth="400" constrains form width for readability
+        
+        DESIGN PRINCIPLES:
+        - Card layout provides visual separation from background
+        - Consistent spacing creates organized, professional appearance
+        - Width constraint ensures form is readable on all screen sizes
+    -->
     <VBox alignment="CENTER" spacing="25" styleClass="signup-card" maxWidth="400" prefWidth="400">
         
-        <!-- Header -->
+        <!-- 
+            FORM HEADER - Page title and introduction
+            
+            Clearly identifies this as the account creation page and
+            provides visual hierarchy for the form.
+            
+            LAYOUT EXPLANATION:
+            - VBox container for header content
+            - alignment="CENTER" centers title text
+            - spacing="5" for minimal spacing between header elements
+        -->
         <VBox alignment="CENTER" spacing="5">
+            <!-- 
+                MAIN TITLE - Page identification
+                
+                Clear, descriptive text that tells users what they're doing.
+                Uses signup-main-title CSS class for prominent styling.
+            -->
             <Text text="Create Your Account" styleClass="signup-main-title"/>
         </VBox>
 
-        <!-- Form Fields -->
+        <!-- 
+            FORM FIELDS CONTAINER - Input field organization
+            
+            This container holds all the form input fields organized
+            in logical groups for optimal user experience.
+            
+            LAYOUT EXPLANATION:
+            - VBox container for vertical field arrangement
+            - spacing="20" provides comfortable separation between field groups
+            - styleClass applies form-specific styling
+            
+            FORM ORGANIZATION:
+            - Personal Information: First, Middle, Last names
+            - Contact Information: Email address
+            - Security: Password and confirmation
+            - Professional: Organization affiliation
+        -->
         <VBox spacing="20" styleClass="signup-form-container">
             
-            <!-- First Name and Middle Name Row -->
+            <!-- 
+                NAME FIELDS ROW - First and Middle names side by side
+                
+                This row places first name and middle name fields horizontally
+                to optimize space usage while maintaining logical grouping.
+                
+                LAYOUT EXPLANATION:
+                - HBox container for horizontal field arrangement
+                - spacing="15" provides separation between the two name fields
+                - Each name field gets equal space (HBox.hgrow="ALWAYS")
+                
+                USER EXPERIENCE:
+                - Side-by-side layout saves vertical space
+                - Logical grouping of related name fields
+                - Consistent field sizing for visual balance
+            -->
             <HBox spacing="15">
+                <!-- 
+                    FIRST NAME FIELD - User's first name input
+                    
+                    Collects the user's first name for account creation.
+                    
+                    LAYOUT EXPLAINED:
+                    - VBox container for field label and input
+                    - spacing="8" for consistent label-input spacing
+                    - HBox.hgrow="ALWAYS" makes field expand to fill available space
+                    
+                    CONTROLLER INTEGRATION:
+                    - fx:id="firstNameField" allows controller access
+                    - promptText provides helpful input guidance
+                    - styleClass applies consistent input styling
+                -->
                 <VBox spacing="8" HBox.hgrow="ALWAYS">
                     <Label text="First Name" styleClass="field-label"/>
                     <TextField fx:id="firstNameField" 
                               promptText="John"
                               styleClass="modern-input"/>
                 </VBox>
+                
+                <!-- 
+                    MIDDLE NAME FIELD - User's middle name input (optional)
+                    
+                    Collects the user's middle name if they have one.
+                    This field is optional but provides complete name information.
+                    
+                    LAYOUT EXPLAINED:
+                    - VBox container for field label and input
+                    - spacing="8" for consistent label-input spacing
+                    - HBox.hgrow="ALWAYS" makes field expand to fill available space
+                    
+                    CONTROLLER INTEGRATION:
+                    - fx:id="middleNameField" allows controller access
+                    - promptText provides helpful input guidance
+                    - styleClass applies consistent input styling
+                -->
                 <VBox spacing="8" HBox.hgrow="ALWAYS">
                     <Label text="Middle Name" styleClass="field-label"/>
                     <TextField fx:id="middleNameField" 
@@ -49,7 +268,22 @@
                 </VBox>
             </HBox>
 
-            <!-- Last Name -->
+            <!-- 
+                LAST NAME FIELD - User's last name input
+                
+                Collects the user's last name to complete their full name.
+                This field spans the full width for consistency with other single fields.
+                
+                LAYOUT EXPLANATION:
+                - VBox container for field label and input
+                - spacing="8" for consistent label-input spacing
+                - Full width layout for visual balance
+                
+                CONTROLLER INTEGRATION:
+                - fx:id="lastNameField" allows controller access
+                - promptText provides helpful input guidance
+                - styleClass applies consistent input styling
+            -->
             <VBox spacing="8">
                 <Label text="Last Name" styleClass="field-label"/>
                 <TextField fx:id="lastNameField" 
@@ -57,7 +291,27 @@
                           styleClass="modern-input"/>
             </VBox>
 
-            <!-- Email -->
+            <!-- 
+                EMAIL FIELD - User's email address input
+                
+                Collects the user's email address for account identification
+                and communication purposes.
+                
+                LAYOUT EXPLANATION:
+                - VBox container for field label and input
+                - spacing="8" for consistent label-input spacing
+                - Full width layout for email input
+                
+                CONTROLLER INTEGRATION:
+                - fx:id="emailField" allows controller access
+                - promptText provides helpful input guidance
+                - styleClass applies consistent input styling
+                
+                VALIDATION:
+                - Email format validation in controller
+                - Duplicate email checking against database
+                - Required field validation
+            -->
             <VBox spacing="8">
                 <Label text="Email" styleClass="field-label"/>
                 <TextField fx:id="emailField" 
@@ -65,14 +319,69 @@
                           styleClass="modern-input"/>
             </VBox>
 
-            <!-- Password and Confirm Password Row -->
+            <!-- 
+                PASSWORD FIELDS ROW - Password and confirmation side by side
+                
+                This row places password and confirm password fields horizontally
+                to optimize space while maintaining security best practices.
+                
+                LAYOUT EXPLANATION:
+                - HBox container for horizontal field arrangement
+                - spacing="15" provides separation between password fields
+                - Each password field gets equal space (HBox.hgrow="ALWAYS")
+                
+                SECURITY FEATURES:
+                - Password confirmation prevents typos
+                - Side-by-side layout for easy comparison
+                - PasswordField hides input for security
+            -->
             <HBox spacing="15">
+                <!-- 
+                    PASSWORD FIELD - User's password input
+                    
+                    Collects the user's chosen password for account security.
+                    
+                    LAYOUT EXPLAINED:
+                    - VBox container for field label and input
+                    - spacing="8" for consistent label-input spacing
+                    - HBox.hgrow="ALWAYS" makes field expand to fill available space
+                    
+                    SECURITY FEATURES:
+                    - PasswordField hides input characters
+                    - promptText provides helpful input guidance
+                    - styleClass applies consistent input styling
+                    
+                    CONTROLLER INTEGRATION:
+                    - fx:id="passwordField" allows controller access
+                    - Password validation and strength checking
+                -->
                 <VBox spacing="8" HBox.hgrow="ALWAYS">
                     <Label text="Password" styleClass="field-label"/>
                     <PasswordField fx:id="passwordField" 
                                   promptText="Enter your password"
                                   styleClass="modern-input"/>
                 </VBox>
+                
+                <!-- 
+                    CONFIRM PASSWORD FIELD - Password verification input
+                    
+                    Requires users to re-enter their password to prevent
+                    typos and ensure they remember their chosen password.
+                    
+                    LAYOUT EXPLAINED:
+                    - VBox container for field label and input
+                    - spacing="8" for consistent label-input spacing
+                    - HBox.hgrow="ALWAYS" makes field expand to fill available space
+                    
+                    SECURITY FEATURES:
+                    - PasswordField hides input characters
+                    - Confirmation prevents accidental password errors
+                    - promptText provides helpful input guidance
+                    
+                    CONTROLLER INTEGRATION:
+                    - fx:id="confirmPasswordField" allows controller access
+                    - Password matching validation
+                -->
                 <VBox spacing="8" HBox.hgrow="ALWAYS">
                     <Label text="Confirm Password" styleClass="field-label"/>
                     <PasswordField fx:id="confirmPasswordField" 
@@ -81,7 +390,27 @@
                 </VBox>
             </HBox>
 
-            <!-- Organization -->
+            <!-- 
+                ORGANIZATION FIELD - User's organization affiliation
+                
+                Collects information about the user's professional or
+                organizational affiliation for event management purposes.
+                
+                LAYOUT EXPLANATION:
+                - VBox container for field label and input
+                - spacing="8" for consistent label-input spacing
+                - Full width layout for organization input
+                
+                CONTROLLER INTEGRATION:
+                - fx:id="organizationField" allows controller access
+                - promptText provides helpful input guidance
+                - styleClass applies consistent input styling
+                
+                BUSINESS LOGIC:
+                - Used for event organization and grouping
+                - Helps with attendee categorization
+                - Optional field for user privacy
+            -->
             <VBox spacing="8">
                 <Label text="Organization" styleClass="field-label"/>
                 <TextField fx:id="organizationField" 
@@ -89,13 +418,55 @@
                           styleClass="modern-input"/>
             </VBox>
 
-            <!-- Error Message -->
+            <!-- 
+                ERROR MESSAGE DISPLAY - Validation feedback area
+                
+                This area displays validation errors and user feedback
+                when form submission fails or validation issues occur.
+                
+                LAYOUT EXPLANATION:
+                - Label component for error text display
+                - fx:id="errorLabel" for controller access
+                - styleClass applies error-specific styling
+                - visible="false" and managed="false" hide by default
+                
+                CONTROLLER INTEGRATION:
+                - Controller shows/hides this label based on validation
+                - Dynamic error message content
+                - Error styling for user attention
+                
+                VALIDATION FEEDBACK:
+                - Field-specific error messages
+                - Form submission errors
+                - Database constraint violations
+            -->
             <Label fx:id="errorLabel" 
                    styleClass="error-message"
                    visible="false"
                    managed="false"/>
 
-            <!-- Create Account Button -->
+            <!-- 
+                CREATE ACCOUNT BUTTON - Form submission control
+                
+                This button submits the registration form and creates
+                the new user account in the system.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="signUpButton": Controller reference for programmatic access
+                - text="Create Account": Clear button text describing the action
+                - styleClass: Applies button-specific CSS styling
+                
+                CONTROLLER INTEGRATION:
+                - onAction="#handleSignUp" calls controller method when clicked
+                - Form validation before submission
+                - Database operations for account creation
+                - Success/error handling and user feedback
+                
+                USER EXPERIENCE:
+                - Clear call-to-action text
+                - Prominent styling for primary action
+                - Disabled state during form processing
+            -->
             <Button fx:id="signUpButton"
                     text="Create Account"
                     onAction="#handleSignUp"

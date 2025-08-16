@@ -2,6 +2,33 @@
 -- Eventra Database Views
 -- Useful views for common queries and reporting
 -- =====================================================
+--
+-- This file contains 20 comprehensive database views that provide optimized
+-- data access patterns for the Eventra application. These views simplify
+-- complex queries and provide consistent data structures for the application.
+--
+-- VIEW CATEGORIES:
+-- 1. User Management Views - User information and permissions
+-- 2. Event Management Views - Event details and statistics
+-- 3. Session Management Views - Session and presenter information
+-- 4. Registration Views - Attendee registrations and status
+-- 5. Venue and Room Views - Location and capacity management
+-- 6. Dashboard Views - System statistics and activity
+-- 7. Reporting Views - Analytics and business intelligence
+-- 8. Search and Filter Views - Data discovery and filtering
+--
+-- BENEFITS OF USING VIEWS:
+-- - Simplified application queries
+-- - Consistent data structures
+-- - Performance optimization
+-- - Easier maintenance
+-- - Security through abstraction
+--
+-- USAGE IN APPLICATION:
+-- - Controllers use these views for data retrieval
+-- - Reports and dashboards display view data
+-- - Search functionality leverages view structures
+-- - Analytics use aggregated view data
 
 USE EventPlannerDB;
 GO
@@ -9,62 +36,96 @@ GO
 -- =====================================================
 -- USER MANAGEMENT VIEWS
 -- =====================================================
+--
+-- These views provide comprehensive user information with role-based
+-- access control and status management. They're used throughout the
+-- application for user authentication, authorization, and display.
 
 -- View for complete user information with roles and status
+-- 
+-- This view joins the UserM table with RoleType and StatusType to provide
+-- a complete user profile including their role name and account status.
+-- It's the primary view for user management and authentication.
+--
+-- USAGE SCENARIOS:
+-- - User login and authentication
+-- - User profile displays
+-- - Admin user management
+-- - Role-based access control
 CREATE OR ALTER VIEW vw_UserComplete AS
 SELECT 
-    u.UserID,
-    u.Username,
-    u.FirstName,
-    u.MiddleName,
-    u.LastName,
-    u.Email,
-    u.ProfilePicUrl,
-    rt.Name AS RoleName,
-    st.Name AS StatusName,
-    u.PeriodCanLoginInMinutes,
-    u.LastFailedLoginAt,
-    u.CreatedAt,
-    u.UpdatedAt
+    u.UserID,                    -- Unique user identifier
+    u.Username,                  -- Login username
+    u.FirstName,                 -- User's first name
+    u.MiddleName,                -- User's middle name (optional)
+    u.LastName,                  -- User's last name
+    u.Email,                     -- User's email address
+    u.ProfilePicUrl,             -- Path to profile picture
+    rt.Name AS RoleName,         -- Human-readable role name
+    st.Name AS StatusName,       -- Account status description
+    u.PeriodCanLoginInMinutes,   -- Session timeout setting
+    u.LastFailedLoginAt,         -- Security tracking
+    u.CreatedAt,                 -- Account creation timestamp
+    u.UpdatedAt                  -- Last modification timestamp
 FROM UserM u
 INNER JOIN RoleType rt ON u.RoleTypeID = rt.RoleTypeID
 INNER JOIN StatusType st ON u.StatusTypeID = st.StatusTypeID;
 GO
 
 -- View for attendee information with user details
+-- 
+-- This view provides complete attendee information including their
+-- user account details if they have one. It's used for attendee
+-- management and event registration.
+--
+-- BUSINESS LOGIC:
+-- - Links attendees to user accounts when applicable
+-- - Provides organization and contact information
+-- - Shows attendee type and status
+-- - Enables attendee-user relationship tracking
 CREATE OR ALTER VIEW vw_AttendeeComplete AS
 SELECT 
-    a.AttendeeID,
-    a.FirstName,
-    a.MiddleName,
-    a.LastName,
-    a.Email,
-    a.Organization,
-    a.Phone,
-    a.Location,
-    a.Gender,
-    a.DateOfBirth,
-    a.ProfilePicUrl,
-    a.Type AS AttendeeType,
-    st.Name AS StatusName,
-    u.Username,
-    u.RoleTypeID,
-    a.CreatedAt,
-    a.UpdatedAt
+    a.AttendeeID,                -- Unique attendee identifier
+    a.FirstName,                 -- Attendee's first name
+    a.MiddleName,                -- Attendee's middle name (optional)
+    a.LastName,                  -- Attendee's last name
+    a.Email,                     -- Attendee's email address
+    a.Organization,              -- Company or organization name
+    a.Phone,                     -- Contact phone number
+    a.Location,                  -- Geographic location
+    a.Gender,                    -- Gender identification
+    a.DateOfBirth,              -- Birth date for demographics
+    a.ProfilePicUrl,             -- Profile picture path
+    a.Type AS AttendeeType,      -- Type of attendee (VIP, Regular, etc.)
+    st.Name AS StatusName,       -- Attendee status
+    u.Username,                  -- Associated username (if any)
+    u.RoleTypeID,                -- User role (if account exists)
+    a.CreatedAt,                 -- Record creation timestamp
+    a.UpdatedAt                  -- Last modification timestamp
 FROM Attendee a
 INNER JOIN StatusType st ON a.StatusTypeID = st.StatusTypeID
 LEFT JOIN UserM u ON a.UserID = u.UserID;
 GO
 
 -- View for user permissions
+-- 
+-- This view provides a comprehensive list of all user permissions
+-- based on their role. It's used for access control and feature
+-- availability throughout the application.
+--
+-- SECURITY FEATURES:
+-- - Role-based permission mapping
+-- - Granular access control
+-- - Permission description for UI display
+-- - Audit trail for security monitoring
 CREATE OR ALTER VIEW vw_UserPermissions AS
 SELECT 
-    u.UserID,
-    u.Username,
-    u.Email,
-    rt.Name AS RoleName,
-    p.Name AS PermissionName,
-    p.Description AS PermissionDescription
+    u.UserID,                    -- User identifier
+    u.Username,                  -- Login username
+    u.Email,                     -- User's email address
+    rt.Name AS RoleName,         -- User's role name
+    p.Name AS PermissionName,    -- Permission identifier
+    p.Description AS PermissionDescription  -- Human-readable description
 FROM UserM u
 INNER JOIN RoleType rt ON u.RoleTypeID = rt.RoleTypeID
 INNER JOIN RolePermission rp ON rt.RoleTypeID = rp.RoleTypeID

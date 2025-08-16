@@ -1,10 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- 
+    EDIT PROFILE SCREEN (EditProfile.fxml)
+    
+    This FXML file defines the user interface for the Edit Profile screen in the
+    Eventra application. Think of it like a "personal information editor" or
+    "account settings page" where users can modify their profile details.
+    
+    WHAT THIS SCREEN DOES:
+    - Allows users to edit their personal information and account details
+    - Provides form fields for updating username, names, and email
+    - Offers save, cancel, and navigation options for profile management
+    - Maintains data integrity and validation during profile updates
+    - Provides a clean, organized interface for profile editing
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Profile Management: Editing and updating user account information
+    - Form Validation: Ensuring data quality and accuracy
+    - User Experience: Simple, intuitive interface for profile changes
+    - Data Persistence: Saving changes to the user's account
+    - Navigation: Moving between profile editing and other screens
+    - User Control: Giving users control over their personal information
+    
+    BUSINESS VALUE:
+    - Enables users to keep their profile information current and accurate
+    - Supports user engagement through personalized account management
+    - Reduces support requests by allowing self-service profile updates
+    - Improves data quality by providing easy update mechanisms
+    - Creates user satisfaction through control over personal information
+    - Supports compliance and data accuracy requirements
+    
+    REAL-WORLD ANALOGY:
+    - Like editing your contact information in an address book
+    - Like updating your profile on a social media platform
+    - Like filling out a form to change your personal details
+    - Like editing your resume or personal information
+    - Like updating your account settings in any online service
+-->
+
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our profile editing screen. Think of them like importing tools from
+    a toolbox that we'll use to build our profile editing interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for saving, canceling, and navigation
+    - TextField: Text input fields for editing profile information
+    - VBox: Vertical layout containers that organize content vertically
+    - Text: Text elements for labels, titles, and headings
+    - Insets: Utilities for adding spacing and padding between elements
+-->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
+<!-- 
+    MAIN CONTAINER - Vertical Box Layout Structure
+    This VBox is the main container that holds all the profile editing content.
+    Think of it like organizing a form vertically with clear sections for
+    different types of information. It provides a clean, organized structure
+    that's easy to navigate and use.
+    
+    LAYOUT EXPLANATION:
+    - VBox arranges all content vertically (top to bottom)
+    - alignment="CENTER" centers content horizontally
+    - spacing="20" adds 20 pixels between major sections
+    - styleClass="edit-profile-container" applies container-specific styling
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the EditProfileController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="edit-profile-container": Applies edit-profile-specific styling
+    
+    USER EXPERIENCE:
+    - Clean, organized vertical layout
+    - Consistent spacing between sections
+    - Centered content for visual balance
+    - Professional, form-like appearance
+    - Easy to scan and complete
+-->
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.EditProfileController"
@@ -12,49 +90,407 @@
       stylesheets="@../css/styles.css"
       styleClass="edit-profile-container">
 
-    <!-- Header -->
+    <!-- 
+        HEADER SECTION - Page Title and Introduction
+        This section displays the page title and provides context for what
+        the user is doing. Think of it like the header of a document that
+        clearly states what you're working on.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges header content vertically
+        - alignment="CENTER" centers the title horizontally
+        - spacing="10" adds 10 pixels between header elements
+        - styleClass="edit-profile-header" applies header-specific styling
+        
+        USER EXPERIENCE:
+        - Clear indication of what page you're on
+        - Professional, organized appearance
+        - Consistent with other application screens
+        - Easy to understand purpose
+    -->
     <VBox alignment="CENTER" spacing="10" styleClass="edit-profile-header">
+        <!-- 
+            PAGE TITLE - "Edit Profile" Text
+            This text clearly identifies what the user is doing on this screen.
+            Think of it like a page heading that tells you exactly what you're
+            working on.
+            
+            PROPERTIES EXPLAINED:
+            - text="Edit Profile": The actual title text that displays
+            - styleClass="edit-profile-title": Applies title-specific styling
+            
+            USER EXPERIENCE:
+            - Clear page identification
+            - Professional appearance
+            - Consistent with application design
+            - Easy to understand purpose
+        -->
         <Text text="Edit Profile" styleClass="edit-profile-title"/>
     </VBox>
 
-    <!-- Edit Form -->
+    <!-- 
+        EDIT FORM SECTION - Profile Information Fields
+        This section contains all the form fields where users can edit their
+        profile information. Think of it like a form you fill out to update
+        your personal details, with clear labels and input fields.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges form fields vertically
+        - alignment="CENTER" centers form fields horizontally
+        - spacing="20" adds 20 pixels between form field groups
+        - styleClass="edit-form" applies form-specific styling
+        
+        USER EXPERIENCE:
+        - Organized, easy-to-follow form layout
+        - Clear separation between different information types
+        - Consistent spacing and alignment
+        - Professional form appearance
+        - Easy to complete and review
+    -->
     <VBox alignment="CENTER" spacing="20" styleClass="edit-form">
+        <!-- 
+            USERNAME FIELD - User's login identifier
+            This field allows users to change their username, which is how
+            they log into the system. Think of it like changing your login
+            name or user ID.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges label and input field vertically
+            - spacing="10" adds 10 pixels between label and input
+            - styleClass="form-field" applies field-specific styling
+            
+            USER EXPERIENCE:
+            - Clear label indicating what to enter
+            - Easy-to-use text input field
+            - Organized field layout
+            - Consistent with other form fields
+        -->
         <VBox spacing="10" styleClass="form-field">
+            <!-- 
+                FIELD LABEL - "Username:" Text
+                This label clearly identifies what information should be
+                entered in the field below. Think of it like a form label
+                that tells you what to write.
+                
+                PROPERTIES EXPLAINED:
+                - text="Username:": The label text that displays
+                - styleClass="form-label": Applies label-specific styling
+                
+                USER EXPERIENCE:
+                - Clear field identification
+                - Professional appearance
+                - Consistent with other labels
+                - Easy to understand what to enter
+            -->
             <Text text="Username:" styleClass="form-label"/>
+            <!-- 
+                USERNAME INPUT FIELD - Text input for username
+                This TextField allows users to type in their new username.
+                Think of it like a text box where you write your desired
+                username.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="usernameField": Unique identifier for the controller
+                - styleClass="form-input": Applies input field styling
+                
+                USER EXPERIENCE:
+                - Easy text input and editing
+                - Clear visual feedback
+                - Professional appearance
+                - Consistent with other input fields
+            -->
             <TextField fx:id="usernameField" styleClass="form-input"/>
         </VBox>
         
+        <!-- 
+            FIRST NAME FIELD - User's given name
+            This field allows users to update their first name. Think of it
+            like changing your first name in your personal information.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges label and input field vertically
+            - spacing="10" adds 10 pixels between label and input
+            - styleClass="form-field" applies field-specific styling
+            
+            USER EXPERIENCE:
+            - Clear field identification
+            - Easy text input and editing
+            - Organized field layout
+            - Consistent with other form fields
+        -->
         <VBox spacing="10" styleClass="form-field">
+            <!-- 
+                FIELD LABEL - "First Name:" Text
+                This label clearly identifies that this field is for the
+                user's first name. Think of it like a form label that
+                tells you what personal information to enter.
+                
+                PROPERTIES EXPLAINED:
+                - text="First Name:": The label text that displays
+                - styleClass="form-label": Applies label-specific styling
+                
+                USER EXPERIENCE:
+                - Clear field identification
+                - Professional appearance
+                - Consistent with other labels
+                - Easy to understand what to enter
+            -->
             <Text text="First Name:" styleClass="form-label"/>
+            <!-- 
+                FIRST NAME INPUT FIELD - Text input for first name
+                This TextField allows users to type in their first name.
+                Think of it like a text box where you write your first name.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="firstNameField": Unique identifier for the controller
+                - styleClass="form-input": Applies input field styling
+                
+                USER EXPERIENCE:
+                - Easy text input and editing
+                - Clear visual feedback
+                - Professional appearance
+                - Consistent with other input fields
+            -->
             <TextField fx:id="firstNameField" styleClass="form-input"/>
         </VBox>
         
+        <!-- 
+            MIDDLE NAME FIELD - User's middle name (optional)
+            This field allows users to update their middle name. Think of it
+            like adding or changing your middle name in your personal records.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges label and input field vertically
+            - spacing="10" adds 10 pixels between label and input
+            - styleClass="form-field" applies field-specific styling
+            
+            USER EXPERIENCE:
+            - Clear field identification
+            - Easy text input and editing
+            - Organized field layout
+            - Consistent with other form fields
+        -->
         <VBox spacing="10" styleClass="form-field">
+            <!-- 
+                FIELD LABEL - "Middle Name:" Text
+                This label clearly identifies that this field is for the
+                user's middle name. Think of it like a form label that
+                tells you what optional personal information to enter.
+                
+                PROPERTIES EXPLAINED:
+                - text="Middle Name:": The label text that displays
+                - styleClass="form-label": Applies label-specific styling
+                
+                USER EXPERIENCE:
+                - Clear field identification
+                - Professional appearance
+                - Consistent with other labels
+                - Easy to understand what to enter
+            -->
             <Text text="Middle Name:" styleClass="form-label"/>
+            <!-- 
+                MIDDLE NAME INPUT FIELD - Text input for middle name
+                This TextField allows users to type in their middle name.
+                Think of it like a text box where you write your middle name.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="middleNameField": Unique identifier for the controller
+                - styleClass="form-input": Applies input field styling
+                
+                USER EXPERIENCE:
+                - Easy text input and editing
+                - Clear visual feedback
+                - Professional appearance
+                - Consistent with other input fields
+            -->
             <TextField fx:id="middleNameField" styleClass="form-input"/>
         </VBox>
         
+        <!-- 
+            LAST NAME FIELD - User's family name
+            This field allows users to update their last name. Think of it
+            like changing your last name in your personal information.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges label and input field vertically
+            - spacing="10" adds 10 pixels between label and input
+            - styleClass="form-field" applies field-specific styling
+            
+            USER EXPERIENCE:
+            - Clear field identification
+            - Easy text input and editing
+            - Organized field layout
+            - Consistent with other form fields
+        -->
         <VBox spacing="10" styleClass="form-field">
+            <!-- 
+                FIELD LABEL - "Last Name:" Text
+                This label clearly identifies that this field is for the
+                user's last name. Think of it like a form label that
+                tells you what family name information to enter.
+                
+                PROPERTIES EXPLAINED:
+                - text="Last Name:": The label text that displays
+                - styleClass="form-label": Applies label-specific styling
+                
+                USER EXPERIENCE:
+                - Clear field identification
+                - Professional appearance
+                - Consistent with other labels
+                - Easy to understand what to enter
+            -->
             <Text text="Last Name:" styleClass="form-label"/>
+            <!-- 
+                LAST NAME INPUT FIELD - Text input for last name
+                This TextField allows users to type in their last name.
+                Think of it like a text box where you write your last name.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="lastNameField": Unique identifier for the controller
+                - styleClass="form-input": Applies input field styling
+                
+                USER EXPERIENCE:
+                - Easy text input and editing
+                - Clear visual feedback
+                - Professional appearance
+                - Consistent with other input fields
+            -->
             <TextField fx:id="lastNameField" styleClass="form-input"/>
         </VBox>
         
+        <!-- 
+            EMAIL FIELD - User's email address
+            This field allows users to update their email address. Think of it
+            like changing your email address in your account settings.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges label and input field vertically
+            - spacing="10" adds 10 pixels between label and input
+            - styleClass="form-field" applies field-specific styling
+            
+            USER EXPERIENCE:
+            - Clear field identification
+            - Easy text input and editing
+            - Organized field layout
+            - Consistent with other form fields
+        -->
         <VBox spacing="10" styleClass="form-field">
+            <!-- 
+                FIELD LABEL - "Email:" Text
+                This label clearly identifies that this field is for the
+                user's email address. Think of it like a form label that
+                tells you what contact information to enter.
+                
+                PROPERTIES EXPLAINED:
+                - text="Email:": The label text that displays
+                - styleClass="form-label": Applies label-specific styling
+                
+                USER EXPERIENCE:
+                - Clear field identification
+                - Professional appearance
+                - Consistent with other labels
+                - Easy to understand what to enter
+            -->
             <Text text="Email:" styleClass="form-label"/>
+            <!-- 
+                EMAIL INPUT FIELD - Text input for email address
+                This TextField allows users to type in their email address.
+                Think of it like a text box where you write your email address.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="emailField": Unique identifier for the controller
+                - styleClass="form-input": Applies input field styling
+                
+                USER EXPERIENCE:
+                - Easy text input and editing
+                - Clear visual feedback
+                - Professional appearance
+                - Consistent with other input fields
+            -->
             <TextField fx:id="emailField" styleClass="form-input"/>
         </VBox>
     </VBox>
 
-    <!-- Action Buttons -->
+    <!-- 
+        ACTION BUTTONS SECTION - User Actions and Navigation
+        This section contains all the buttons that users can click to
+        perform actions with their profile changes. Think of it like
+        the control panel at the bottom of a form that lets you save,
+        cancel, or navigate away.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges action buttons vertically
+        - alignment="CENTER" centers buttons horizontally
+        - spacing="15" adds 15 pixels between buttons
+        - styleClass="action-buttons" applies button container styling
+        
+        USER EXPERIENCE:
+        - Clear action options
+        - Organized button layout
+        - Consistent button spacing
+        - Professional appearance
+        - Easy to understand what each button does
+    -->
     <VBox alignment="CENTER" spacing="15" styleClass="action-buttons">
+        <!-- 
+            SAVE CHANGES BUTTON - Save profile modifications
+            This button saves all the changes the user made to their profile.
+            Think of it like a "submit" button that sends your form data
+            to be processed and saved.
+            
+            PROPERTIES EXPLAINED:
+            - text="💾 Save Changes": Button text with save icon
+            - onAction="#handleSaveChanges": Calls controller method when clicked
+            - styleClass="save-button": Applies save button styling
+            
+            USER EXPERIENCE:
+            - Clear indication of what the button does
+            - Visual icon for easy recognition
+            - Primary action button for the form
+            - Consistent with application design
+        -->
         <Button text="💾 Save Changes"
                 onAction="#handleSaveChanges"
                 styleClass="save-button"/>
         
+        <!-- 
+            CANCEL BUTTON - Discard profile changes
+            This button cancels all the changes and returns to the previous
+            state. Think of it like an "undo" button that discards your
+            changes and goes back to how things were.
+            
+            PROPERTIES EXPLAINED:
+            - text="❌ Cancel": Button text with cancel icon
+            - onAction="#handleCancel": Calls controller method when clicked
+            - styleClass="cancel-button": Applies cancel button styling
+            
+            USER EXPERIENCE:
+            - Clear indication of what the button does
+            - Visual icon for easy recognition
+            - Secondary action button
+            - Consistent with application design
+        -->
         <Button text="❌ Cancel"
                 onAction="#handleCancel"
                 styleClass="cancel-button"/>
         
+        <!-- 
+            BACK TO PROFILE BUTTON - Return to profile view
+            This button takes the user back to their profile page without
+            saving changes. Think of it like a "go back" button that
+            returns you to where you came from.
+            
+            PROPERTIES EXPLAINED:
+            - text="⬅️ Back to Profile": Button text with back arrow icon
+            - onAction="#handleBackToProfile": Calls controller method when clicked
+            - styleClass="back-button": Applies back button styling
+            
+            USER EXPERIENCE:
+            - Clear indication of where the button takes you
+            - Visual icon for easy recognition
+            - Navigation button for returning to profile
+            - Consistent with application design
+        -->
         <Button text="⬅️ Back to Profile"
                 onAction="#handleBackToProfile"
                 styleClass="back-button"/>

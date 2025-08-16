@@ -244,59 +244,69 @@ public class LoginController {
     
     @FXML
     private void handleSignIn() {
+        // Get user input and trim whitespace for better user experience
         String email = emailField.getText().trim();
         String password = passwordVisible ? visiblePasswordField.getText() : passwordField.getText();
         
-        // Validate input
+        // Validate input before attempting authentication
         if (!validateInput(email, password)) {
-            return;
+            return;  // Stop if validation fails
         }
         
+        // Disable sign-in button to prevent multiple submissions
         signInButton.setDisable(true);
         signInButton.setText("Signing In...");
         
         try {
             System.out.println("Attempting to authenticate user: " + email);
             
-            // DEMO MODE: Bypass database for testing
+            // DEMO MODE: Bypass database for testing and demonstration purposes
+            // This allows developers and users to test the system without a database
             if (email.equals("demo@eventra.com") && password.equals("demo123")) {
-                // Create demo user
+                // Create demo user with admin privileges for testing
                 User demoUser = new User("demo", "Demo", "User", email, "");
                 demoUser.setUserId(1);
-                demoUser.setRoleTypeId(2); // Admin role
+                demoUser.setRoleTypeId(2); // Admin role (can manage events and users)
                 
+                // Create user session and redirect to admin dashboard
                 SessionManager.setCurrentUser(demoUser);
                 ViewUtil.switchTo("Dashboard", emailField.getScene().getWindow());
                 return;
             }
             
             // SUPER ADMIN DEMO MODE: Direct access to SuperAdmin Dashboard
+            // This provides access to system-wide management features
             if (email.equals("superadmin@eventra.com") && password.equals("admin123")) {
-                // Create demo super admin user
+                // Create demo super admin user with full system access
                 User superAdminUser = new User("superadmin", "Super", "Admin", email, "");
                 superAdminUser.setUserId(0);
-                superAdminUser.setRoleTypeId(1); // SuperAdmin role
+                superAdminUser.setRoleTypeId(1); // SuperAdmin role (can manage everything)
                 
+                // Create user session and redirect to super admin dashboard
                 SessionManager.setCurrentUser(superAdminUser);
                 ViewUtil.switchTo("SuperAdminDashboard", emailField.getScene().getWindow());
                 return;
             }
             
-            // Try real authentication
+            // REAL AUTHENTICATION: Attempt to authenticate against the database
+            // This is the normal authentication flow for real users
             Optional<User> userOpt = UserDAO.authenticateUser(email, password);
             
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
                 System.out.println("Authentication successful for user: " + user.getEmail() + " with role: " + user.getRoleTypeId());
+                
+                // Create user session for the authenticated user
                 SessionManager.setCurrentUser(user);
                 
-                // Redirect based on user role
+                // ROLE-BASED REDIRECTION: Send users to appropriate dashboards
+                // This ensures users only see features they have permission to access
                 if (user.getRoleTypeId() == 1) {
-                    // SuperAdmin gets the specialized dashboard
+                    // SuperAdmin gets the specialized dashboard with system management
                     System.out.println("Redirecting SuperAdmin to SuperAdminDashboard page");
                     ViewUtil.switchTo("SuperAdminDashboard", emailField.getScene().getWindow());
                 } else if (user.getRoleTypeId() == 2) {
-                    // Admin gets the admin dashboard
+                    // Admin gets the admin dashboard for event and user management
                     System.out.println("Redirecting Admin to AdminDashboard page");
                     ViewUtil.switchTo("AdminDashboard", emailField.getScene().getWindow());
                 } else if (user.getRoleTypeId() == 4) {

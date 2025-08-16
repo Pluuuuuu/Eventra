@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
+<!-- 
+    DASHBOARD SCREEN (Dashboard.fxml)
+    
+    This FXML file defines the user interface for the Dashboard screen in the
+    Eventra application. Think of it like a "control center" or "home base"
+    where users land after logging in and can access all the main features.
+    
+    WHAT THIS SCREEN DOES:
+    - Displays personalized welcome message and user information
+    - Shows role-specific action buttons and features based on user type
+    - Provides navigation to different parts of the application
+    - Handles user logout and profile management
+    - Displays user profile picture and Eventra branding
+    - Adapts the interface based on user permissions and role
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Role-Based Interface: Different users see different buttons and features
+    - Dynamic Content: Role-specific content is added programmatically by the controller
+    - User Context: Displays personalized information for the logged-in user
+    - Navigation Hub: Central starting point for accessing all application features
+    - Responsive Layout: Adapts to different screen sizes and content amounts
+    - User Authentication: Shows user-specific information and permissions
+    
+    BUSINESS VALUE:
+    - Provides a personalized experience for each user type
+    - Enables efficient navigation to relevant features
+    - Creates a professional and organized user interface
+    - Supports different user roles and permission levels
+    - Maintains brand consistency and user orientation
+    
+    REAL-WORLD ANALOGY:
+    - Like a personalized homepage that shows relevant information
+    - Like a control panel that adapts to the user's role
+    - Like a dashboard in a car that shows important information
+    - Like a main menu that changes based on user permissions
+    - Like a personalized workspace that shows relevant tools
+-->
 
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our dashboard. Think of them like importing tools from
+    a toolbox that we'll use to build our interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons that users can click
+    - Label: Text elements for displaying information
+    - VBox/HBox: Layout containers that organize content
+    - Text: Text elements for headings and content
+    - ImageView: Container for displaying images (logo, profile picture)
+    - Insets: Utilities for adding spacing and padding
+-->
+<?import javafx.scene.control.*?>      <!-- Buttons, labels, and other controls -->
+<?import javafx.scene.layout.*?>       <!-- Layout containers (VBox, HBox) -->
+<?import javafx.scene.text.*?>         <!-- Text elements for headings and content -->
+<?import javafx.scene.image.*?>        <!-- Image components for logo and profile -->
+<?import javafx.geometry.Insets?>      <!-- Spacing and padding utilities -->
+
+<!-- 
+    ROOT CONTAINER - Main Layout Structure
+    This VBox is the main container that holds all the dashboard elements.
+    Think of it like the main frame of a picture that holds all the content.
+    
+    LAYOUT EXPLANATION:
+    - VBox arranges all child elements vertically (top to bottom)
+    - Think of it like stacking boxes on top of each other
+    - All content flows from top to bottom in a clean, organized way
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the DashboardController Java class
+    - alignment="CENTER": Centers all content horizontally on the screen
+    - spacing="20": Adds 20 pixels of space between child elements
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="dashboard-container": Applies dashboard-specific styling
+-->
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.DashboardController"
@@ -13,50 +84,260 @@
       stylesheets="@../css/styles.css"
       styleClass="dashboard-container">
 
-    <!-- Top Bar with Logo and Profile Picture -->
+    <!-- 
+        TOP BAR - Logo and Profile Section
+        This horizontal bar contains the Eventra logo on the left and
+        the user's profile picture on the right. It provides brand
+        recognition and quick access to user profile management.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges elements horizontally (left to right)
+        - alignment="CENTER_RIGHT" centers elements vertically and aligns to right
+        - styleClass="top-bar" applies top bar-specific styling
+        - Logo section expands to fill available space
+        - Profile picture is positioned on the right side
+        
+        USER EXPERIENCE:
+        - Users immediately see the Eventra brand
+        - Profile picture provides quick access to user settings
+        - Clean, professional appearance
+        - Easy navigation between branding and user features
+    -->
     <HBox alignment="CENTER_RIGHT" styleClass="top-bar">
+        <!-- 
+            LOGO SECTION - Left side of top bar
+            This section contains the Eventra logo for brand recognition.
+            The HBox.hgrow="ALWAYS" makes this section expand to fill
+            available space, pushing the profile picture to the right.
+            
+            LAYOUT EXPLANATION:
+            - HBox arranges logo elements horizontally
+            - alignment="CENTER_LEFT" centers logo vertically on the left
+            - HBox.hgrow="ALWAYS" makes this section expand to fill space
+        -->
         <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+            <!-- 
+                LOGO IMAGE - Eventra brand logo
+                This displays the Eventra logo prominently at the top left.
+                Think of it like a company sign that establishes brand identity.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="logoImageView": Gives this image a name for controller access
+                - fitWidth="40": Makes image 40 pixels wide
+                - fitHeight="40": Makes image 40 pixels tall
+                - styleClass="logo-image": Applies logo-specific styling
+                
+                CONTROLLER USAGE:
+                The controller can access this logo using: logoImageView
+            -->
             <ImageView fx:id="logoImageView" 
                        fitWidth="40" 
                        fitHeight="40" 
                        styleClass="logo-image"/>
         </HBox>
+        
+        <!-- 
+            PROFILE PICTURE - Right side of top bar
+            This displays the current user's profile picture and handles
+            click events for profile management. Think of it like a
+            user avatar that provides quick access to personal settings.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="profileImageView": Gives this image a name for controller access
+            - fitWidth="40": Makes image 40 pixels wide
+            - fitHeight="40": Makes image 40 pixels tall
+            - styleClass="profile-image": Applies profile picture styling
+            - onMouseClicked="#handleProfileClick": Calls controller method when clicked
+            
+            USER EXPERIENCE:
+            - Users can see their profile picture
+            - Clicking the picture opens profile management
+            - Provides visual confirmation of logged-in status
+            - Creates a personalized connection to the user's account
+            
+            CONTROLLER USAGE:
+            The controller can handle profile clicks using: handleProfileClick method
+        -->
         <ImageView fx:id="profileImageView" 
-                   fitWidth="50" 
-                   fitHeight="50" 
-                   styleClass="profile-picture-small"
-                   onMouseClicked="#handleProfilePictureClick"/>
+                   fitWidth="40" 
+                   fitHeight="40" 
+                   styleClass="profile-image"
+                   onMouseClicked="#handleProfileClick"/>
     </HBox>
 
-    <!-- Header -->
-    <VBox alignment="CENTER" spacing="10" styleClass="dashboard-header">
-        <Text text="Welcome to Eventra!" styleClass="dashboard-title"/>
-        <Text fx:id="welcomeText" text="Hello, User!" styleClass="dashboard-subtitle"/>
+    <!-- 
+        WELCOME HEADER - User greeting and information
+        This section displays a personalized welcome message and shows
+        the user's name and role. Think of it like a personalized
+        greeting that makes users feel welcome and oriented.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges welcome elements vertically
+        - alignment="CENTER" centers all content horizontally
+        - spacing="10" adds 10 pixels between welcome elements
+        - styleClass="welcome-header" applies welcome-specific styling
+    -->
+    <VBox alignment="CENTER" spacing="10" styleClass="welcome-header">
+        <!-- 
+            WELCOME TITLE - Main greeting message
+            This text displays a personalized welcome message for the user.
+            Think of it like a friendly greeting that welcomes users back.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="welcomeTitle": Gives this text a name for controller access
+            - text="Welcome back!": Default welcome message
+            - styleClass="welcome-title": Applies title-specific styling
+            
+            CONTROLLER USAGE:
+            The controller can update this text using: welcomeTitle.setText("Custom Message")
+        -->
+        <Text fx:id="welcomeTitle" 
+              text="Welcome back!" 
+              styleClass="welcome-title"/>
+        
+        <!-- 
+            USER INFO - User name and role display
+            This text shows the user's name and their role in the system.
+            Think of it like a personalized identification that shows
+            who the user is and what they can do.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="userInfoText": Gives this text a name for controller access
+            - text="User Info": Default text that shows before real data loads
+            - styleClass="user-info": Applies user info-specific styling
+            
+            CONTROLLER USAGE:
+            The controller can update this text using: userInfoText.setText("John Doe - Admin")
+        -->
+        <Text fx:id="userInfoText" 
+              text="User Info" 
+              styleClass="user-info"/>
     </VBox>
 
-    <!-- Dashboard Content -->
-    <VBox alignment="CENTER" spacing="15" styleClass="dashboard-content">
+    <!-- 
+        USER INFORMATION SECTION - Personal details display
+        This section shows detailed information about the logged-in user,
+        including their email address and other account details.
+        Think of it like a personal information card that displays
+        the user's account details.
         
-        <Text text="You have successfully signed in!" styleClass="dashboard-text"/>
+        LAYOUT EXPLANATION:
+        - VBox arranges user info elements vertically
+        - alignment="CENTER" centers all content horizontally
+        - spacing="15" adds 15 pixels between info elements
+        - styleClass="user-info-section" applies info section styling
+        - maxWidth="400" limits the width for better readability
+    -->
+    <VBox alignment="CENTER" spacing="15" styleClass="user-info-section" maxWidth="400">
+        <!-- 
+            USER EMAIL - Email address display
+            This text shows the user's email address for reference.
+            Think of it like displaying contact information on a profile card.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="userEmailText": Gives this text a name for controller access
+            - text="Email: user@example.com": Default text that shows before real data loads
+            - styleClass="user-email": Applies email-specific styling
+            
+            CONTROLLER USAGE:
+            The controller can update this text using: userEmailText.setText("Email: real@email.com")
+        -->
+        <Text fx:id="userEmailText" 
+              text="Email: user@example.com" 
+              styleClass="user-email"/>
         
-        <!-- User Info -->
-        <VBox spacing="10" styleClass="user-info">
-            <Text fx:id="userInfoText" text="User Information" styleClass="info-title"/>
-            <Text fx:id="emailText" text="Email: " styleClass="info-text"/>
-            <Text fx:id="roleText" text="Role: " styleClass="info-text"/>
-        </VBox>
+        <!-- 
+            USER ROLE - Role and permissions display
+            This text shows the user's role and what they can do in the system.
+            Think of it like a job title that explains the user's capabilities.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="userRoleText": Gives this text a name for controller access
+            - text="Role: User": Default text that shows before real data loads
+            - styleClass="user-role": Applies role-specific styling
+            
+            CONTROLLER USAGE:
+            The controller can update this text using: userRoleText.setText("Role: Administrator")
+        -->
+        <Text fx:id="userRoleText" 
+              text="Role: User" 
+              styleClass="user-role"/>
+    </VBox>
 
-        <!-- Action Buttons -->
-        <VBox fx:id="roleSpecificContent" alignment="CENTER" spacing="15" styleClass="role-content">
-            <!-- Role-specific buttons will be dynamically added here -->
-        </VBox>
+    <!-- 
+        ACTION BUTTONS CONTAINER - Role-specific functionality
+        This section contains all the action buttons that users can
+        click to access different features. The buttons shown depend
+        on the user's role and permissions. Think of it like a
+        toolbox that contains different tools based on what the
+        user is allowed to do.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges action buttons vertically
+        - alignment="CENTER" centers all buttons horizontally
+        - spacing="15" adds 15 pixels between buttons
+        - styleClass="action-buttons" applies button container styling
+        - maxWidth="300" limits the width for better button layout
+    -->
+    <VBox fx:id="actionButtonsContainer" 
+          alignment="CENTER" 
+          spacing="15" 
+          styleClass="action-buttons"
+          maxWidth="300">
+        
+        <!-- 
+            DYNAMIC BUTTONS - Added programmatically by controller
+            This container will be populated with buttons by the controller
+            based on the user's role and permissions. Think of it like
+            a dynamic menu that changes based on who is using the system.
+            
+            CONTROLLER USAGE:
+            The controller can add buttons using: actionButtonsContainer.getChildren().add(button)
+            
+            BUTTON EXAMPLES:
+            - Admin users might see: "Manage Events", "View Reports", "User Management"
+            - Regular users might see: "Browse Events", "My Schedule", "Edit Profile"
+            - Staff users might see: "Event Operations", "Attendee Management"
+        -->
+        
+    </VBox>
 
-        <!-- Logout Button -->
-        <HBox alignment="CENTER" spacing="15">
-                    <Button text="🚪 Logout"
-                onAction="#handleLogout"
+    <!-- 
+        LOGOUT SECTION - Session termination
+        This section provides a way for users to log out of the system.
+        Think of it like a "sign out" button that safely ends the
+        user's session and returns them to the login screen.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges logout elements vertically
+        - alignment="CENTER" centers all content horizontally
+        - spacing="10" adds 10 pixels between logout elements
+        - styleClass="logout-section" applies logout-specific styling
+    -->
+    <VBox alignment="CENTER" spacing="10" styleClass="logout-section">
+        <!-- 
+            LOGOUT BUTTON - End user session
+            This button allows users to safely log out of the system.
+            Think of it like a "sign out" button that ends the current
+            session and returns to the login screen.
+            
+            PROPERTIES EXPLAINED:
+            - text="Logout": Button text that clearly indicates the action
+            - onAction="#handleLogout": Calls controller method when clicked
+            - styleClass="logout-button": Applies logout button styling
+            
+            USER EXPERIENCE:
+            - Clear indication of logout functionality
+            - Safe way to end user session
+            - Returns user to login screen
+            - Protects user account security
+            
+            CONTROLLER USAGE:
+            The controller can handle logout using: handleLogout method
+        -->
+        <Button text="Logout" 
+                onAction="#handleLogout" 
                 styleClass="logout-button"/>
-        </HBox>
     </VBox>
 
 </VBox>

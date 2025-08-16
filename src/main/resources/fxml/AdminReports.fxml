@@ -1,10 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- 
+    ADMIN REPORTS SCREEN (AdminReports.fxml)
+    
+    This FXML file defines the user interface for the Admin Reports screen in the
+    Eventra application. Think of it like a "business intelligence center" or
+    "analytics dashboard" where administrators can view system performance data,
+    generate reports, and make data-driven decisions.
+    
+    WHAT THIS SCREEN DOES:
+    - Provides access to comprehensive system analytics and reporting tools
+    - Displays key performance indicators and system statistics
+    - Enables report generation for various system aspects
+    - Shows event reports, user analytics, and system performance data
+    - Offers insights into system usage and event participation
+    - Supports data-driven administrative decision making
+    - Manages reporting workflows and analytics access
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Business Intelligence: Data analysis and insights for decision making
+    - System Analytics: Performance metrics and usage statistics
+    - Report Generation: Creating detailed reports on various system aspects
+    - Data Visualization: Presenting complex data in understandable formats
+    - Administrative Insights: Information to improve system management
+    - User Experience: Intuitive interface for accessing analytics and reports
+    
+    BUSINESS VALUE:
+    - Enables administrators to make data-driven decisions about system management
+    - Provides visibility into system performance and user engagement
+    - Supports proactive problem identification and resolution
+    - Improves administrative efficiency through better information access
+    - Creates opportunities for system optimization and improvement
+    - Supports strategic planning and resource allocation decisions
+    
+    REAL-WORLD ANALOGY:
+    - Like a business intelligence dashboard for executives
+    - Like an analytics center for monitoring system performance
+    - Like a reporting office that provides insights and data
+    - Like a control room that shows system health and performance
+    - Like a business analyst's workstation with all the key metrics
+-->
+
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our reports and analytics screen. Think of them like importing tools from
+    a toolbox that we'll use to build our business intelligence interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for report generation and navigation
+    - TextField: Text input fields for report parameters and search
+    - HBox/VBox: Layout containers that organize content horizontally and vertically
+    - Text: Text elements for headings, labels, content, and information display
+    - Insets: Utilities for adding spacing and padding between elements
+-->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
+<!-- 
+    MAIN CONTAINER - Vertical Box Layout Structure
+    This VBox is the main container that organizes all the reports and analytics
+    content vertically. Think of it like organizing a business intelligence
+    interface with clear sections for different types of reporting and analytics.
+    
+    LAYOUT EXPLANATION:
+    - VBox arranges all content vertically (top to bottom)
+    - alignment="CENTER" centers content horizontally
+    - spacing="20" adds 20 pixels between major sections
+    - styleClass="dashboard-container" applies dashboard-specific styling
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the AdminReportsController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="dashboard-container": Applies dashboard-specific styling
+    
+    USER EXPERIENCE:
+    - Clean, organized vertical layout
+    - Centered content for visual balance
+    - Consistent spacing between sections
+    - Professional, analytics-focused appearance
+    - Easy to navigate and use
+-->
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.AdminReportsController"
@@ -12,30 +92,232 @@
       stylesheets="@../css/styles.css"
       styleClass="dashboard-container">
 
-    <!-- Header -->
+    <!-- 
+        HEADER SECTION - Page title and identification
+        This section displays the main title and identifies this as the
+        administrator dashboard for reports and analytics. Think of it like
+        the header of a business report that clearly states what you're
+        looking at and who it's for.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges header content vertically
+        - alignment="CENTER" centers content horizontally
+        - spacing="10" adds 10 pixels between header elements
+        - styleClass="dashboard-header" applies header-specific styling
+        
+        USER EXPERIENCE:
+        - Clear page identification and purpose
+        - Professional appearance
+        - Consistent with other interface elements
+        - Easy to understand functionality
+    -->
     <VBox alignment="CENTER" spacing="10" styleClass="dashboard-header">
+        <!-- 
+            MAIN TITLE - "Reports & Analytics" Text
+            This text clearly identifies that this is the reports and analytics
+            page. Think of it like a page heading that tells you exactly
+            what you're working with.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="titleText": Unique identifier for the controller
+            - text="Reports &amp; Analytics": The main title text (amp; is HTML entity for &)
+            - styleClass="dashboard-title": Applies main title styling
+            
+            USER EXPERIENCE:
+            - Clear page identification
+            - Professional appearance
+            - Consistent with application design
+            - Easy to understand purpose
+        -->
         <Text fx:id="titleText" text="Reports &amp; Analytics" styleClass="dashboard-title"/>
+        <!-- 
+            SUBTITLE - "Administrator Dashboard" Text
+            This text identifies that this is specifically for administrators
+            and provides context about the user role. Think of it like a
+            subtitle that clarifies who this interface is designed for.
+            
+            PROPERTIES EXPLAINED:
+            - text="Administrator Dashboard": The subtitle text that displays
+            - styleClass="dashboard-subtitle": Applies subtitle styling
+            
+            USER EXPERIENCE:
+            - Clear user role identification
+            - Professional appearance
+            - Consistent with other interface elements
+            - Easy to understand access level
+        -->
         <Text text="Administrator Dashboard" styleClass="dashboard-subtitle"/>
     </VBox>
 
-    <!-- Content -->
+    <!-- 
+        MAIN CONTENT SECTION - Reports and analytics information
+        This section contains the main content of the reports page, including
+        information about available features and action buttons. Think of it
+        like the main body of a business report that contains the key
+        information and next steps.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges content vertically
+        - alignment="CENTER" centers content horizontally
+        - spacing="15" adds 15 pixels between content elements
+        - styleClass="dashboard-content" applies content-specific styling
+        
+        USER EXPERIENCE:
+        - Clear information organization
+        - Professional appearance
+        - Easy-to-read content layout
+        - Consistent with interface design
+    -->
     <VBox alignment="CENTER" spacing="15" styleClass="dashboard-content">
         
+        <!-- 
+            SECTION TITLE - "Reporting System" Text
+            This text introduces the reporting system section and provides
+            context about what this area offers. Think of it like a section
+            header that introduces the main topic.
+            
+            PROPERTIES EXPLAINED:
+            - text="Reporting System": The section title text
+            - styleClass="dashboard-text": Applies dashboard text styling
+            
+            USER EXPERIENCE:
+            - Clear section identification
+            - Professional appearance
+            - Consistent with other text elements
+            - Easy to understand purpose
+        -->
         <Text text="Reporting System" styleClass="dashboard-text"/>
         
-        <!-- Placeholder Content -->
+        <!-- 
+            FEATURES INFORMATION - Available reporting capabilities
+            This section describes what reporting features are available
+            to administrators. Think of it like an overview section that
+            tells you what tools and capabilities you have access to.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges feature information vertically
+            - spacing="10" adds 10 pixels between information elements
+            - styleClass="user-info" applies information section styling
+            
+            USER EXPERIENCE:
+            - Clear feature overview
+            - Professional appearance
+            - Easy-to-read information layout
+            - Consistent with interface design
+        -->
         <VBox spacing="10" styleClass="user-info">
+            <!-- 
+                FEATURE TITLE - "This is the Reports page for Administrators" Text
+                This text clearly identifies what this page is for and who
+                it's designed for. Think of it like an introduction that
+                tells you exactly what you're looking at.
+                
+                PROPERTIES EXPLAINED:
+                - text="This is the Reports page for Administrators": Description text
+                - styleClass="info-title": Applies information title styling
+                
+                USER EXPERIENCE:
+                - Clear page purpose identification
+                - Professional appearance
+                - Consistent with other interface elements
+                - Easy to understand functionality
+            -->
             <Text text="This is the Reports page for Administrators" styleClass="info-title"/>
+            <!-- 
+                FEATURE DESCRIPTION - "Here you can view system analytics and reports" Text
+                This text explains what administrators can do on this page.
+                Think of it like a description that tells you the main
+                capabilities available.
+                
+                PROPERTIES EXPLAINED:
+                - text="Here you can view system analytics and reports": Description text
+                - styleClass="info-text": Applies information text styling
+                
+                USER EXPERIENCE:
+                - Clear capability explanation
+                - Professional appearance
+                - Consistent with other text elements
+                - Easy to understand functionality
+            -->
             <Text text="Here you can view system analytics and reports" styleClass="info-text"/>
+            <!-- 
+                FEATURE LIST - "Features: Event Reports, User Analytics, and System Statistics" Text
+                This text lists the specific types of reports and analytics
+                available. Think of it like a feature list that shows you
+                exactly what tools you have access to.
+                
+                PROPERTIES EXPLAINED:
+                - text="Features: Event Reports, User Analytics, and System Statistics": Feature list text
+                - styleClass="info-text": Applies information text styling
+                
+                USER EXPERIENCE:
+                - Clear feature listing
+                - Professional appearance
+                - Consistent with other text elements
+                - Easy to understand available tools
+            -->
             <Text text="Features: Event Reports, User Analytics, and System Statistics" styleClass="info-text"/>
         </VBox>
 
-        <!-- Action Buttons -->
+        <!-- 
+            ACTION BUTTONS SECTION - Report generation and navigation
+            This section contains buttons that allow administrators to
+            generate reports and navigate back to the main dashboard.
+            Think of it like a control panel that gives you access to
+            the main functions and navigation options.
+            
+            LAYOUT EXPLANATION:
+            - HBox arranges action buttons horizontally
+            - alignment="CENTER" centers buttons horizontally
+            - spacing="15" adds 15 pixels between buttons
+            - styleClass applies button-specific styling
+            
+            USER EXPERIENCE:
+            - Clear action options
+            - Organized button layout
+            - Professional appearance
+            - Easy task completion
+        -->
         <HBox alignment="CENTER" spacing="15">
+            <!-- 
+                GENERATE REPORT BUTTON - Create new reports
+                This button allows administrators to generate new reports
+                based on current system data. Think of it like a "create"
+                button that starts the process of building a new report.
+                
+                PROPERTIES EXPLAINED:
+                - text="Generate Report": Button text that clearly indicates the action
+                - onAction="#handleGenerateReport": Calls controller method when clicked
+                - styleClass="primary-button": Applies primary button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of what the button does
+                - Easy access to report generation
+                - Professional appearance
+                - Consistent with application design
+            -->
             <Button text="Generate Report"
                     onAction="#handleGenerateReport"
                     styleClass="primary-button"/>
             
+            <!-- 
+                BACK TO DASHBOARD BUTTON - Return to main dashboard
+                This button takes administrators back to the main dashboard
+                where they can access other administrative functions.
+                Think of it like a "return" button that takes you back
+                to the main administrative area.
+                
+                PROPERTIES EXPLAINED:
+                - text="Back to Dashboard": Button text that clearly indicates the action
+                - onAction="#handleBackToDashboard": Calls controller method when clicked
+                - styleClass="secondary-button": Applies secondary button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of where the button takes you
+                - Easy return to main dashboard
+                - Professional appearance
+                - Consistent with application design
+            -->
             <Button text="Back to Dashboard"
                     onAction="#handleBackToDashboard"
                     styleClass="secondary-button"/>

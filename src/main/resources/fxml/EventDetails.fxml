@@ -1,103 +1,700 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
-<?import java.time.format.DateTimeFormatter?>
+<!-- 
+    EVENT DETAILS SCREEN (EventDetails.fxml)
+    
+    This FXML file defines the user interface for the Event Details screen in the
+    Eventra application. Think of it like a "detailed event page" or "event
+    information center" where users can see comprehensive details about a specific event.
+    
+    WHAT THIS SCREEN DOES:
+    - Shows detailed information about a specific event
+    - Displays event banner with title, date, time, and location
+    - Shows speaker information and session schedules
+    - Provides registration options and event actions
+    - Offers navigation back to other parts of the application
+    - Presents comprehensive event information for decision-making
+    - Manages event viewing and registration workflows
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Event Information Display: Comprehensive view of event details
+    - Event Banner: Prominent display of key event information
+    - Speaker Information: Details about event presenters and organizers
+    - Session Scheduling: Timeline and agenda of event activities
+    - Registration Management: Options for attending the event
+    - Navigation: Moving between event details and other screens
+    - User Experience: Rich, informative interface for event exploration
+    
+    BUSINESS VALUE:
+    - Enables users to make informed decisions about event attendance
+    - Provides comprehensive event information for better planning
+    - Supports event discovery and exploration capabilities
+    - Creates engagement through detailed event presentation
+    - Facilitates event registration and participation
+    - Improves user satisfaction with rich event information
+    
+    REAL-WORLD ANALOGY:
+    - Like a detailed event page on an event website
+    - Like a comprehensive event brochure or flyer
+    - Like an event information center at a venue
+    - Like a detailed calendar entry with full event details
+    - Like an event catalog page with comprehensive information
+-->
 
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our event details screen. Think of them like importing tools from
+    a toolbox that we'll use to build our detailed event information interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for registration and navigation
+    - TextField: Text input fields for search functionality
+    - HBox/VBox: Layout containers that organize content
+    - Text: Text elements for headings, labels, and content
+    - ImageView: Container for displaying event images and banners
+    - Insets: Utilities for adding spacing and padding
+    - BorderPane: Main layout container with top, center, bottom sections
+    - DateTimeFormatter: Utilities for formatting and displaying dates
+-->
+<?import javafx.scene.control.*?>          <!-- Buttons, text fields, and other controls -->
+<?import javafx.scene.layout.*?>           <!-- Layout containers like HBox and VBox -->
+<?import javafx.scene.text.*?>             <!-- Text elements for headings and labels -->
+<?import javafx.scene.image.*?>            <!-- Image components for event images -->
+<?import javafx.geometry.Insets?>          <!-- Spacing and padding tools -->
+<?import java.time.format.DateTimeFormatter?>  <!-- Date formatting utilities -->
+
+<!-- 
+    MAIN CONTAINER - BorderPane Layout Structure
+    This BorderPane is like a picture frame with sections for top, bottom, left, right, and center.
+    We use it here to put the navigation bar at the top and the event details in the center.
+    Think of it like organizing a page with a header and main content area that provides
+    comprehensive event information.
+    
+    LAYOUT EXPLANATION:
+    - BorderPane provides organized sections for different content areas
+    - Think of it like a document with a header, main content, and organized sections
+    - Top section contains navigation, center section contains event details
+    - Clean, organized structure that's easy to navigate and read
+    - Two-column content area: main content and sidebar for additional information
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the EventDetailsController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="main-container": Applies main-container-specific styling
+    
+    USER EXPERIENCE:
+    - Clear separation between navigation and content
+    - Consistent layout structure across the application
+    - Easy navigation between different sections
+    - Professional, organized appearance
+    - Rich, informative event presentation
+-->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.eventra.controller.EventDetailsController"
             stylesheets="@../css/styles.css"
             styleClass="main-container">
 
-    <!-- Header -->
+    <!-- 
+        TOP SECTION - Navigation Bar
+        This is the top bar that stays visible while you view event details.
+        It's like the header of a website that always shows at the top and
+        provides navigation to other parts of the application.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges navigation elements horizontally (left to right)
+        - alignment="CENTER_LEFT" puts content on the left side
+        - spacing="20" adds 20 pixels between navigation elements
+        - styleClass="header" applies header-specific styling
+        
+        USER EXPERIENCE:
+        - Consistent navigation across all screens
+        - Easy access to main application features
+        - Clear branding and user orientation
+        - Professional, organized appearance
+        - Always-visible navigation for easy access
+    -->
     <top>
         <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <!-- 
+                PADDING - Space around the navigation bar
+                Padding adds breathing room around the navigation bar content.
+                Think of it like adding margins around text in a document.
+                
+                PROPERTIES EXPLAINED:
+                - top="15": 15 pixels of space above the content
+                - right="20": 20 pixels of space to the right
+                - bottom="15": 15 pixels of space below the content
+                - left="20": 20 pixels of space to the left
+                
+                USER EXPERIENCE:
+                - Content doesn't touch the screen edges
+                - Clean, professional appearance
+                - Better readability and visual comfort
+                - Consistent spacing throughout the interface
+                - Proper visual hierarchy and breathing room
+            -->
             <padding>
                 <Insets top="15" right="20" bottom="15" left="20"/>
             </padding>
             
-            <!-- Logo -->
+            <!-- 
+                LOGO - Eventra brand identity
+                Shows the Eventra logo/text so users know which app they're using.
+                It's like the company name at the top of a website that establishes
+                brand recognition and trust.
+                
+                PROPERTIES EXPLAINED:
+                - text="Eventra": The actual text that displays
+                - styleClass="logo-text": Applies logo-specific CSS styling
+                - style: Inline styling for font size and weight
+                - -fx-font-size: 24px: Makes text 24 pixels tall
+                - -fx-font-weight: bold: Makes text bold and prominent
+                
+                USER EXPERIENCE:
+                - Clear brand identification
+                - Professional, trustworthy appearance
+                - Consistent branding across the application
+                - Easy recognition of the platform
+                - Establishes credibility and trust
+            -->
             <Text text="Eventra" styleClass="logo-text" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             
-            <!-- Navigation -->
+            <!-- 
+                NAVIGATION MENU - Main menu buttons
+                
+                These buttons let users move between different parts of the app.
+                Think of them like the main menu of a website.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges buttons horizontally
+                - spacing="30" adds 30 pixels between buttons
+                - alignment="CENTER_LEFT" centers buttons vertically on the left
+                
+                BUTTON EXPLANATION:
+                - "My Schedule": Takes you to your personal event schedule
+                - "Browse Events": Takes you to see all available events
+            -->
             <HBox spacing="30" alignment="CENTER_LEFT">
+                <!-- 
+                    MY SCHEDULE BUTTON - Navigation to personal schedule
+                    
+                    This button takes you to see your personal event schedule.
+                    It's like going to your personal calendar page.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="My Schedule": Button text
+                    - styleClass: Applies attendee-nav-button styling
+                    - onAction="#handleMySchedule": Calls controller method when clicked
+                -->
                 <Button text="My Schedule" styleClass="attendee-nav-button" onAction="#handleMySchedule"/>
+                
+                <!-- 
+                    BROWSE EVENTS BUTTON - Navigation to events list
+                    
+                    This button takes you to see all available events you can register for.
+                    It's like going to the main catalog or events page.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Browse Events": Button text
+                    - styleClass: Applies attendee-nav-button styling
+                    - onAction="#handleBrowseEvents": Calls controller method when clicked
+                -->
                 <Button text="Browse Events" styleClass="attendee-nav-button" onAction="#handleBrowseEvents"/>
             </HBox>
             
-            <!-- Search Bar -->
+            <!-- 
+                SEARCH SECTION - Event search functionality
+                
+                This area lets you search for specific events in the system.
+                It's like a search box that helps you find what you're looking for.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges search field and button horizontally
+                - alignment="CENTER_RIGHT" puts search on the right side
+                - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                
+                COMPONENTS:
+                - Search text field: Where you type what you're looking for
+                - Search button: Magnifying glass icon to start the search
+            -->
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <!-- 
+                    SEARCH FIELD - Text input for search terms
+                    
+                    This is where you type keywords to search for specific events.
+                    For example, type "conference" to find conference events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="searchField": Gives this field a name so the controller can access it
+                    - promptText="Search events...": Gray text that shows when the field is empty
+                    - styleClass: Applies search-field-specific styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can read what you type using: searchField.getText()
+                -->
                 <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                
+                <!-- 
+                    SEARCH BUTTON - Triggers the search
+                    
+                    Click this button to search for events using the text you typed.
+                    The 🔍 icon is a magnifying glass, which is the universal symbol for search.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="🔍": Magnifying glass emoji for the search icon
+                    - styleClass: Applies search-button-specific styling
+                    - onAction="#handleSearch": Calls the search method in the controller
+                    
+                    USER EXPERIENCE:
+                    - Click to search for events
+                    - Searches through all available events
+                    - Shows results based on what you typed
+                -->
                 <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
             </HBox>
             
-            <!-- Profile Icon -->
+            <!-- 
+                PROFILE BUTTON - User profile access
+                
+                This button takes you to your personal profile page where you can
+                see your information, change settings, or log out.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="profileButton": Gives this button a name for controller access
+                - text="👤": Person emoji representing your profile
+                - styleClass: Applies profile-button-specific styling
+                - onAction="#handleProfile": Calls controller method when clicked
+                
+                FUNCTIONALITY:
+                - Takes you to your profile page
+                - Shows your personal information
+                - Provides account management options
+            -->
             <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
         </HBox>
     </top>
 
-    <!-- Main Content -->
+    <!-- 
+        CENTER SECTION - Main Event Details Content
+        
+        This is the main area where detailed event information is displayed.
+        It shows the event banner, content, and sidebar in an organized layout.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges content vertically (top to bottom)
+        - styleClass applies event-details-container styling
+        - spacing="0" means no automatic spacing between sections
+    -->
     <center>
         <VBox styleClass="event-details-container" spacing="0">
             
-            <!-- Event Banner -->
+            <!-- 
+                EVENT BANNER - Prominent event header section
+                
+                This section displays the event title and key details in a large,
+                prominent banner at the top. Think of it like the hero section
+                of a website that immediately catches your attention.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges banner content vertically
+                - fx:id="eventBanner": Controller can access this banner
+                - styleClass applies event-banner CSS styling
+                - alignment="CENTER_LEFT" centers content vertically, aligns left horizontally
+                
+                CONTENT:
+                - Event title (large and prominent)
+                - Event details (date, time, location) with icons
+            -->
             <VBox fx:id="eventBanner" styleClass="event-banner" alignment="CENTER_LEFT">
+                <!-- 
+                    BANNER PADDING - Space around the banner content
+                    
+                    Adds generous spacing around the banner content to make it
+                    look prominent and easy to read.
+                    
+                    PROPERTIES EXPLAINED:
+                    - top="60": 60 pixels above the content (very spacious)
+                    - right="40": 40 pixels to the right of content
+                    - bottom="60": 60 pixels below the content (very spacious)
+                    - left="40": 40 pixels to the left of content
+                -->
                 <padding>
                     <Insets top="60" right="40" bottom="60" left="40"/>
                 </padding>
                 
+                <!-- 
+                    BANNER CONTENT - Title and details layout
+                    
+                    This VBox arranges the event title and details in a clean,
+                    organized way within the banner.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges title and details vertically
+                    - spacing="15" adds 15 pixels between title and details section
+                -->
                 <VBox spacing="15">
+                    <!-- 
+                        EVENT TITLE - Main event name
+                        
+                        This is the large, prominent title that immediately tells
+                        users what event they're looking at.
+                        
+                        PROPERTIES EXPLAINED:
+                        - fx:id="eventTitle": Controller can update this text
+                        - text="Annual Tech Summit 2024": Default example text
+                        - styleClass: Applies event-title CSS styling
+                        
+                        CONTROLLER USAGE:
+                        The controller updates this with the actual event title:
+                        eventTitle.setText(actualEvent.getTitle());
+                    -->
                     <Text fx:id="eventTitle" text="Annual Tech Summit 2024" styleClass="event-title"/>
                     
+                    <!-- 
+                        EVENT DETAILS ROW - Date, time, and location
+                        
+                        This row shows the key event information (when and where)
+                        in an organized, easy-to-read format with icons.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox arranges three detail groups horizontally
+                        - spacing="30" adds 30 pixels between each detail group
+                        - alignment="CENTER_LEFT" centers content vertically, aligns left
+                        
+                        DETAIL GROUPS:
+                        - Date: When the event happens
+                        - Time: What time the event starts and ends
+                        - Location: Where the event takes place
+                    -->
                     <HBox spacing="30" alignment="CENTER_LEFT">
+                        <!-- 
+                            DATE DETAIL GROUP - Event date information
+                            
+                            Shows when the event is scheduled to happen.
+                            The 📅 icon makes it easy to identify as date information.
+                            
+                            LAYOUT EXPLANATION:
+                            - HBox arranges icon and text horizontally
+                            - spacing="8" adds 8 pixels between icon and text
+                            - alignment="CENTER_LEFT" centers icon and text vertically
+                            
+                            COMPONENTS:
+                            - Calendar emoji (📅): Visual indicator for date
+                            - Date text: Actual event date information
+                        -->
                         <HBox spacing="8" alignment="CENTER_LEFT">
+                            <!-- 
+                                DATE ICON - Calendar emoji
+                                
+                                The 📅 emoji visually represents the date concept.
+                                Makes it easy to quickly identify this as date information.
+                                
+                                PROPERTIES EXPLAINED:
+                                - text="📅": Calendar emoji character
+                                - style: Inline styling for size
+                                - -fx-font-size: 16: Makes icon 16 pixels tall
+                            -->
                             <Text text="📅" style="-fx-font-size: 16;"/>
+                            
+                            <!-- 
+                                EVENT DATE TEXT - When the event happens
+                                
+                                Displays the actual date or date range for the event.
+                                For example: "October 26-28, 2024" or "December 15, 2024"
+                                
+                                PROPERTIES EXPLAINED:
+                                - fx:id="eventDate": Controller can update this text
+                                - text="October 26-28, 2024": Default example text
+                                - styleClass: Applies event-detail CSS styling
+                                
+                                CONTROLLER USAGE:
+                                The controller updates this with the actual event date:
+                                eventDate.setText(actualEvent.getFormattedDate());
+                            -->
                             <Text fx:id="eventDate" text="October 26-28, 2024" styleClass="event-detail"/>
                         </HBox>
                         
+                        <!-- 
+                            TIME DETAIL GROUP - Event time information
+                            
+                            Shows what time the event starts and ends.
+                            The 🕐 icon makes it easy to identify as time information.
+                            
+                            LAYOUT EXPLANATION:
+                            - HBox arranges icon and text horizontally
+                            - spacing="8" adds 8 pixels between icon and text
+                            - alignment="CENTER_LEFT" centers icon and text vertically
+                            
+                            COMPONENTS:
+                            - Clock emoji (🕐): Visual indicator for time
+                            - Time text: Actual event time information
+                        -->
                         <HBox spacing="8" alignment="CENTER_LEFT">
+                            <!-- 
+                                TIME ICON - Clock emoji
+                                
+                                The 🕐 emoji visually represents the time concept.
+                                Makes it easy to quickly identify this as time information.
+                                
+                                PROPERTIES EXPLAINED:
+                                - text="🕐": Clock emoji character
+                                - style: Inline styling for size
+                                - -fx-font-size: 16: Makes icon 16 pixels tall
+                            -->
                             <Text text="🕐" style="-fx-font-size: 16;"/>
+                            
+                            <!-- 
+                                EVENT TIME TEXT - When the event starts and ends
+                                
+                                Displays the actual time range for the event.
+                                For example: "9:00 AM - 5:00 PM PDT" or "2:00 PM - 4:00 PM"
+                                
+                                PROPERTIES EXPLAINED:
+                                - fx:id="eventTime": Controller can update this text
+                                - text="9:00 AM - 5:00 PM PDT": Default example text
+                                - styleClass: Applies event-detail CSS styling
+                                
+                                CONTROLLER USAGE:
+                                The controller updates this with the actual event time:
+                                eventTime.setText(actualEvent.getFormattedTime());
+                            -->
                             <Text fx:id="eventTime" text="9:00 AM - 5:00 PM PDT" styleClass="event-detail"/>
                         </HBox>
                         
+                        <!-- 
+                            LOCATION DETAIL GROUP - Event location information
+                            
+                            Shows where the event takes place.
+                            The 📍 icon makes it easy to identify as location information.
+                            
+                            LAYOUT EXPLANATION:
+                            - HBox arranges icon and text horizontally
+                            - spacing="8" adds 8 pixels between icon and text
+                            - alignment="CENTER_LEFT" centers icon and text vertically
+                            
+                            COMPONENTS:
+                            - Location pin emoji (📍): Visual indicator for location
+                            - Location text: Actual event location information
+                        -->
                         <HBox spacing="8" alignment="CENTER_LEFT">
+                            <!-- 
+                                LOCATION ICON - Location pin emoji
+                                
+                                The 📍 emoji visually represents the location concept.
+                                Makes it easy to quickly identify this as location information.
+                                
+                                PROPERTIES EXPLAINED:
+                                - text="📍": Location pin emoji character
+                                - style: Inline styling for size
+                                - -fx-font-size: 16: Makes icon 16 pixels tall
+                            -->
                             <Text text="📍" style="-fx-font-size: 16;"/>
+                            
+                            <!-- 
+                                EVENT LOCATION TEXT - Where the event happens
+                                
+                                Displays the actual location for the event.
+                                For example: "Virtual and San Francisco, CA" or "Online"
+                                
+                                PROPERTIES EXPLAINED:
+                                - fx:id="eventLocation": Controller can update this text
+                                - text="Virtual and San Francisco, CA": Default example text
+                                - styleClass: Applies event-detail CSS styling
+                                
+                                CONTROLLER USAGE:
+                                The controller updates this with the actual event location:
+                                eventLocation.setText(actualEvent.getLocation());
+                            -->
                             <Text fx:id="eventLocation" text="Virtual and San Francisco, CA" styleClass="event-detail"/>
                         </HBox>
                     </HBox>
                 </VBox>
             </VBox>
             
-            <!-- Content Area -->
+            <!-- 
+                CONTENT AREA - Main event information and sidebar
+                
+                This area contains the detailed event information below the banner.
+                It's organized in two columns: main content on the left and sidebar on the right.
+                
+                LAYOUT EXPLANATION:
+                - HBox creates two columns side by side
+                - spacing="40" adds 40 pixels between the main content and sidebar
+                - styleClass applies event-content styling
+                - padding adds space around the entire content area
+                
+                COLUMN STRUCTURE:
+                - Left: Main content (speakers, sessions, descriptions)
+                - Right: Sidebar (registration, quick actions)
+            -->
             <HBox spacing="40" styleClass="event-content">
+                <!-- 
+                    CONTENT PADDING - Space around the main content
+                    
+                    Adds comfortable spacing around all the content.
+                    This prevents content from touching the edges of the screen.
+                    
+                    PROPERTIES EXPLAINED:
+                    - top="40": 40 pixels above the content
+                    - right="40": 40 pixels to the right of content
+                    - bottom="40": 40 pixels below the content
+                    - left="40": 40 pixels to the left of content
+                -->
                 <padding>
                     <Insets top="40" right="40" bottom="40" left="40"/>
                 </padding>
                 
-                <!-- Main Content -->
+                <!-- 
+                    MAIN CONTENT COLUMN - Event details and information
+                    
+                    This column contains the primary event information like speakers,
+                    session schedules, and detailed descriptions.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges content sections vertically
+                    - styleClass applies event-main-content styling
+                    - spacing="40" adds 40 pixels between sections
+                    - HBox.hgrow="ALWAYS" makes this column expand to fill available space
+                    
+                    CONTENT SECTIONS:
+                    - Speaker Spotlight: Information about event speakers
+                    - Session Schedule: Detailed timeline of event sessions
+                -->
                 <VBox styleClass="event-main-content" spacing="40" HBox.hgrow="ALWAYS">
                     
-                    <!-- Speaker Spotlight -->
+                    <!-- 
+                        SPEAKER SPOTLIGHT SECTION - Event speakers information
+                        
+                        This section highlights the speakers or presenters at the event.
+                        Think of it like a "meet the speakers" section on an event website.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges title and speaker grid vertically
+                        - spacing="20" adds 20 pixels between title and speaker grid
+                        
+                        CONTENT:
+                        - Section title: "Speaker Spotlight"
+                        - Speaker grid: Visual display of speaker information
+                    -->
                     <VBox spacing="20">
+                        <!-- 
+                            SECTION TITLE - Speaker spotlight header
+                            
+                            Clearly identifies this section as showing information about
+                            the event speakers or presenters.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Speaker Spotlight": Section title text
+                            - styleClass: Applies section-title CSS styling
+                        -->
                         <Text text="Speaker Spotlight" styleClass="section-title"/>
+                        
+                        <!-- 
+                            SPEAKERS CONTAINER - Dynamic speaker grid
+                            
+                            This container displays speaker information in a flexible grid layout.
+                            Think of it like a photo gallery of speakers with their details.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="speakersContainer": Controller can access this container
+                            - FlowPane automatically arranges speaker cards in rows and columns
+                            - hgap="20" adds 20 pixels between speaker cards horizontally
+                            - vgap="20" adds 20 pixels between speaker cards vertically
+                            - styleClass applies speakers-grid CSS styling
+                            
+                            CONTROLLER INTEGRATION:
+                            The controller will add speaker cards showing:
+                            - Speaker names and photos
+                            - Speaker titles and organizations
+                            - Speaker topics and expertise
+                            - Quick action buttons
+                        -->
                         <FlowPane fx:id="speakersContainer" hgap="20" vgap="20" styleClass="speakers-grid"/>
                     </VBox>
                     
-                    <!-- Session Schedule -->
+                    <!-- 
+                        SESSION SCHEDULE SECTION - Event timeline and sessions
+                        
+                        This section shows the detailed schedule of event sessions.
+                        Think of it like a program or agenda that tells you what happens when.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges title and session list vertically
+                        - spacing="20" adds 20 pixels between title and session list
+                        
+                        CONTENT:
+                        - Section title: "Session Schedule"
+                        - Session list: Detailed timeline of event activities
+                    -->
                     <VBox spacing="20">
+                        <!-- 
+                            SECTION TITLE - Session schedule header
+                            
+                            Clearly identifies this section as showing the event's
+                            session timeline and schedule.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Session Schedule": Section title text
+                            - styleClass: Applies section-title CSS styling
+                        -->
                         <Text text="Session Schedule" styleClass="section-title"/>
+                        
+                        <!-- 
+                            SESSIONS CONTAINER - Dynamic session list
+                            
+                            This container displays event sessions in a chronological list.
+                            Think of it like a timeline or agenda showing what happens when.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="sessionsContainer": Controller can access this container
+                            - VBox arranges session items vertically
+                            - spacing="15" adds 15 pixels between each session
+                            - styleClass applies sessions-list CSS styling
+                            
+                            CONTROLLER INTEGRATION:
+                            The controller will add session items showing:
+                            - Session times and durations
+                            - Session titles and descriptions
+                            - Speaker names and topics
+                            - Room or location information
+                        -->
                         <VBox fx:id="sessionsContainer" spacing="15" styleClass="sessions-list"/>
                     </VBox>
                 </VBox>
                 
-                <!-- Right Sidebar -->
+                <!-- 
+                    RIGHT SIDEBAR - Registration and quick actions
+                    
+                    This sidebar contains event registration options and quick actions.
+                    It's like a "call to action" area that encourages user participation.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges sidebar content vertically
+                    - styleClass applies event-sidebar styling
+                    - spacing="30" adds 30 pixels between sidebar sections
+                    - minWidth/maxWidth="300" keeps sidebar consistent size
+                    
+                    CONTENT:
+                    - Registration section: Sign up for the event
+                    - Quick actions: Other event-related options
+                -->
                 <VBox styleClass="event-sidebar" spacing="30" minWidth="300" maxWidth="300">
                     
-                    <!-- Registration Section -->
+                    <!-- 
+                        REGISTRATION SECTION - Event sign-up options
+                        
+                        This section provides options for users to register for the event.
+                        It's the main action area that converts visitors to attendees.
+                        
+                        CONTENT:
+                        - Registration buttons and options
+                        - Event status and availability
+                        - Quick registration actions
+                    -->
                     <VBox styleClass="registration-card" spacing="15">
                         <Text text="Registration Open!" styleClass="registration-title"/>
                         <Text fx:id="spotsLeftText" text="Only 157 spots left!" styleClass="spots-left"/>
@@ -105,7 +702,21 @@
                         <Button fx:id="registerButton" text="Register Now" styleClass="register-button" onAction="#handleRegister"/>
                     </VBox>
                     
-                    <!-- Organizer Section -->
+                    <!-- 
+                        ORGANIZER SECTION - Event organizer information
+                        
+                        This section displays the name of the event organizer.
+                        It's like the "About the Organizer" section on an event website.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges organizer name and icon horizontally
+                        - spacing="10" adds 10 pixels between icon and text
+                        - alignment="CENTER_LEFT" centers icon and text vertically
+                        
+                        COMPONENTS:
+                        - Person emoji (👤): Visual indicator for organizer
+                        - Organizer name: The name of the event organizer
+                    -->
                     <VBox styleClass="organizer-card" spacing="15">
                         <Text text="Organizer" styleClass="organizer-title"/>
                         <HBox spacing="10" alignment="CENTER_LEFT">

@@ -1,48 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!-- 
-    Welcome.fxml - Main Entry Point User Interface
+    WELCOME SCREEN (Welcome.fxml)
     
-    This file defines the visual layout of the Welcome screen - the first screen
-    users see when they open the Eventra application.
+    This FXML file defines the user interface for the Welcome screen in the
+    Eventra application. Think of it like a "front door" or "welcome mat"
+    that greets users when they first open the application.
     
-    WHAT THIS FILE DOES:
-    - Defines the visual structure of the welcome screen
-    - Connects UI elements to the WelcomeController Java class
-    - Sets up the logo display and welcome button
-    - Applies styling and layout properties
+    WHAT THIS SCREEN DOES:
+    - Displays the Eventra logo and brand identity
+    - Provides a welcoming first impression for new users
+    - Offers a simple button to enter the application
+    - Creates a professional and inviting entry point
+    - Sets the tone for the user experience
     
     KEY CONCEPTS TO UNDERSTAND:
-    - FXML: JavaFX Markup Language - defines UI layouts in XML format
-    - Controller Binding: Links UI elements to Java code for functionality
-    - Layout Containers: VBox arranges elements vertically
-    - CSS Styling: Applies visual design to UI elements
-    - Event Handling: Connects button clicks to Java methods
+    - First Impression: The initial screen users see when opening the app
+    - Brand Presentation: Showing the Eventra logo and identity
+    - User Onboarding: Guiding new users into the application
+    - Simple Navigation: One clear action to proceed forward
+    - Visual Design: Creating an attractive and professional appearance
     
-    FILE STRUCTURE:
-    - XML Declaration and imports
-    - Root container (VBox) with properties
-    - UI elements (ImageView, Button)
-    - Styling and event connections
+    BUSINESS VALUE:
+    - Creates a positive first impression for new users
+    - Establishes brand recognition and professionalism
+    - Provides a simple entry point that doesn't overwhelm users
+    - Sets expectations for the quality of the application
+    - Encourages users to explore the platform further
+    
+    REAL-WORLD ANALOGY:
+    - Like a welcome mat at the entrance of a building
+    - Like a reception desk that greets visitors
+    - Like a front cover of a book that introduces the content
+    - Like a lobby that welcomes guests to a hotel
+    - Like a homepage that introduces a website
 -->
 
-<!-- Import statements - tell JavaFX which UI components we want to use -->
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our welcome screen. Think of them like importing tools from
+    a toolbox that we'll use to build our interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive button that users can click
+    - ImageView: Container for displaying images (like the logo)
+    - VBox: Vertical layout container that stacks elements top to bottom
+-->
 <?import javafx.scene.control.Button?>      <!-- Button component for user interaction -->
 <?import javafx.scene.image.ImageView?>     <!-- Image component for displaying the logo -->
 <?import javafx.scene.layout.VBox?>         <!-- Vertical layout container -->
 
 <!-- 
-    Root Container - VBox (Vertical Box)
+    ROOT CONTAINER - Main Layout Structure
+    This VBox is the main container that holds all the welcome screen
+    elements. Think of it like the main frame of a picture that holds
+    all the content.
     
-    VBox arranges all child elements vertically (top to bottom).
-    Think of it like stacking boxes on top of each other.
+    LAYOUT EXPLANATION:
+    - VBox arranges all child elements vertically (top to bottom)
+    - Think of it like stacking boxes on top of each other
+    - All content flows from top to bottom in a clean, organized way
     
     PROPERTIES EXPLAINED:
-    - xmlns: Standard XML namespace declaration
+    - xmlns: Standard XML namespace declaration for JavaFX
     - xmlns:fx: JavaFX-specific namespace for special attributes
     - fx:controller: Links this FXML to the WelcomeController Java class
-    - alignment="CENTER": Centers all content horizontally
+    - alignment="CENTER": Centers all content horizontally on the screen
     - spacing="30": Adds 30 pixels of space between child elements
-    - stylesheets: Links to the CSS file for styling
+    - stylesheets: Links to the CSS file for visual styling
 -->
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -51,20 +77,30 @@
       stylesheets="@../css/styles.css">
 
     <!-- 
-        Logo Image Display
-        
+        LOGO IMAGE DISPLAY - Eventra Brand Identity
         This ImageView displays the Eventra logo at the top of the welcome screen.
-        It's the first thing users see when they open the application.
+        It's the first thing users see and establishes the brand identity.
+        Think of it like a company sign that greets visitors.
         
         PROPERTIES EXPLAINED:
         - fx:id="logoView": Gives this element a name so the controller can reference it
-        - fitWidth="300": Sets the width to 300 pixels
+        - fitWidth="300": Sets the logo width to 300 pixels (maintains proportions)
         - preserveRatio="true": Keeps the image proportions correct (no stretching)
-        - pickOnBounds="true": Makes the entire image area clickable
+        - pickOnBounds="true": Makes the entire image area clickable for interaction
+        
+        USER EXPERIENCE:
+        - Users immediately see the Eventra brand
+        - Logo size is appropriate for the screen
+        - Image maintains its professional appearance
+        - Logo can be made interactive if needed
         
         CONTROLLER CONNECTION:
         The WelcomeController can access this image using: @FXML private ImageView logoView;
-        This allows the controller to change the image, make it clickable, etc.
+        This allows the controller to:
+        - Change the logo image dynamically
+        - Make the logo clickable
+        - Apply animations or effects
+        - Handle logo-related interactions
     -->
     <ImageView fx:id="logoView"
                fitWidth="300"
@@ -72,26 +108,37 @@
                pickOnBounds="true" />
 
     <!-- 
-        Welcome Button
-        
-        This button is what users click to proceed from the welcome screen.
-        It's styled to look attractive and professional.
+        WELCOME BUTTON - Entry Point to Application
+        This button is what users click to proceed from the welcome screen
+        into the main application. Think of it like a "Enter" button or
+        "Get Started" button that welcomes users in.
         
         PROPERTIES EXPLAINED:
         - text="Welcome": The text displayed on the button
-        - fx:id="welcomeBtn": Gives this button a name for the controller
+        - fx:id="welcomeBtn": Gives this button a name for the controller to access
         - onAction="#onWelcome": Calls the onWelcome() method in the controller when clicked
         
         STYLING EXPLAINED:
-        - -fx-font-size: 16px: Sets button text size to 16 pixels
-        - -fx-background-color: #5C4DAA: Sets button background to purple
-        - -fx-text-fill: white: Sets button text color to white
-        - -fx-padding: 10 20: Adds 10px vertical and 20px horizontal padding
-        - -fx-background-radius: 5: Makes button corners rounded (5px radius)
+        - -fx-font-size: 16px: Sets button text size to 16 pixels for readability
+        - -fx-background-color: #5C4DAA: Sets button background to Eventra brand purple
+        - -fx-text-fill: white: Sets button text color to white for contrast
+        - -fx-padding: 10 20: Adds 10px vertical and 20px horizontal padding for comfort
+        - -fx-background-radius: 5: Makes button corners rounded (5px radius) for modern look
+        
+        USER EXPERIENCE:
+        - Button is clearly visible and attractive
+        - Text is easy to read with good contrast
+        - Button size is comfortable for clicking
+        - Rounded corners give a modern, professional appearance
+        - Purple color matches the Eventra brand identity
         
         CONTROLLER CONNECTION:
         When clicked, this button calls the onWelcome() method in WelcomeController.
-        That method handles what happens next (probably navigating to the main menu).
+        That method handles what happens next, typically:
+        - Navigating to the main menu or dashboard
+        - Starting the user onboarding process
+        - Transitioning to the next screen in the application
+        - Initializing any necessary setup for the user session
     -->
     <Button text="Welcome"
             fx:id="welcomeBtn"

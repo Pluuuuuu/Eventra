@@ -1,11 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- 
+    ADMIN MANAGE EVENTS SCREEN (AdminManageEvents.fxml)
+    
+    This FXML file defines the user interface for the Admin Manage Events screen in the
+    Eventra application. Think of it like an "event management office" or "event
+    control center" where administrators can oversee, organize, and manage all events
+    in the system.
+    
+    WHAT THIS SCREEN DOES:
+    - Provides comprehensive event management and oversight capabilities
+    - Displays all events in an organized, searchable table format
+    - Offers filtering and search tools for efficient event management
+    - Enables event creation, editing, and status management
+    - Shows event statistics and attendee information
+    - Provides administrative control over event operations
+    - Manages event lifecycle and administrative workflows
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Event Management: Comprehensive oversight and control of all events
+    - Administrative Control: Centralized management of event operations
+    - Data Organization: Structured display of event information in tables
+    - Search and Filtering: Tools for finding and organizing specific events
+    - Event Lifecycle: Managing events from creation to completion
+    - User Experience: Intuitive interface for administrative event management
+    
+    BUSINESS VALUE:
+    - Enables administrators to efficiently manage all events in the system
+    - Provides comprehensive oversight and control over event operations
+    - Supports data-driven event management through organized information display
+    - Improves administrative efficiency with centralized event control
+    - Creates better event organization and management capabilities
+    - Supports proactive event oversight and problem resolution
+    
+    REAL-WORLD ANALOGY:
+    - Like a manager's office for overseeing all company events
+    - Like a control center for managing multiple projects
+    - Like an event planner's desk with all events organized
+    - Like a dashboard for monitoring and controlling operations
+    - Like a command center for event management oversight
+-->
+
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our event management screen. Think of them like importing tools from
+    a toolbox that we'll use to build our comprehensive event management interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for actions and navigation
+    - TextField: Text input fields for search functionality
+    - ComboBox: Dropdown selection controls for filtering options
+    - TableView: Data table for displaying event information
+    - TableColumn: Individual columns for organizing event data
+    - HBox/VBox: Layout containers that organize content
+    - Text: Text elements for headings, labels, and content
+    - Insets: Utilities for adding spacing and padding between elements
+    - PropertyValueFactory: Connects table columns to data properties
+-->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
+<!-- 
+    MAIN CONTAINER - Vertical Box Layout Structure
+    This VBox is the main container that organizes all the event management
+    content vertically. Think of it like organizing a management interface
+    with clear sections for different types of event management tasks.
+    
+    LAYOUT EXPLANATION:
+    - VBox arranges all content vertically (top to bottom)
+    - spacing="20" adds 20 pixels between major sections
+    - styleClass="manage-events-container" applies container-specific styling
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the AdminManageEventsController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="manage-events-container": Applies manage-events-specific styling
+    
+    USER EXPERIENCE:
+    - Clean, organized vertical layout
+    - Consistent spacing between sections
+    - Professional, management-focused appearance
+    - Easy to navigate and use
+-->
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.AdminManageEventsController"
@@ -13,87 +95,469 @@
       stylesheets="@../css/styles.css"
       styleClass="manage-events-container">
 
-    <!-- Header with Search and Create Button -->
+    <!-- 
+        HEADER SECTION - Page title, description, and action controls
+        This section displays the page title, provides context about what
+        administrators can do, and offers quick access to create new events
+        and search existing ones. Think of it like the header of a management
+        report that shows what you're working on and provides key controls.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges header content horizontally (left to right)
+        - alignment="CENTER_LEFT" puts content on the left side
+        - spacing="20" adds 20 pixels between header elements
+        - styleClass="manage-events-header" applies header-specific styling
+        
+        USER EXPERIENCE:
+        - Clear page identification and purpose
+        - Easy access to key functions
+        - Professional, organized appearance
+        - Intuitive control placement
+    -->
     <HBox alignment="CENTER_LEFT" spacing="20" styleClass="manage-events-header">
+        <!-- 
+            HEADER LEFT SECTION - Title and description
+            This section displays the main title and explains what the page
+            is for. Think of it like the introduction section of a document
+            that tells you what you're working with.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges title and description vertically
+            - spacing="5" adds 5 pixels between title and description
+            - Left side of the header for clear identification
+            
+            USER EXPERIENCE:
+            - Clear page purpose identification
+            - Professional appearance
+            - Easy to understand functionality
+            - Consistent with other interface elements
+        -->
         <VBox spacing="5">
+            <!-- 
+                MAIN TITLE - "Manage Your Events" Text
+                This text clearly identifies that this is the event management
+                page. Think of it like a page heading that tells you exactly
+                what you're working on.
+                
+                PROPERTIES EXPLAINED:
+                - text="Manage Your Events": The main title text that displays
+                - styleClass="manage-events-title": Applies main title styling
+                
+                USER EXPERIENCE:
+                - Clear page identification
+                - Professional appearance
+                - Consistent with application design
+                - Easy to understand purpose
+            -->
             <Text text="Manage Your Events" styleClass="manage-events-title"/>
+            <!-- 
+                SUBTITLE - Page description
+                This text provides context about what administrators can do
+                on this page. Think of it like a subtitle that explains
+                the purpose and capabilities.
+                
+                PROPERTIES EXPLAINED:
+                - text="Create, edit and manage all your events": Description text
+                - styleClass="manage-events-subtitle": Applies subtitle styling
+                
+                USER EXPERIENCE:
+                - Clear purpose explanation
+                - Professional appearance
+                - Consistent with other interface elements
+                - Easy to understand functionality
+            -->
             <Text text="Create, edit and manage all your events" styleClass="manage-events-subtitle"/>
         </VBox>
         
+        <!-- 
+            SPACER - Flexible space allocation
+            This Region acts as a flexible spacer that pushes the right-side
+            controls to the right side of the header. Think of it like a
+            spring that expands to fill available space and pushes other
+            content to the edges.
+            
+            LAYOUT EXPLANATION:
+            - Region is a flexible container that can expand
+            - HBox.hgrow="ALWAYS" makes it expand to fill available space
+            - This pushes the right-side controls to the right
+            
+            USER EXPERIENCE:
+            - Consistent control positioning
+            - Professional layout appearance
+            - Better visual organization
+            - Improved interface structure
+        -->
         <Region HBox.hgrow="ALWAYS"/>
         
+        <!-- 
+            HEADER RIGHT SECTION - Search and create controls
+            This section contains the search field and create event button
+            for quick access to key functions. Think of it like a control
+            panel that gives you quick access to the most important actions.
+            
+            LAYOUT EXPLANATION:
+            - HBox arranges controls horizontally
+            - spacing="15" adds 15 pixels between controls
+            - alignment="CENTER_RIGHT" centers controls vertically on the right
+            
+            USER EXPERIENCE:
+            - Quick access to key functions
+            - Organized control layout
+            - Professional appearance
+            - Easy task completion
+        -->
         <HBox spacing="15" alignment="CENTER_RIGHT">
+            <!-- 
+                SEARCH FIELD - Event search functionality
+                This text field allows administrators to search for specific
+                events. Think of it like a search box that helps you find
+                particular events quickly.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="searchField": Unique identifier for the controller
+                - promptText="Search events...": Placeholder text that displays
+                - styleClass="search-field": Applies search field styling
+                - prefWidth="200": Sets preferred width to 200 pixels
+                
+                USER EXPERIENCE:
+                - Easy event search functionality
+                - Clear placeholder text
+                - Professional appearance
+                - Consistent with other input fields
+            -->
             <TextField fx:id="searchField" 
                       promptText="Search events..."
                       styleClass="search-field"
                       prefWidth="200"/>
             
+            <!-- 
+                CREATE EVENT BUTTON - New event creation
+                This button allows administrators to create new events.
+                Think of it like a "new" button that starts the process
+                of creating a new event.
+                
+                PROPERTIES EXPLAINED:
+                - text="Create Event": Button text that clearly indicates the action
+                - onAction="#handleCreateEvent": Calls controller method when clicked
+                - styleClass="create-event-button": Applies create button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of what the button does
+                - Easy access to event creation
+                - Professional appearance
+                - Consistent with application design
+            -->
             <Button text="Create Event" 
                     onAction="#handleCreateEvent"
                     styleClass="create-event-button"/>
         </HBox>
     </HBox>
 
-    <!-- Filters Bar -->
+    <!-- 
+        FILTERS BAR - Event filtering and organization tools
+        This section provides various filtering options to help administrators
+        organize and find specific events. Think of it like a set of sorting
+        and filtering tools that help you organize a large collection of items.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges filter controls horizontally
+        - spacing="15" adds 15 pixels between filter elements
+        - alignment="CENTER_LEFT" puts content on the left side
+        - styleClass="filters-bar" applies filter bar styling
+        
+        USER EXPERIENCE:
+        - Easy event organization and filtering
+        - Clear filter options
+        - Professional appearance
+        - Intuitive filtering workflow
+    -->
     <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filters-bar">
+        <!-- 
+            FILTER LABEL - "Filter by:" Text
+            This label clearly identifies that this section contains
+            filtering options. Think of it like a section header that
+            tells you what tools are available.
+            
+            PROPERTIES EXPLAINED:
+            - text="Filter by:": The label text that displays
+            - styleClass="filter-label": Applies filter label styling
+            
+            USER EXPERIENCE:
+            - Clear section identification
+            - Professional appearance
+            - Consistent with other interface elements
+            - Easy to understand purpose
+        -->
         <Label text="Filter by:" styleClass="filter-label"/>
         
+        <!-- 
+            STATUS FILTER - Event status filtering
+            This dropdown allows administrators to filter events by their
+            current status. Think of it like a sorting tool that groups
+            events by their current state.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="statusFilter": Unique identifier for the controller
+            - promptText="Status": Placeholder text that displays
+            - styleClass="filter-combo": Applies filter combo box styling
+            - prefWidth="120": Sets preferred width to 120 pixels
+            
+            USER EXPERIENCE:
+            - Easy status-based filtering
+            - Clear placeholder text
+            - Professional appearance
+            - Consistent with other filter controls
+        -->
         <ComboBox fx:id="statusFilter" 
                  promptText="Status"
                  styleClass="filter-combo"
                  prefWidth="120">
         </ComboBox>
         
+        <!-- 
+            DATE FILTER - Event date range filtering
+            This dropdown allows administrators to filter events by date
+            ranges. Think of it like a calendar filter that helps you
+            find events in specific time periods.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="dateFilter": Unique identifier for the controller
+            - promptText="Date Range": Placeholder text that displays
+            - styleClass="filter-combo": Applies filter combo box styling
+            - prefWidth="130": Sets preferred width to 130 pixels
+            
+            USER EXPERIENCE:
+            - Easy date-based filtering
+            - Clear placeholder text
+            - Professional appearance
+            - Consistent with other filter controls
+        -->
         <ComboBox fx:id="dateFilter" 
                  promptText="Date Range"
                  styleClass="filter-combo"
                  prefWidth="130">
         </ComboBox>
         
+        <!-- 
+            LOCATION FILTER - Event location filtering
+            This dropdown allows administrators to filter events by location.
+            Think of it like a location-based sorting tool that groups
+            events by where they take place.
+            
+            PROPERTIES EXPLAINED:
+            - fx:id="locationFilter": Unique identifier for the controller
+            - promptText="Location": Placeholder text that displays
+            - styleClass="filter-combo": Applies filter combo box styling
+            - prefWidth="120": Sets preferred width to 120 pixels
+            
+            USER EXPERIENCE:
+            - Easy location-based filtering
+            - Clear placeholder text
+            - Professional appearance
+            - Consistent with other filter controls
+        -->
         <ComboBox fx:id="locationFilter" 
                  promptText="Location"
                  styleClass="filter-combo"
                  prefWidth="120">
         </ComboBox>
         
+        <!-- 
+            RESET FILTERS BUTTON - Clear all filters
+            This button allows administrators to clear all applied filters
+            and return to the default view. Think of it like a "clear all"
+            button that resets your filtering choices.
+            
+            PROPERTIES EXPLAINED:
+            - text="Reset": Button text that clearly indicates the action
+            - onAction="#handleResetFilters": Calls controller method when clicked
+            - styleClass="reset-filters-button": Applies reset button styling
+            
+            USER EXPERIENCE:
+            - Clear indication of what the button does
+            - Easy filter reset functionality
+            - Professional appearance
+            - Consistent with application design
+        -->
         <Button text="Reset" 
                 onAction="#handleResetFilters"
                 styleClass="reset-filters-button"/>
     </HBox>
 
-    <!-- Events Table -->
+    <!-- 
+        EVENTS TABLE - Comprehensive event information display
+        This section displays all events in an organized, searchable table
+        format. Think of it like a spreadsheet that shows all your events
+        with columns for different types of information.
+        
+        LAYOUT EXPLANATION:
+        - TableView displays event data in organized columns
+        - VBox.vgrow="ALWAYS" makes it expand to fill available vertical space
+        - styleClass="events-table" applies table-specific styling
+        
+        USER EXPERIENCE:
+        - Organized event information display
+        - Easy data scanning and comparison
+        - Professional table appearance
+        - Clear data organization
+    -->
     <TableView fx:id="eventsTable" styleClass="events-table" VBox.vgrow="ALWAYS">
+        <!-- 
+            TABLE COLUMNS - Event data organization
+            These columns organize event information into logical categories
+            for easy viewing and management. Think of them like the columns
+            in a spreadsheet that organize different types of information.
+            
+            LAYOUT EXPLANATION:
+            - Each TableColumn represents a different type of event information
+            - prefWidth sets the preferred width for each column
+            - cellValueFactory connects columns to data properties
+            
+            USER EXPERIENCE:
+            - Clear data organization
+            - Easy information scanning
+            - Professional table appearance
+            - Consistent column structure
+        -->
         <columns>
+            <!-- 
+                EVENT NAME COLUMN - Event title display
+                This column shows the name or title of each event.
+                Think of it like the main identifier column that shows
+                what each event is called.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="eventNameColumn": Unique identifier for the controller
+                - text="Event Name": Column header text
+                - prefWidth="200": Sets column width to 200 pixels
+                - PropertyValueFactory property="title": Connects to event title data
+                
+                USER EXPERIENCE:
+                - Clear event identification
+                - Professional column appearance
+                - Easy-to-read event names
+                - Consistent with other columns
+            -->
             <TableColumn fx:id="eventNameColumn" text="Event Name" prefWidth="200">
                 <cellValueFactory>
                     <PropertyValueFactory property="title"/>
                 </cellValueFactory>
             </TableColumn>
             
+            <!-- 
+                DATE & TIME COLUMN - Event scheduling information
+                This column shows when each event is scheduled to take place.
+                Think of it like a calendar column that shows the timing
+                of each event.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="dateTimeColumn": Unique identifier for the controller
+                - text="Date &amp; Time": Column header text (amp; is HTML entity for &)
+                - prefWidth="180": Sets column width to 180 pixels
+                - PropertyValueFactory property="startDate": Connects to event start date data
+                
+                USER EXPERIENCE:
+                - Clear event timing information
+                - Professional column appearance
+                - Easy-to-read date and time data
+                - Consistent with other columns
+            -->
             <TableColumn fx:id="dateTimeColumn" text="Date &amp; Time" prefWidth="180">
                 <cellValueFactory>
                     <PropertyValueFactory property="startDate"/>
                 </cellValueFactory>
             </TableColumn>
             
+            <!-- 
+                LOCATION COLUMN - Event venue information
+                This column shows where each event takes place.
+                Think of it like a location column that shows the venue
+                or place for each event.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="locationColumn": Unique identifier for the controller
+                - text="Location": Column header text
+                - prefWidth="150": Sets column width to 150 pixels
+                - PropertyValueFactory property="location": Connects to event location data
+                
+                USER EXPERIENCE:
+                - Clear event location information
+                - Professional column appearance
+                - Easy-to-read location data
+                - Consistent with other columns
+            -->
             <TableColumn fx:id="locationColumn" text="Location" prefWidth="150">
                 <cellValueFactory>
                     <PropertyValueFactory property="location"/>
                 </cellValueFactory>
             </TableColumn>
             
+            <!-- 
+                STATUS COLUMN - Event current state
+                This column shows the current status of each event.
+                Think of it like a status column that shows whether
+                events are active, completed, or in planning.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="statusColumn": Unique identifier for the controller
+                - text="Status": Column header text
+                - prefWidth="120": Sets column width to 120 pixels
+                - PropertyValueFactory property="status": Connects to event status data
+                
+                USER EXPERIENCE:
+                - Clear event status information
+                - Professional column appearance
+                - Easy-to-read status data
+                - Consistent with other columns
+            -->
             <TableColumn fx:id="statusColumn" text="Status" prefWidth="120">
                 <cellValueFactory>
                     <PropertyValueFactory property="status"/>
                 </cellValueFactory>
             </TableColumn>
             
+            <!-- 
+                ATTENDEE COUNT COLUMN - Event participation numbers
+                This column shows how many people are registered for each event.
+                Think of it like a count column that shows the current
+                attendance for each event.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="attendeeCountColumn": Unique identifier for the controller
+                - text="Attendees": Column header text
+                - prefWidth="100": Sets column width to 100 pixels
+                - PropertyValueFactory property="attendeeCount": Connects to attendee count data
+                
+                USER EXPERIENCE:
+                - Clear attendance information
+                - Professional column appearance
+                - Easy-to-read count data
+                - Consistent with other columns
+            -->
             <TableColumn fx:id="attendeeCountColumn" text="Attendees" prefWidth="100">
                 <cellValueFactory>
                     <PropertyValueFactory property="attendeeCount"/>
                 </cellValueFactory>
             </TableColumn>
             
+            <!-- 
+                ACTIONS COLUMN - Event management controls
+                This column provides action buttons for managing each event.
+                Think of it like a control column that gives you buttons
+                to edit, delete, or manage each event.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="actionsColumn": Unique identifier for the controller
+                - text="Actions": Column header text
+                - prefWidth="120": Sets column width to 120 pixels
+                - sortable="false": Disables sorting for this column
+                
+                USER EXPERIENCE:
+                - Easy access to event management actions
+                - Professional column appearance
+                - Clear action button placement
+                - Consistent with other columns
+            -->
             <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="120" sortable="false">
             </TableColumn>
         </columns>

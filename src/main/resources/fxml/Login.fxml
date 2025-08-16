@@ -7,71 +7,389 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
+<!-- 
+    LOGIN SCREEN (Login.fxml)
+    
+    This FXML file defines the user interface for the Login screen in the
+    Eventra application. Think of it like a "front door" where users
+    enter their credentials to access their accounts.
+    
+    WHAT THIS SCREEN DOES:
+    - Provides a secure way for users to access their accounts
+    - Displays the Eventra brand and welcome message
+    - Collects user email and password for authentication
+    - Offers password visibility toggle for better user experience
+    - Provides navigation to the sign-up page for new users
+    - Shows error messages for failed login attempts
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - User Authentication: Verifying user identity through credentials
+    - Brand Presentation: Showing the Eventra logo and messaging
+    - Form Design: Creating an intuitive login experience
+    - Password Security: Handling sensitive password input
+    - Error Handling: Displaying helpful error messages
+    - Navigation: Providing access to other parts of the application
+    
+    BUSINESS VALUE:
+    - Secures access to user accounts and personal information
+    - Creates a professional first impression for new users
+    - Reduces support requests through clear error messaging
+    - Encourages new user registration through sign-up links
+    - Maintains brand consistency and recognition
+    
+    REAL-WORLD ANALOGY:
+    - Like a secure entrance to a building with ID verification
+    - Like a login page for an online banking system
+    - Like a membership portal for a professional organization
+    - Like a secure gateway to access personal information
+    - Like a front desk where you check in with credentials
+-->
+
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.LoginController"
       stylesheets="@../css/styles.css"
       styleClass="login-page-container">
 
-    <!-- Left Section - Branding -->
+    <!-- 
+        LEFT SECTION - Branding and Welcome Area
+        This section displays the Eventra brand, logo, and welcome message.
+        It's like the "face" of the application that greets users.
+        
+        LAYOUT EXPLANATION:
+        - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+        - styleClass="branding-section" applies branding-specific styling
+        - VBox arranges elements vertically (top to bottom)
+    -->
     <VBox styleClass="branding-section" HBox.hgrow="ALWAYS">
+        <!-- 
+            BRANDING CONTENT - Logo and messaging layout
+            This container holds all the branding elements in a centered layout.
+            Think of it like a welcome mat that introduces the application.
+            
+            LAYOUT EXPLANATION:
+            - styleClass="branding-content" applies content-specific styling
+            - alignment="CENTER" centers all content both horizontally and vertically
+            - spacing="20" adds 20 pixels between elements
+        -->
         <VBox styleClass="branding-content" alignment="CENTER" spacing="20">
-            <!-- Logo and Brand -->
+            <!-- 
+                LOGO AND BRAND - Eventra visual identity
+                This section displays the Eventra logo and brand name prominently.
+                It's like showing the company sign at the entrance.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges logo and text horizontally
+                - spacing="15" adds 15 pixels between logo and text
+                - alignment="CENTER" centers elements vertically
+            -->
             <HBox spacing="15" alignment="CENTER">
+                <!-- 
+                    PRIMARY LOGO - Main Eventra logo image
+                    This displays the primary Eventra logo on the left side.
+                    Think of it like the main company logo on a building.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="logoImage": Gives this image a name for controller access
+                    - styleClass="logo-image": Applies logo-specific styling
+                    - fitHeight="120": Makes image 120 pixels tall
+                    - fitWidth="120": Makes image 120 pixels wide
+                    - preserveRatio="true": Keeps image proportions correct
+                    
+                    CONTROLLER USAGE:
+                    The controller can access this logo using: logoImage
+                -->
                 <ImageView fx:id="logoImage" styleClass="logo-image" fitHeight="120" fitWidth="120" preserveRatio="true"/>
+                
+                <!-- 
+                    BRAND TITLE - Eventra company name
+                    This displays the "Welcome to Eventra" text prominently.
+                    Think of it like the company name displayed on a sign.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges text elements vertically
+                    - spacing="5" adds 5 pixels between text elements
+                    - alignment="CENTER" centers text horizontally
+                -->
                 <VBox spacing="5" alignment="CENTER">
+                    <!-- 
+                        WELCOME TITLE - Main welcome message
+                        This text greets users and introduces the Eventra platform.
+                        Think of it like a friendly greeting at the entrance.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Welcome to Eventra": The welcome message text
+                        - styleClass="branding-title": Applies title-specific styling
+                    -->
                     <Text text="Welcome to Eventra" styleClass="branding-title"/>
                 </VBox>
+                
+                <!-- 
+                    SECONDARY LOGO - Additional logo image (hidden by default)
+                    This displays a secondary logo that's hidden by default.
+                    Think of it like a backup logo that can be shown if needed.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="logoImage2": Gives this image a name for controller access
+                    - styleClass="logo-image": Applies logo-specific styling
+                    - fitHeight="120": Makes image 120 pixels tall
+                    - fitWidth="120": Makes image 120 pixels wide
+                    - preserveRatio="true": Keeps image proportions correct
+                    - visible="false": Image is hidden by default
+                    
+                    CONTROLLER USAGE:
+                    The controller can show this logo using: logoImage2.setVisible(true)
+                -->
                 <ImageView fx:id="logoImage2" styleClass="logo-image" fitHeight="120" fitWidth="120" preserveRatio="true" visible="false"/>
             </HBox>
             
-            <!-- Tagline -->
+            <!-- 
+                TAGLINE - Application description
+                This text explains what Eventra is and what it offers users.
+                Think of it like a brief description of what the company does.
+                
+                PROPERTIES EXPLAINED:
+                - text: The descriptive text about Eventra's purpose
+                - styleClass="branding-tagline": Applies tagline-specific styling
+                - wrappingWidth="400": Limits text width to 400 pixels for readability
+                
+                MESSAGE CONTENT:
+                "Your unified platform for seamless event management and engagement.
+                Connect, plan, and experience." - Explains Eventra's value proposition
+            -->
             <Text text="Your unified platform for seamless event management and engagement. Connect, plan, and experience." 
                   styleClass="branding-tagline" 
                   wrappingWidth="400"/>
         </VBox>
     </VBox>
 
-    <!-- Right Section - Sign In Form -->
+    <!-- 
+        RIGHT SECTION - Login Form
+        This section contains the actual login form where users enter their
+        credentials. It's like the security checkpoint where users prove
+        their identity.
+        
+        LAYOUT EXPLANATION:
+        - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+        - styleClass="form-section" applies form-specific styling
+        - alignment="CENTER" centers the form content
+    -->
     <VBox styleClass="form-section" HBox.hgrow="ALWAYS" alignment="CENTER">
+        <!-- 
+            SIGN-IN CARD - Form container
+            This container holds the login form in a card-like layout.
+            Think of it like a form on a clipboard or in a card holder.
+            
+            LAYOUT EXPLANATION:
+            - styleClass="signin-card" applies card-specific styling
+            - spacing="25" adds 25 pixels between form sections
+            - alignment="CENTER" centers all form elements
+        -->
         <VBox styleClass="signin-card" spacing="25" alignment="CENTER">
-            <!-- Form Header -->
+            <!-- 
+                FORM HEADER - Form title and description
+                This section introduces the login form and explains what users
+                need to do. Think of it like instructions at the top of a form.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges title and subtitle vertically
+                - spacing="8" adds 8 pixels between title and subtitle
+                - alignment="CENTER" centers text horizontally
+            -->
             <VBox spacing="8" alignment="CENTER">
+                <!-- 
+                    SIGN-IN TITLE - Form main heading
+                    This text clearly identifies this as the sign-in form.
+                    Think of it like a form title that tells you what to do.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Sign In": The form title text
+                    - styleClass="signin-title": Applies title-specific styling
+                -->
                 <Text text="Sign In" styleClass="signin-title"/>
+                
+                <!-- 
+                    SIGN-IN SUBTITLE - Form instructions
+                    This text explains what users need to do to sign in.
+                    Think of it like helpful instructions below a form title.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text: Instructions for the user
+                    - styleClass="signin-subtitle": Applies subtitle-specific styling
+                    
+                    MESSAGE CONTENT:
+                    "Welcome back! Please enter your credentials to access your account."
+                    - Friendly greeting and clear instructions
+                -->
                 <Text text="Welcome back! Please enter your credentials to access your account." 
                       styleClass="signin-subtitle"/>
             </VBox>
 
-            <!-- Login Form -->
+            <!-- 
+                LOGIN FORM - Input fields and buttons
+                This section contains all the form fields and controls needed
+                for user authentication. Think of it like the actual form
+                where users fill in their information.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges form elements vertically
+                - spacing="20" adds 20 pixels between form sections
+                - styleClass="signin-form" applies form-specific styling
+            -->
             <VBox spacing="20" styleClass="signin-form">
                 
-                <!-- Email Field -->
+                <!-- 
+                    EMAIL FIELD - User email input
+                    This section collects the user's email address for login.
+                    Think of it like asking for someone's email on a form.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges label and input field vertically
+                    - spacing="8" adds 8 pixels between label and input
+                    - styleClass="form-field" applies field-specific styling
+                -->
                 <VBox spacing="8" styleClass="form-field">
+                    <!-- 
+                        EMAIL LABEL - Field description
+                        This text explains what the field below is for.
+                        Think of it like a label on a form.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Email": The label text that explains the field
+                        - styleClass="form-label": Applies label-specific styling
+                    -->
                     <Label text="Email" styleClass="form-label"/>
+                    
+                    <!-- 
+                        EMAIL INPUT FIELD - Text input for email
+                        This is where users type their email address.
+                        Think of it like a text box for entering information.
+                        
+                        PROPERTIES EXPLAINED:
+                        - fx:id="emailField": Gives this field a name for controller access
+                        - promptText="your.email@example.com": Gray text that shows when the field is empty
+                        - styleClass="form-input": Applies input field styling
+                        
+                        CONTROLLER USAGE:
+                        The controller can read the email using: emailField.getText()
+                    -->
                     <TextField fx:id="emailField" 
                               promptText="your.email@example.com"
                               styleClass="form-input"/>
                 </VBox>
 
-                <!-- Password Field -->
+                <!-- 
+                    PASSWORD FIELD - User password input
+                    This section collects the user's password for authentication.
+                    Think of it like asking for someone's password on a secure form.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges label and input field vertically
+                    - spacing="8" adds 8 pixels between label and input
+                    - styleClass="form-field" applies field-specific styling
+                -->
                 <VBox spacing="8" styleClass="form-field">
+                    <!-- 
+                        PASSWORD LABEL - Field description
+                        This text explains what the field below is for.
+                        Think of it like a label on a form.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Password": The label text that explains the field
+                        - styleClass="form-label": Applies label-specific styling
+                    -->
                     <Label text="Password" styleClass="form-label"/>
+                    
+                    <!-- 
+                        PASSWORD INPUT CONTAINER - Password field with toggle
+                        This section contains the password field and a button to
+                        show/hide the password. Think of it like a password
+                        field with an eye icon to toggle visibility.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox arranges password field and toggle button horizontally
+                        - spacing="5" adds 5 pixels between field and button
+                        - alignment="CENTER_LEFT" centers elements vertically on the left
+                    -->
                     <HBox spacing="5" alignment="CENTER_LEFT">
+                        <!-- 
+                            HIDDEN PASSWORD FIELD - Secure password input
+                            This is the main password field that hides the password
+                            with asterisks. Think of it like a secure password box.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="passwordField": Gives this field a name for controller access
+                            - promptText="********": Gray text that shows when the field is empty
+                            - styleClass="form-input": Applies input field styling
+                            - HBox.hgrow="ALWAYS": Makes this field expand to fill available space
+                            
+                            CONTROLLER USAGE:
+                            The controller can read the password using: passwordField.getText()
+                        -->
                         <PasswordField fx:id="passwordField" 
                                       promptText="********"
                                       styleClass="form-input"
                                       HBox.hgrow="ALWAYS"/>
+                        
+                        <!-- 
+                            VISIBLE PASSWORD FIELD - Alternative password display
+                            This field shows the password in plain text when the
+                            user wants to see what they typed. Think of it like
+                            a temporary clear view of the password.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="visiblePasswordField": Gives this field a name for controller access
+                            - promptText="********": Gray text that shows when the field is empty
+                            - styleClass="form-input": Applies input field styling
+                            - HBox.hgrow="ALWAYS": Makes this field expand to fill available space
+                            - visible="false": Field is hidden by default
+                            - managed="false": Field doesn't take up space when hidden
+                            
+                            CONTROLLER USAGE:
+                            The controller can show this field using: visiblePasswordField.setVisible(true)
+                        -->
                         <TextField fx:id="visiblePasswordField"
                                   promptText="********"
                                   styleClass="form-input"
                                   HBox.hgrow="ALWAYS"
                                   visible="false"
                                   managed="false"/>
+                        
+                        <!-- 
+                            PASSWORD TOGGLE BUTTON - Show/hide password
+                            This button allows users to toggle between seeing
+                            their password as asterisks or as plain text.
+                            Think of it like an eye icon that opens and closes.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="togglePasswordButton": Gives this button a name for controller access
+                            - styleClass="password-toggle-button": Applies toggle button styling
+                            - onAction="#handleTogglePassword": Calls controller method when clicked
+                            - prefWidth="40": Makes button 40 pixels wide
+                            - prefHeight="40": Makes button 40 pixels tall
+                            
+                            CONTROLLER USAGE:
+                            The controller can handle clicks using: handleTogglePassword method
+                        -->
                         <Button fx:id="togglePasswordButton"
                                 styleClass="password-toggle-button"
                                 onAction="#handleTogglePassword"
                                 prefWidth="40"
                                 prefHeight="40">
+                            <!-- 
+                                EYE ICON - Visual indicator for password toggle
+                                This image shows an eye icon to indicate the
+                                password visibility toggle function.
+                                Think of it like a visual symbol for "see password".
+                                
+                                PROPERTIES EXPLAINED:
+                                - fx:id="eyeIcon": Gives this image a name for controller access
+                                - fitWidth="20": Makes image 20 pixels wide
+                                - fitHeight="20": Makes image 20 pixels tall
+                                
+                                CONTROLLER USAGE:
+                                The controller can change this icon using: eyeIcon.setImage()
+                            -->
                             <graphic>
                                 <ImageView fx:id="eyeIcon" fitWidth="20" fitHeight="20"/>
                             </graphic>
@@ -79,21 +397,83 @@
                     </HBox>
                 </VBox>
 
-                <!-- Error Message -->
+                <!-- 
+                    ERROR MESSAGE - Login error display
+                    This section displays error messages when login fails.
+                    Think of it like a warning sign that tells you what went wrong.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="errorLabel": Gives this label a name for controller access
+                    - styleClass="error-message": Applies error message styling
+                    - visible="false": Error message is hidden by default
+                    - managed="false": Error message doesn't take up space when hidden
+                    
+                    CONTROLLER USAGE:
+                    The controller can show errors using: errorLabel.setText("Error message")
+                    and errorLabel.setVisible(true)
+                -->
                 <Label fx:id="errorLabel" 
                        styleClass="error-message"
                        visible="false"
                        managed="false"/>
 
-                <!-- Sign In Button -->
+                <!-- 
+                    SIGN IN BUTTON - Login submission
+                    This button submits the login form and attempts to
+                    authenticate the user. Think of it like a "submit"
+                    button on a form.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="signInButton": Gives this button a name for controller access
+                    - text="Sign In": Button text
+                    - onAction="#handleSignIn": Calls controller method when clicked
+                    - styleClass="signin-button": Applies sign-in button styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can handle clicks using: handleSignIn method
+                -->
                 <Button fx:id="signInButton"
                         text="Sign In"
                         onAction="#handleSignIn"
                         styleClass="signin-button"/>
 
-                <!-- Sign Up Link -->
+                <!-- 
+                    SIGN UP LINK - Navigation to registration
+                    This section provides a link for users who don't have
+                    accounts to create one. Think of it like a "new user"
+                    section on a login page.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox arranges text and link horizontally
+                    - alignment="CENTER" centers content horizontally
+                    - spacing="5" adds 5 pixels between text and link
+                -->
                 <HBox alignment="CENTER" spacing="5">
+                    <!-- 
+                        SIGN UP TEXT - Explanation text
+                        This text explains that users can create new accounts.
+                        Think of it like helpful text that guides new users.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Don't have an account? ": The explanation text
+                        - styleClass="signup-text": Applies text-specific styling
+                    -->
                     <Text text="Don't have an account? " styleClass="signup-text"/>
+                    
+                    <!-- 
+                        SIGN UP HYPERLINK - Registration page link
+                        This is a clickable link that takes users to the
+                        sign-up page. Think of it like a "click here" link.
+                        
+                        PROPERTIES EXPLAINED:
+                        - fx:id="signUpLink": Gives this link a name for controller access
+                        - text="Sign Up": The link text
+                        - onAction="#handleSignUp": Calls controller method when clicked
+                        - styleClass="signup-link": Applies link-specific styling
+                        
+                        CONTROLLER USAGE:
+                        The controller can handle clicks using: handleSignUp method
+                    -->
                     <Hyperlink fx:id="signUpLink"
                                text="Sign Up"
                                onAction="#handleSignUp"

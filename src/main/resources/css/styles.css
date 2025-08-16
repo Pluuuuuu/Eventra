@@ -108,95 +108,162 @@
     -fx-text-fill: #636e72;
 }
 
-/* Modern Input Fields */
+/* 
+ * MODERN INPUT FIELD STYLES - Professional form elements
+ * 
+ * These styles create modern, professional-looking input fields that provide
+ * excellent user experience and visual feedback.
+ * 
+ * DESIGN PRINCIPLES:
+ * - Clean, minimal appearance that doesn't distract from content
+ * - Clear visual feedback for different states (normal, focused, error)
+ * - Consistent sizing and spacing for form usability
+ * - Subtle shadows and borders for depth without being overwhelming
+ */
+
+/* Base input field styling */
 .modern-input {
-    -fx-font-size: 14px;
-    -fx-padding: 12px 16px;
-    -fx-background-color: #f8f9fa;
-    -fx-border-color: #e9ecef;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-border-width: 2px;
-    -fx-min-height: 45px;
-    -fx-effect: null;
+    -fx-font-size: 14px;                    /* Readable text size */
+    -fx-padding: 12px 16px;                 /* Comfortable internal spacing */
+    -fx-background-color: #f8f9fa;          /* Light gray background */
+    -fx-border-color: #e9ecef;               /* Subtle border color */
+    -fx-border-radius: 8px;                  /* Rounded corners for modern look */
+    -fx-background-radius: 8px;              /* Background matches border radius */
+    -fx-border-width: 2px;                   /* Visible but not thick border */
+    -fx-min-height: 45px;                    /* Touch-friendly height */
+    -fx-effect: null;                        /* No default JavaFX effects */
 }
 
+/* Focused state - when user clicks or tabs to the field */
 .modern-input:focused {
-    -fx-border-color: #6c5ce7;
-    -fx-background-color: white;
-    -fx-effect: null;
+    -fx-border-color: #6c5ce7;               /* Purple border to show focus */
+    -fx-background-color: white;             /* White background for contrast */
+    -fx-effect: null;                        /* Maintain clean appearance */
 }
 
-/* Create Account Button */
+/* 
+ * BUTTON STYLES - Interactive elements with hover effects
+ * 
+ * Buttons are the primary way users interact with forms.
+ * These styles provide clear visual feedback and encourage interaction.
+ * 
+ * INTERACTION STATES:
+ * - Normal: Default appearance
+ * - Hover: When mouse is over button
+ * - Pressed: When button is clicked
+ * - Disabled: When button is not available
+ */
+
+/* Primary action button (Create Account, Sign In) */
 .create-account-button {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-background-color: #6c5ce7;
-    -fx-text-fill: white;
-    -fx-padding: 14px 30px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-cursor: hand;
-    -fx-min-height: 50px;
-    -fx-max-width: Infinity;
+    -fx-font-size: 16px;                    /* Larger text for importance */
+    -fx-font-weight: bold;                   /* Bold text for emphasis */
+    -fx-background-color: #6c5ce7;          /* Primary purple color */
+    -fx-text-fill: white;                    /* White text for contrast */
+    -fx-padding: 14px 30px;                 /* Generous padding for clickability */
+    -fx-background-radius: 8px;              /* Rounded corners */
+    -fx-border-radius: 8px;                  /* Border matches background */
+    -fx-cursor: hand;                        /* Hand cursor on hover */
+    -fx-min-height: 50px;                    /* Touch-friendly height */
+    -fx-max-width: Infinity;                 /* Full width of container */
 }
 
+/* Hover effect - subtle color change */
 .create-account-button:hover {
-    -fx-background-color: #5f3dc4;
+    -fx-background-color: #5f3dc4;          /* Darker purple on hover */
 }
 
+/* Pressed effect - even darker when clicked */
 .create-account-button:pressed {
-    -fx-background-color: #5a31b8;
+    -fx-background-color: #5a31b8;          /* Darkest purple when pressed */
 }
 
-/* Link Text */
+/* 
+ * LINK STYLES - Navigation and secondary actions
+ * 
+ * Links provide secondary navigation options and should be
+ * clearly distinguishable from buttons but still accessible.
+ * 
+ * ACCESSIBILITY FEATURES:
+ * - High contrast colors for visibility
+ * - Hover effects for interaction feedback
+ * - Underline on hover for clear link indication
+ */
+
+/* General link styling */
 .link-text {
-    -fx-font-size: 14px;
-    -fx-fill: #74b9ff;
+    -fx-font-size: 14px;                    /* Consistent with other text */
+    -fx-fill: #74b9ff;                      /* Blue color for link recognition */
 }
 
+/* Sign in link specific styling */
 .sign-in-link {
-    -fx-font-size: 14px;
-    -fx-text-fill: #6c5ce7;
-    -fx-border-color: transparent;
-    -fx-background-color: transparent;
-    -fx-cursor: hand;
-    -fx-underline: false;
+    -fx-font-size: 14px;                    /* Readable text size */
+    -fx-text-fill: #6c5ce7;                 /* Purple to match brand */
+    -fx-border-color: transparent;           /* No border by default */
+    -fx-background-color: transparent;       /* Transparent background */
+    -fx-cursor: hand;                        /* Hand cursor on hover */
+    -fx-underline: false;                    /* No underline initially */
 }
 
+/* Hover effect for sign in link */
 .sign-in-link:hover {
-    -fx-text-fill: #5f3dc4;
-    -fx-underline: true;
+    -fx-text-fill: #5f3dc4;                 /* Darker purple on hover */
+    -fx-underline: true;                     /* Show underline on hover */
 }
 
-/* Error Messages */
+/* 
+ * ERROR MESSAGE STYLES - User feedback and validation
+ * 
+ * Error messages need to be clearly visible and distinguishable
+ * from other content while maintaining the overall design aesthetic.
+ * 
+ * VISUAL HIERARCHY:
+ * - Red text for immediate attention
+ * - Yellow background for warning appearance
+ * - Rounded corners for consistency
+ * - Proper padding for readability
+ */
+
+/* Error message container */
 .error-message {
-    -fx-font-size: 14px;
-    -fx-text-fill: #e74c3c;
-    -fx-font-weight: 600;
-    -fx-padding: 12px 16px;
-    -fx-background-color: #ffeaa7;
-    -fx-background-radius: 8px;
-    -fx-border-color: #fdcb6e;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1px;
+    -fx-font-size: 14px;                    /* Readable text size */
+    -fx-text-fill: #e74c3c;                 /* Red text for error indication */
+    -fx-font-weight: 600;                    /* Semi-bold for emphasis */
+    -fx-padding: 12px 16px;                 /* Comfortable spacing */
+    -fx-background-color: #ffeaa7;          /* Light yellow background */
+    -fx-background-radius: 8px;              /* Rounded corners */
+    -fx-border-color: #fdcb6e;               /* Yellow border for definition */
+    -fx-border-radius: 8px;                  /* Border matches background */
+    -fx-border-width: 1px;                   /* Thin border for subtlety */
 }
 
-/* Existing styles for other pages... */
+/* 
+ * LOGIN PAGE LAYOUT - Two-column responsive design
+ * 
+ * The login page uses a modern two-column layout:
+ * - Left: Branding and welcome message
+ * - Right: Login form
+ * 
+ * RESPONSIVE DESIGN:
+ * - Minimum dimensions ensure usability on different screens
+ * - Flexible layout that adapts to content
+ * - Consistent spacing and alignment
+ */
 
-/* New Login Page Layout - Two Column Design */
+/* Main login page container */
 .login-page-container {
-    -fx-background-color: #f5f5f5;
-    -fx-min-width: 1000px;
-    -fx-min-height: 600px;
+    -fx-background-color: #f5f5f5;          /* Light gray background */
+    -fx-min-width: 1000px;                  /* Minimum width for two columns */
+    -fx-min-height: 600px;                  /* Minimum height for content */
 }
 
-/* Left Section - Branding */
+/* Left section - Branding and welcome message */
 .branding-section {
-    -fx-background-color: #fafafa;
-    -fx-padding: 60px 40px;
-    -fx-pref-width: 600px;
-    -fx-alignment: center;
+    -fx-background-color: #fafafa;           /* Slightly lighter background */
+    -fx-padding: 60px 40px;                 /* Generous padding for breathing room */
+    -fx-pref-width: 600px;                  /* Fixed width for consistent layout */
+    -fx-alignment: center;                   /* Center content horizontally and vertically */
 }
 
 .branding-content {

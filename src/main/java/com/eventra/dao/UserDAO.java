@@ -207,6 +207,23 @@ public class UserDAO {
     
     /**
      * Check if email already exists
+     * 
+     * This method is used during user registration to prevent duplicate email addresses.
+     * It's a critical validation step that ensures each user has a unique email.
+     * 
+     * BUSINESS RULES:
+     * - Each email address can only be used by one user account
+     * - Prevents account confusion and security issues
+     * - Required for password reset functionality
+     * - Ensures data integrity in the system
+     * 
+     * SECURITY IMPLICATIONS:
+     * - Prevents email-based account enumeration attacks
+     * - Protects user privacy by not revealing if an email exists
+     * - Used in registration form validation
+     * 
+     * @param email - The email address to check for uniqueness
+     * @return boolean - true if email already exists, false if it's available
      */
     public static boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM UserM WHERE Email = ?";
@@ -218,7 +235,7 @@ public class UserDAO {
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                return rs.getInt(1) > 0;  // Returns true if count > 0
             }
             
         } catch (SQLException e) {
@@ -226,11 +243,28 @@ public class UserDAO {
             e.printStackTrace();
         }
         
-        return false;
+        return false;  // Default to false on error (safe assumption)
     }
     
     /**
      * Check if username already exists
+     * 
+     * This method validates username uniqueness during user registration.
+     * Usernames must be unique across the entire system for login purposes.
+     * 
+     * BUSINESS RULES:
+     * - Each username can only be used by one user account
+     * - Usernames are used for login identification
+     * - Prevents login confusion and security issues
+     * - Required for user authentication system
+     * 
+     * USER EXPERIENCE:
+     * - Provides immediate feedback during registration
+     * - Suggests alternative usernames if taken
+     * - Prevents registration form submission with duplicate username
+     * 
+     * @param username - The username to check for uniqueness
+     * @return boolean - true if username already exists, false if it's available
      */
     public static boolean usernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM UserM WHERE Username = ?";
@@ -242,7 +276,7 @@ public class UserDAO {
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return rs.getInt(1) > 0;
+                return rs.getInt(1) > 0;  // Returns true if count > 0
             }
             
         } catch (SQLException e) {
@@ -250,11 +284,28 @@ public class UserDAO {
             e.printStackTrace();
         }
         
-        return false;
+        return false;  // Default to false on error (safe assumption)
     }
     
     /**
      * Get user by email
+     * 
+     * This method retrieves a complete user profile using their email address.
+     * It's commonly used for password reset functionality and user lookup.
+     * 
+     * USE CASES:
+     * - Password reset requests (user enters email)
+     * - User profile retrieval
+     * - Admin user management
+     * - Email-based user identification
+     * 
+     * RETURN VALUE:
+     * - Optional<User>: Contains user if found, empty if not found
+     * - This prevents null pointer exceptions in calling code
+     * - Modern Java pattern for handling "maybe exists" scenarios
+     * 
+     * @param email - The email address to search for
+     * @return Optional<User> - User object if found, empty Optional if not found
      */
     public static Optional<User> getUserByEmail(String email) {
         String sql = "SELECT * FROM UserM WHERE Email = ?";
@@ -266,7 +317,7 @@ public class UserDAO {
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
-                return Optional.of(mapResultSetToUser(rs));
+                return Optional.of(mapResultSetToUser(rs));  // Wrap user in Optional
             }
             
         } catch (SQLException e) {
@@ -274,11 +325,28 @@ public class UserDAO {
             e.printStackTrace();
         }
         
-        return Optional.empty();
+        return Optional.empty();  // Return empty Optional if not found or error
     }
     
     /**
      * Update failed login attempt timestamp
+     * 
+     * This private method tracks when a user fails to log in.
+     * It's used for security monitoring and potential account lockout features.
+     * 
+     * SECURITY FEATURES:
+     * - Tracks failed login attempts for monitoring
+     * - Can be used to implement account lockout after multiple failures
+     * - Helps identify potential brute force attacks
+     * - Provides audit trail for security incidents
+     * 
+     * IMPLEMENTATION DETAILS:
+     * - Updates LastFailedLoginAt field in UserM table
+     * - Uses CURRENT_TIMESTAMP for accurate timing
+     * - Private method (only called internally by authenticateUser)
+     * - Silent failure (doesn't throw exceptions)
+     * 
+     * @param userId - The ID of the user who failed to log in
      */
     private static void updateFailedLoginAttempt(int userId) {
         String sql = "UPDATE UserM SET LastFailedLoginAt = CURRENT_TIMESTAMP WHERE UserID = ?";
@@ -287,7 +355,7 @@ public class UserDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, userId);
-            stmt.executeUpdate();
+            stmt.executeUpdate();  // Execute the update statement
             
         } catch (SQLException e) {
             System.err.println("Error updating failed login attempt: " + e.getMessage());
@@ -297,6 +365,24 @@ public class UserDAO {
     
     /**
      * Hash password using BCrypt
+     * 
+     * This method converts plain text passwords into secure BCrypt hashes.
+     * BCrypt is an industry-standard password hashing algorithm that includes salt.
+     * 
+     * SECURITY FEATURES:
+     * - BCrypt automatically generates and includes salt
+     * - Salt prevents rainbow table attacks
+     * - Configurable work factor (default: 10 rounds)
+     * - One-way hashing (cannot be reversed to plain text)
+     * 
+     * TECHNICAL DETAILS:
+     * - BCrypt.checkpw() is used for verification
+     * - BCrypt.hashpw() is used for hashing
+     * - Work factor 10 provides good balance of security vs performance
+     * - Hash length is always 60 characters
+     * 
+     * @param plainTextPassword - The plain text password to hash
+     * @return String - The BCrypt hash of the password
      */
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());

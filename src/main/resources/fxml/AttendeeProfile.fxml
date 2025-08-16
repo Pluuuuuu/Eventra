@@ -7,96 +7,559 @@
 <?import javafx.geometry.Insets?>
 <?import java.time.format.DateTimeFormatter?>
 
+<!-- 
+    ATTENDEE PROFILE SCREEN (AttendeeProfile.fxml)
+    
+    This FXML file defines the user interface for the Attendee Profile screen
+    in the Eventra application. Think of it like a "personal information page"
+    where attendees can view and edit their profile details.
+    
+    WHAT THIS SCREEN DOES:
+    - Shows the attendee's personal profile information
+    - Allows editing of username and email address
+    - Displays account statistics and membership details
+    - Provides navigation to other parts of the application
+    - Enables profile management and updates
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Profile Management: Viewing and editing personal information
+    - Navigation: Moving between different parts of the app
+    - Form Controls: Input fields and buttons for data entry
+    - Layout Management: Organizing content in a user-friendly way
+    - User Experience: Making profile management easy and intuitive
+    
+    BUSINESS VALUE:
+    - Enables attendees to manage their personal information
+    - Provides a central location for profile updates
+    - Supports user account customization and preferences
+    - Creates a professional and organized user experience
+    - Facilitates user engagement and satisfaction
+    
+    REAL-WORLD ANALOGY:
+    - Like a personal profile page on a social media platform
+    - Like an account settings page in an online service
+    - Like a membership profile in a professional organization
+    - Like a user dashboard that shows personal information
+-->
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.eventra.controller.AttendeeProfileController"
             stylesheets="@../css/styles.css"
             styleClass="main-container">
 
-    <!-- Header -->
+    <!-- 
+        HEADER SECTION - Top navigation bar
+        This section provides navigation and search functionality while
+        keeping the user oriented within the application.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges elements horizontally (left to right)
+        - alignment="CENTER_LEFT" puts content on the left side
+        - spacing="20" adds 20 pixels between elements
+        - styleClass applies header-specific styling
+    -->
     <top>
         <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <!-- 
+                PADDING - Space around the navigation bar
+                Padding adds breathing room around the navigation bar content.
+                Think of it like adding margins around text in a document.
+                
+                PROPERTIES EXPLAINED:
+                - top="15": 15 pixels of space above the content
+                - right="20": 20 pixels of space to the right
+                - bottom="15": 15 pixels of space below the content
+                - left="20": 20 pixels of space to the left
+            -->
             <padding>
                 <Insets top="15" right="20" bottom="15" left="20"/>
             </padding>
             
-            <!-- Logo -->
+            <!-- 
+                LOGO - Eventra brand identity
+                Shows the Eventra logo so users know which app they're using.
+                It's like the company name at the top of a website.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="logoImage": Gives this image a name for controller access
+                - fitHeight="40": Makes image 40 pixels tall
+                - fitWidth="120": Makes image 120 pixels wide
+                - preserveRatio="true": Keeps image proportions correct
+                
+                CONTROLLER USAGE:
+                The controller can access this logo using: logoImage
+            -->
             <ImageView fx:id="logoImage" fitHeight="40" fitWidth="120" 
                       preserveRatio="true"/>
             
-            <!-- Navigation -->
+            <!-- 
+                NAVIGATION MENU - Main menu buttons
+                These buttons let users move between different parts of the app.
+                Think of them like the main menu of a website.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges buttons horizontally
+                - spacing="30" adds 30 pixels between buttons
+                - alignment="CENTER_LEFT" centers buttons vertically on the left
+                
+                BUTTON EXPLANATION:
+                - "My Schedule": Takes you to your personal event schedule
+                - "Browse Events": Takes you to see all available events
+            -->
             <HBox spacing="30" alignment="CENTER_LEFT">
+                <!-- 
+                    MY SCHEDULE BUTTON - Navigation to personal schedule
+                    This button takes you to see all the events you've registered for.
+                    It's like going to your personal calendar or agenda.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="My Schedule": Button text
+                    - styleClass: Applies attendee-nav-button styling
+                    - onAction="#handleMySchedule": Calls controller method when clicked
+                -->
                 <Button text="My Schedule" styleClass="attendee-nav-button" onAction="#handleMySchedule"/>
+                
+                <!-- 
+                    BROWSE EVENTS BUTTON - Navigation to events list
+                    This button takes you to see all available events you can register for.
+                    It's like going to the main catalog or events page.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Browse Events": Button text
+                    - styleClass: Applies attendee-nav-button styling
+                    - onAction="#handleBrowseEvents": Calls controller method when clicked
+                -->
                 <Button text="Browse Events" styleClass="attendee-nav-button" onAction="#handleBrowseEvents"/>
             </HBox>
             
-            <!-- Search Bar -->
+            <!-- 
+                SEARCH SECTION - Event search functionality
+                This area lets you search for specific events in the system.
+                It's like a search box that helps you find what you're looking for.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges search field and button horizontally
+                - alignment="CENTER_RIGHT" puts search on the right side
+                - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                
+                COMPONENTS:
+                - Search text field: Where you type what you're looking for
+                - Search button: Magnifying glass icon to start the search
+            -->
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <!-- 
+                    SEARCH FIELD - Text input for search terms
+                    This is where you type keywords to search for specific events.
+                    For example, type "conference" to find conference events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="searchField": Gives this field a name so the controller can access it
+                    - promptText="Search events...": Gray text that shows when the field is empty
+                    - styleClass: Applies search-field-specific styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can read what you type using: searchField.getText()
+                -->
                 <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                
+                <!-- 
+                    SEARCH BUTTON - Triggers the search
+                    Click this button to search for events using the text you typed.
+                    The 🔍 icon is a magnifying glass, which is the universal symbol for search.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="🔍": Magnifying glass emoji for the search icon
+                    - styleClass: Applies search-button-specific styling
+                    - onAction="#handleSearch": Calls the search method in the controller
+                    
+                    USER EXPERIENCE:
+                    - Click to search for events
+                    - Searches through all available events
+                    - Shows results based on what you typed
+                -->
                 <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
             </HBox>
             
-            <!-- Profile Icon -->
+            <!-- 
+                PROFILE BUTTON - User profile access
+                This button takes you to your personal profile page where you can
+                see your information, change settings, or log out.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="profileButton": Gives this button a name for controller access
+                - text="👤": Person emoji representing your profile
+                - styleClass: Applies profile-button-specific styling
+                - onAction="#handleProfile": Calls controller method when clicked
+                
+                FUNCTIONALITY:
+                - Takes you to your profile page
+                - Shows your personal information
+                - Provides account management options
+            -->
             <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
         </HBox>
     </top>
 
-    <!-- Main Content -->
+    <!-- 
+        MAIN CONTENT AREA - Profile information and editing
+        This section contains all the profile information and editing controls.
+        It's organized in a clean, easy-to-use layout.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges elements vertically (top to bottom)
+        - styleClass="profile-container" applies profile-specific styling
+        - spacing="40" adds 40 pixels between major sections
+        - alignment="TOP_CENTER" centers content horizontally and aligns to top
+    -->
     <center>
         <VBox styleClass="profile-container" spacing="40" alignment="TOP_CENTER">
+            <!-- 
+                CONTENT PADDING - Space around the main content
+                Padding adds breathing room around the profile content.
+                Think of it like adding margins around text in a document.
+                
+                PROPERTIES EXPLAINED:
+                - top="40": 40 pixels of space above the content
+                - right="40": 40 pixels of space to the right
+                - bottom="40": 40 pixels of space below the content
+                - left="40": 40 pixels of space to the left
+            -->
             <padding>
                 <Insets top="40" right="40" bottom="40" left="40"/>
             </padding>
             
-            <!-- Profile Header -->
+            <!-- 
+                PROFILE HEADER - Visual profile identification
+                This section shows the attendee's profile picture, name, and email
+                at the top of the profile page. It's like a personal introduction.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges elements vertically
+                - spacing="20" adds 20 pixels between elements
+                - alignment="CENTER" centers all content horizontally
+            -->
             <VBox spacing="20" alignment="CENTER">
+                <!-- 
+                    PROFILE PICTURE - User's profile image
+                    This displays the attendee's profile picture or avatar.
+                    Think of it like a profile picture on a social media platform.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="profileImage": Gives this image a name for controller access
+                    - fitHeight="120": Makes image 120 pixels tall
+                    - fitWidth="120": Makes image 120 pixels wide
+                    - styleClass="profile-avatar": Applies profile picture styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can access this image using: profileImage
+                -->
                 <ImageView fx:id="profileImage" fitHeight="120" fitWidth="120" 
                           styleClass="profile-avatar"/>
+                
+                <!-- 
+                    PROFILE NAME - User's display name
+                    This shows the attendee's full name as it appears in the system.
+                    Think of it like the name that appears on a business card.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="profileName": Gives this text a name for controller access
+                    - text="John Doe": Default text that shows before real data loads
+                    - styleClass="profile-name": Applies name-specific styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can update this text using: profileName.setText("New Name")
+                -->
                 <Text fx:id="profileName" text="John Doe" styleClass="profile-name"/>
+                
+                <!-- 
+                    PROFILE EMAIL - User's email address
+                    This shows the attendee's email address for contact purposes.
+                    Think of it like the email address on a business card.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="profileEmail": Gives this text a name for controller access
+                    - text="john.doe@example.com": Default text that shows before real data loads
+                    - styleClass="profile-email": Applies email-specific styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can update this text using: profileEmail.setText("new@email.com")
+                -->
                 <Text fx:id="profileEmail" text="john.doe@example.com" styleClass="profile-email"/>
             </VBox>
             
-            <!-- Profile Form -->
+            <!-- 
+                PROFILE EDITING FORM - Editable profile information
+                This section contains form fields that allow the attendee to
+                edit their profile information. It's like a settings form.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges form elements vertically
+                - styleClass="profile-form" applies form-specific styling
+                - spacing="25" adds 25 pixels between form sections
+                - maxWidth="500" limits the form width for better readability
+            -->
             <VBox styleClass="profile-form" spacing="25" maxWidth="500">
                 
-                <!-- Username Section -->
+                <!-- 
+                    USERNAME SECTION - Edit username field
+                    This section allows the attendee to view and edit their username.
+                    Think of it like a form field for changing your login name.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges label and input field vertically
+                    - spacing="8" adds 8 pixels between label and input
+                -->
                 <VBox spacing="8">
+                    <!-- 
+                        FORM LABEL - Field description
+                        This text explains what the field below is for.
+                        Think of it like a label on a form.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Username": The label text that explains the field
+                        - styleClass="form-label": Applies label-specific styling
+                    -->
                     <Text text="Username" styleClass="form-label"/>
+                    
+                    <!-- 
+                        INPUT FIELD WITH EDIT BUTTON - Username editing controls
+                        This section contains the username input field and an edit button.
+                        Think of it like a form field with a button to make changes.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox arranges input field and button horizontally
+                        - spacing="10" adds 10 pixels between field and button
+                        - alignment="CENTER_LEFT" centers elements vertically on the left
+                    -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
+                        <!-- 
+                            USERNAME INPUT FIELD - Text input for username
+                            This is where the attendee can type their new username.
+                            Think of it like a text box for entering information.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="usernameField": Gives this field a name for controller access
+                            - styleClass="form-field": Applies input field styling
+                            - HBox.hgrow="ALWAYS": Makes this field expand to fill available space
+                            
+                            CONTROLLER USAGE:
+                            The controller can read the username using: usernameField.getText()
+                        -->
                         <TextField fx:id="usernameField" styleClass="form-field" HBox.hgrow="ALWAYS"/>
+                        
+                        <!-- 
+                            EDIT USERNAME BUTTON - Trigger username editing
+                            This button allows the attendee to edit their username.
+                            Think of it like a button to make changes to your account.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Edit": Button text
+                            - styleClass="edit-button": Applies edit button styling
+                            - onAction="#handleEditUsername": Calls controller method when clicked
+                        -->
                         <Button text="Edit" styleClass="edit-button" onAction="#handleEditUsername"/>
                     </HBox>
                 </VBox>
                 
-                <!-- Email Section -->
+                <!-- 
+                    EMAIL SECTION - Edit email field
+                    This section allows the attendee to view and edit their email address.
+                    Think of it like a form field for changing your contact email.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges label and input field vertically
+                    - spacing="8" adds 8 pixels between label and input
+                -->
                 <VBox spacing="8">
+                    <!-- 
+                        FORM LABEL - Field description
+                        This text explains what the field below is for.
+                        Think of it like a label on a form.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Email": The label text that explains the field
+                        - styleClass="form-label": Applies label-specific styling
+                    -->
                     <Text text="Email" styleClass="form-label"/>
+                    
+                    <!-- 
+                        INPUT FIELD WITH EDIT BUTTON - Email editing controls
+                        This section contains the email input field and an edit button.
+                        Think of it like a form field with a button to make changes.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox arranges input field and button horizontally
+                        - spacing="10" adds 10 pixels between field and button
+                        - alignment="CENTER_LEFT" centers elements vertically on the left
+                    -->
                     <HBox spacing="10" alignment="CENTER_LEFT">
+                        <!-- 
+                            EMAIL INPUT FIELD - Text input for email
+                            This is where the attendee can type their new email address.
+                            Think of it like a text box for entering information.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="emailField": Gives this field a name for controller access
+                            - styleClass="form-field": Applies input field styling
+                            - HBox.hgrow="ALWAYS": Makes this field expand to fill available space
+                            
+                            CONTROLLER USAGE:
+                            The controller can read the email using: emailField.getText()
+                        -->
                         <TextField fx:id="emailField" styleClass="form-field" HBox.hgrow="ALWAYS"/>
+                        
+                        <!-- 
+                            EDIT EMAIL BUTTON - Trigger email editing
+                            This button allows the attendee to edit their email address.
+                            Think of it like a button to make changes to your account.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Edit": Button text
+                            - styleClass="edit-button": Applies edit button styling
+                            - onAction="#handleEditEmail": Calls controller method when clicked
+                        -->
                         <Button text="Edit" styleClass="edit-button" onAction="#handleEditEmail"/>
                     </HBox>
                 </VBox>
                 
-                <!-- Save Changes Button -->
+                <!-- 
+                    SAVE CHANGES BUTTON - Save profile updates
+                    This button saves any changes the attendee made to their profile.
+                    Think of it like a "submit" button on a form.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="saveButton": Gives this button a name for controller access
+                    - text="Save Changes": Button text
+                    - styleClass="primary-button": Applies primary button styling
+                    - onAction="#handleSaveChanges": Calls controller method when clicked
+                    - disable="true": Button starts disabled until changes are made
+                    
+                    CONTROLLER USAGE:
+                    The controller can enable/disable this button using: saveButton.setDisable(false)
+                -->
                 <Button fx:id="saveButton" text="Save Changes" styleClass="primary-button" 
                         onAction="#handleSaveChanges" disable="true"/>
                 
-                <!-- Cancel Button -->
+                <!-- 
+                    CANCEL BUTTON - Cancel profile updates
+                    This button cancels any unsaved changes and returns to the previous state.
+                    Think of it like a "cancel" button on a form.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Cancel": Button text
+                    - styleClass="secondary-button": Applies secondary button styling
+                    - onAction="#handleCancel": Calls controller method when clicked
+                -->
                 <Button text="Cancel" styleClass="secondary-button" onAction="#handleCancel"/>
             </VBox>
             
-            <!-- Additional Profile Info -->
+            <!-- 
+                ADDITIONAL PROFILE INFORMATION - Account statistics
+                This section displays additional information about the attendee's
+                account, such as membership duration and event attendance.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges information sections vertically
+                - styleClass="profile-info" applies info-specific styling
+                - spacing="15" adds 15 pixels between information sections
+                - maxWidth="500" limits the width for better readability
+            -->
             <VBox styleClass="profile-info" spacing="15" maxWidth="500">
+                <!-- 
+                    SECTION TITLE - Information section header
+                    This text introduces the additional profile information section.
+                    Think of it like a heading for a section of information.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Account Information": The section title text
+                    - styleClass="section-title": Applies title-specific styling
+                -->
                 <Text text="Account Information" styleClass="section-title"/>
                 
+                <!-- 
+                    INFORMATION ROW - Account details layout
+                    This section displays account information in a horizontal layout.
+                    Think of it like a row of information cards.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox arranges information sections horizontally
+                    - spacing="20" adds 20 pixels between information sections
+                -->
                 <HBox spacing="20">
+                    <!-- 
+                        MEMBER SINCE SECTION - Account creation date
+                        This section shows when the attendee first joined the system.
+                        Think of it like showing your membership start date.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges label and value vertically
+                        - spacing="5" adds 5 pixels between label and value
+                        - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                    -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <!-- 
+                            INFORMATION LABEL - Field description
+                            This text explains what the information below represents.
+                            Think of it like a label on an information card.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Member Since": The label text
+                            - styleClass="info-label": Applies label-specific styling
+                        -->
                         <Text text="Member Since" styleClass="info-label"/>
+                        
+                        <!-- 
+                            INFORMATION VALUE - Actual data display
+                            This text shows the actual value for the information above.
+                            Think of it like the data that fills in a form.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="memberSinceText": Gives this text a name for controller access
+                            - text="January 2024": Default text that shows before real data loads
+                            - styleClass="info-value": Applies value-specific styling
+                            
+                            CONTROLLER USAGE:
+                            The controller can update this text using: memberSinceText.setText("New Date")
+                        -->
                         <Text fx:id="memberSinceText" text="January 2024" styleClass="info-value"/>
                     </VBox>
                     
+                    <!-- 
+                        EVENTS ATTENDED SECTION - Attendance statistics
+                        This section shows how many events the attendee has attended.
+                        Think of it like showing your participation statistics.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges label and value vertically
+                        - spacing="5" adds 5 pixels between label and value
+                        - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                    -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <!-- 
+                            INFORMATION LABEL - Field description
+                            This text explains what the information below represents.
+                            Think of it like a label on an information card.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Events Attended": The label text
+                            - styleClass="info-label": Applies label-specific styling
+                        -->
                         <Text text="Events Attended" styleClass="info-label"/>
+                        
+                        <!-- 
+                            INFORMATION VALUE - Actual data display
+                            This text shows the actual value for the information above.
+                            Think of it like the data that fills in a form.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="eventsAttendedText": Gives this text a name for controller access
+                            - text="5": Default text that shows before real data loads
+                            - styleClass="info-value": Applies value-specific styling
+                            
+                            CONTROLLER USAGE:
+                            The controller can update this text using: eventsAttendedText.setText("10")
+                        -->
                         <Text fx:id="eventsAttendedText" text="5" styleClass="info-value"/>
                     </VBox>
                 </HBox>

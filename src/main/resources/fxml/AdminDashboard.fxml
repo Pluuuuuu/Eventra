@@ -1,102 +1,824 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- 
+    ADMIN DASHBOARD SCREEN (AdminDashboard.fxml)
+    
+    This FXML file defines the user interface for the Admin Dashboard screen in the
+    Eventra application. Think of it like a "control center" or "management hub"
+    where administrators can oversee the entire system, view metrics, and manage operations.
+    
+    WHAT THIS SCREEN DOES:
+    - Provides administrators with a comprehensive overview of system operations
+    - Displays key performance metrics and statistics in easy-to-read cards
+    - Offers navigation to different administrative functions and tools
+    - Shows personal event management statistics and system-wide data
+    - Provides quick access to common administrative tasks
+    - Manages administrative workflows and system oversight
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Administrative Control: Central hub for system management and oversight
+    - Dashboard Metrics: Key performance indicators and system statistics
+    - Navigation Management: Easy access to different administrative functions
+    - Event Oversight: Monitoring and managing event-related activities
+    - System Monitoring: Tracking overall system performance and usage
+    - User Experience: Intuitive interface for administrative tasks
+    
+    BUSINESS VALUE:
+    - Enables administrators to efficiently manage the entire event system
+    - Provides real-time visibility into system performance and usage
+    - Supports data-driven decision making through metrics and analytics
+    - Improves administrative efficiency with centralized control
+    - Creates better oversight and management of event operations
+    - Supports system health monitoring and proactive management
+    
+    REAL-WORLD ANALOGY:
+    - Like a control room for managing a large facility
+    - Like a dashboard in a car that shows all important information
+    - Like a manager's office with all the key reports and controls
+    - Like a command center for overseeing operations
+    - Like a business intelligence dashboard for executives
+-->
+
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our admin dashboard screen. Think of them like importing tools from
+    a toolbox that we'll use to build our administrative control interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for navigation and actions
+    - TextField: Text input fields for search and data entry
+    - HBox/VBox: Layout containers that organize content horizontally and vertically
+    - Text: Text elements for headings, labels, and content
+    - GridPane: Grid layout for organizing metric cards and content
+    - Insets: Utilities for adding spacing and padding between elements
+    - Separator: Visual dividers to separate different sections
+-->
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
+<!-- 
+    MAIN CONTAINER - Horizontal Box Layout Structure
+    This HBox is the main container that creates a two-panel layout: sidebar navigation
+    on the left and main content area on the right. Think of it like organizing a
+    management interface with navigation tools on one side and information display
+    on the other.
+    
+    LAYOUT EXPLANATION:
+    - HBox arranges content horizontally (left to right)
+    - Left side contains sidebar navigation and controls
+    - Right side contains main dashboard content and metrics
+    - Clean, organized structure that's easy to navigate
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the AdminDashboardController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="admin-dashboard-container": Applies admin dashboard-specific styling
+    
+    USER EXPERIENCE:
+    - Clear separation between navigation and content
+    - Professional, organized administrative interface
+    - Easy access to all administrative functions
+    - Consistent layout structure for efficiency
+-->
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.eventra.controller.AdminDashboardController"
       stylesheets="@../css/styles.css"
       styleClass="admin-dashboard-container">
 
-    <!-- Sidebar Navigation -->
+    <!-- 
+        SIDEBAR NAVIGATION - Administrative Control Panel
+        This sidebar provides navigation to all administrative functions and tools.
+        Think of it like a control panel or menu that gives administrators access
+        to all the different areas they need to manage.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges navigation elements vertically (top to bottom)
+        - prefWidth="250" sets consistent sidebar width
+        - maxWidth="250" and minWidth="250" maintain fixed width
+        - styleClass="dashboard-sidebar" applies sidebar-specific styling
+        
+        USER EXPERIENCE:
+        - Always-visible navigation for quick access
+        - Consistent sidebar width for stability
+        - Organized navigation structure
+        - Professional administrative appearance
+    -->
     <VBox styleClass="dashboard-sidebar" prefWidth="250" maxWidth="250" minWidth="250">
         
-        <!-- Logo/Title Area -->
+        <!-- 
+            SIDEBAR HEADER - Branding and Identification
+            This section displays the Eventra branding and identifies this as
+            the admin panel. Think of it like the header of a management
+            interface that clearly shows what system you're working with.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges header content vertically
+            - alignment="CENTER" centers content horizontally
+            - spacing="10" adds 10 pixels between header elements
+            - styleClass="sidebar-header" applies header-specific styling
+            
+            USER EXPERIENCE:
+            - Clear system identification
+            - Professional branding appearance
+            - Consistent with application design
+            - Easy to understand purpose
+        -->
         <VBox styleClass="sidebar-header" alignment="CENTER" spacing="10">
+            <!-- 
+                BRAND LOGO - "EVENTRA" Text
+                This text displays the Eventra brand name prominently in the sidebar.
+                Think of it like a company sign that establishes brand identity
+                in the administrative interface.
+                
+                PROPERTIES EXPLAINED:
+                - text="EVENTRA": The brand name that displays
+                - styleClass="sidebar-logo": Applies logo-specific styling
+                
+                USER EXPERIENCE:
+                - Clear brand identification
+                - Professional appearance
+                - Consistent branding across the application
+                - Establishes credibility and trust
+            -->
             <Text text="EVENTRA" styleClass="sidebar-logo"/>
+            <!-- 
+                PANEL IDENTIFICATION - "Admin Panel" Text
+                This text clearly identifies that this is the administrative
+                control panel. Think of it like a label that tells you exactly
+                what type of interface you're using.
+                
+                PROPERTIES EXPLAINED:
+                - text="Admin Panel": The panel identification text
+                - styleClass="sidebar-subtitle": Applies subtitle styling
+                
+                USER EXPERIENCE:
+                - Clear interface identification
+                - Professional appearance
+                - Consistent with other interface elements
+                - Easy to understand purpose
+            -->
             <Text text="Admin Panel" styleClass="sidebar-subtitle"/>
         </VBox>
         
-        <!-- Navigation Menu -->
+        <!-- 
+            NAVIGATION MENU - Administrative Function Access
+            This section contains all the navigation buttons that give administrators
+            access to different parts of the system. Think of it like the main menu
+            of a management application that provides access to all tools and functions.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges navigation buttons vertically
+            - spacing="5" adds 5 pixels between navigation buttons
+            - styleClass="sidebar-nav" applies navigation-specific styling
+            
+            USER EXPERIENCE:
+            - Easy access to all administrative functions
+            - Clear navigation options
+            - Organized button layout
+            - Consistent navigation experience
+        -->
         <VBox styleClass="sidebar-nav" spacing="5">
+            <!-- 
+                DASHBOARD NAVIGATION BUTTON - Return to main dashboard
+                This button takes administrators back to the main dashboard view.
+                It's highlighted as active since this is the current page.
+                Think of it like a "home" button that returns you to the main
+                administrative overview.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="dashboardNavBtn": Unique identifier for the controller
+                - text="Dashboard": Button text that clearly indicates the action
+                - onAction="#handleDashboardNav": Calls controller method when clicked
+                - styleClass="nav-button,nav-button-active": Applies navigation button styling plus active state
+                
+                USER EXPERIENCE:
+                - Clear indication of current page
+                - Easy return to main dashboard
+                - Visual feedback for active state
+                - Consistent with other navigation buttons
+            -->
             <Button fx:id="dashboardNavBtn" text="Dashboard" 
                     onAction="#handleDashboardNav"
                     styleClass="nav-button,nav-button-active"/>
             
+            <!-- 
+                EVENTS MANAGEMENT BUTTON - Access event management tools
+                This button takes administrators to the event management section
+                where they can create, edit, and manage events. Think of it like
+                going to the "events office" to handle all event-related tasks.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="eventsNavBtn": Unique identifier for the controller
+                - text="Manage Events": Button text that clearly indicates the action
+                - onAction="#handleEventsNav": Calls controller method when clicked
+                - styleClass="nav-button": Applies navigation button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of where the button takes you
+                - Easy access to event management tools
+                - Consistent with other navigation buttons
+                - Intuitive navigation flow
+            -->
             <Button fx:id="eventsNavBtn" text="Manage Events" 
                     onAction="#handleEventsNav"
                     styleClass="nav-button"/>
             
+            <!-- 
+                REPORTS BUTTON - Access system reports and analytics
+                This button takes administrators to the reports section where they
+                can view system analytics, user statistics, and performance data.
+                Think of it like going to the "reports office" to get insights
+                about system performance.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="reportsNavBtn": Unique identifier for the controller
+                - text="Reports": Button text that clearly indicates the action
+                - onAction="#handleReportsNav": Calls controller method when clicked
+                - styleClass="nav-button": Applies navigation button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of where the button takes you
+                - Easy access to system reports and analytics
+                - Consistent with other navigation buttons
+                - Intuitive navigation flow
+            -->
             <Button fx:id="reportsNavBtn" text="Reports" 
                     onAction="#handleReportsNav"
                     styleClass="nav-button"/>
             
+            <!-- 
+                SETTINGS BUTTON - Access system configuration
+                This button takes administrators to the settings section where they
+                can configure system parameters, user permissions, and other
+                administrative settings. Think of it like going to the "settings
+                office" to configure how the system works.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="settingsNavBtn": Unique identifier for the controller
+                - text="Settings": Button text that clearly indicates the action
+                - onAction="#handleSettingsNav": Calls controller method when clicked
+                - styleClass="nav-button": Applies navigation button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of where the button takes you
+                - Easy access to system configuration
+                - Consistent with other navigation buttons
+                - Intuitive navigation flow
+            -->
             <Button fx:id="settingsNavBtn" text="Settings" 
                     onAction="#handleSettingsNav"
                     styleClass="nav-button"/>
         </VBox>
         
-        <!-- Spacer -->
+        <!-- 
+            SPACER - Flexible space allocation
+            This Region acts as a flexible spacer that pushes the footer content
+            to the bottom of the sidebar. Think of it like a spring that expands
+            to fill available space and pushes other content to the edges.
+            
+            LAYOUT EXPLANATION:
+            - Region is a flexible container that can expand
+            - VBox.vgrow="ALWAYS" makes it expand to fill available space
+            - This pushes the footer content to the bottom
+            
+            USER EXPERIENCE:
+            - Consistent footer positioning
+            - Professional layout appearance
+            - Better visual organization
+            - Improved navigation structure
+        -->
         <Region VBox.vgrow="ALWAYS"/>
         
-        <!-- User Info & Logout -->
+        <!-- 
+            SIDEBAR FOOTER - User information and logout
+            This section displays user information and provides logout functionality
+            at the bottom of the sidebar. Think of it like the footer of a
+            management interface that shows who's logged in and how to sign out.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges footer content vertically
+            - spacing="10" adds 10 pixels between footer elements
+            - styleClass="sidebar-footer" applies footer-specific styling
+            
+            USER EXPERIENCE:
+            - Clear user identification
+            - Easy access to logout functionality
+            - Professional footer appearance
+            - Consistent with interface design
+        -->
         <VBox styleClass="sidebar-footer" spacing="10">
+            <!-- 
+                SEPARATOR - Visual divider
+                This separator creates a visual line that separates the footer
+                from the main navigation. Think of it like a line that divides
+                different sections of a document for better organization.
+                
+                PROPERTIES EXPLAINED:
+                - styleClass="sidebar-separator": Applies separator-specific styling
+                
+                USER EXPERIENCE:
+                - Clear visual separation
+                - Better organization appearance
+                - Professional interface design
+                - Improved readability
+            -->
             <Separator styleClass="sidebar-separator"/>
+            <!-- 
+                USER NAME DISPLAY - Current administrator identification
+                This text shows the name of the currently logged-in administrator.
+                Think of it like a name tag that shows who is currently using
+                the administrative interface.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="userNameText": Unique identifier for the controller
+                - text="Admin User": Default text that displays
+                - styleClass="sidebar-user": Applies user name styling
+                
+                USER EXPERIENCE:
+                - Clear user identification
+                - Professional appearance
+                - Consistent with interface design
+                - Easy to understand current user
+            -->
             <Text fx:id="userNameText" text="Admin User" styleClass="sidebar-user"/>
-                            <Button text="🚪 Logout"
-                        onAction="#handleLogout"
-                        styleClass="logout-button"/>
+            <!-- 
+                LOGOUT BUTTON - End administrative session
+                This button allows administrators to log out of the system.
+                Think of it like a "sign out" button that safely ends the
+                administrative session and returns to the login screen.
+                
+                PROPERTIES EXPLAINED:
+                - text="🚪 Logout": Button text with logout icon
+                - onAction="#handleLogout": Calls controller method when clicked
+                - styleClass="logout-button": Applies logout button styling
+                
+                USER EXPERIENCE:
+                - Clear indication of what the button does
+                - Visual icon for easy recognition
+                - Safe session termination
+                - Consistent with application design
+            -->
+            <Button text="🚪 Logout"
+                    onAction="#handleLogout"
+                    styleClass="logout-button"/>
         </VBox>
     </VBox>
 
-    <!-- Main Content Area -->
+    <!-- 
+        MAIN CONTENT AREA - Dashboard Information and Metrics
+        This section contains all the main dashboard content including metrics,
+        statistics, and administrative overview information. Think of it like
+        the main display area of a control room that shows all the important
+        information and status updates.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges content vertically (top to bottom)
+        - HBox.hgrow="ALWAYS" makes it expand to fill available horizontal space
+        - styleClass="dashboard-main-content" applies main content styling
+        
+        USER EXPERIENCE:
+        - Comprehensive information display
+        - Easy-to-read metrics and statistics
+        - Professional dashboard appearance
+        - Clear information organization
+    -->
     <VBox styleClass="dashboard-main-content" HBox.hgrow="ALWAYS">
         
-        <!-- Header -->
+        <!-- 
+            DASHBOARD HEADER - Page title and description
+            This section displays the dashboard title and provides context for
+            what administrators are viewing. Think of it like the header of a
+            report that clearly states what information is being presented.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges header content vertically
+            - spacing="10" adds 10 pixels between header elements
+            - styleClass="dashboard-content-header" applies header-specific styling
+            
+            USER EXPERIENCE:
+            - Clear page identification
+            - Professional appearance
+            - Consistent with other interface elements
+            - Easy to understand purpose
+        -->
         <VBox styleClass="dashboard-content-header" spacing="10">
+            <!-- 
+                MAIN TITLE - "Admin Dashboard" Text
+                This text clearly identifies that this is the administrative
+                dashboard. Think of it like a page heading that tells you exactly
+                what you're looking at.
+                
+                PROPERTIES EXPLAINED:
+                - text="Admin Dashboard": The main title text that displays
+                - styleClass="dashboard-main-title": Applies main title styling
+                
+                USER EXPERIENCE:
+                - Clear page identification
+                - Professional appearance
+                - Consistent with application design
+                - Easy to understand purpose
+            -->
             <Text text="Admin Dashboard" styleClass="dashboard-main-title"/>
+            <!-- 
+                SUBTITLE - Dashboard description
+                This text provides context about what the dashboard shows and
+                what administrators can do here. Think of it like a subtitle
+                that explains the purpose of the page.
+                
+                PROPERTIES EXPLAINED:
+                - text="Manage events, view reports and oversee operations": Description text
+                - styleClass="dashboard-main-subtitle": Applies subtitle styling
+                
+                USER EXPERIENCE:
+                - Clear purpose explanation
+                - Professional appearance
+                - Consistent with other interface elements
+                - Easy to understand functionality
+            -->
             <Text text="Manage events, view reports and oversee operations" styleClass="dashboard-main-subtitle"/>
         </VBox>
         
-        <!-- Metrics Cards Grid (3 cards - removed Revenue) -->
+        <!-- 
+            METRICS GRID - Key performance indicators
+            This section displays important system metrics in organized cards.
+            Think of it like a dashboard with gauges and meters that show
+            the current status of different system aspects.
+            
+            LAYOUT EXPLANATION:
+            - GridPane arranges metric cards in a grid layout
+            - hgap="20" adds 20 pixels between columns
+            - vgap="20" adds 20 pixels between rows
+            - styleClass="metrics-grid" applies grid-specific styling
+            
+            USER EXPERIENCE:
+            - Easy-to-read metric display
+            - Organized information layout
+            - Professional dashboard appearance
+            - Clear data presentation
+        -->
         <GridPane styleClass="metrics-grid" hgap="20" vgap="20">
             
-            <!-- My Events Card -->
+            <!-- 
+                MY EVENTS METRIC CARD - Personal event count
+                This card shows how many events the current administrator has created.
+                Think of it like a personal counter that shows your own contributions
+                to the system.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges card content vertically
+                - alignment="CENTER" centers content horizontally
+                - spacing="10" adds 10 pixels between card elements
+                - GridPane.columnIndex="0" places it in the first column
+                - GridPane.rowIndex="0" places it in the first row
+                - styleClass="metric-card" applies metric card styling
+                
+                USER EXPERIENCE:
+                - Clear metric display
+                - Professional card appearance
+                - Easy-to-read information
+                - Consistent with other metric cards
+            -->
             <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <!-- 
+                    METRIC HEADER - Icon and label
+                    This section displays the metric icon and label at the top
+                    of the card. Think of it like the header of a report card
+                    that identifies what the metric represents.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox arranges icon and label horizontally
+                    - alignment="CENTER" centers content
+                    - spacing="10" adds 10 pixels between icon and label
+                    - styleClass="metric-header" applies header styling
+                    
+                    USER EXPERIENCE:
+                    - Clear metric identification
+                    - Professional appearance
+                    - Easy-to-understand icons
+                    - Consistent with other metric headers
+                -->
                 <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <!-- 
+                        METRIC ICON - Visual representation
+                        This emoji icon provides a visual representation of the metric.
+                        Think of it like a symbol that quickly identifies what
+                        the metric is about.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="📅": Calendar emoji representing events
+                        - styleClass="metric-icon": Applies icon styling
+                        
+                        USER EXPERIENCE:
+                        - Quick visual identification
+                        - Professional appearance
+                        - Easy-to-understand symbolism
+                        - Consistent with other metric icons
+                    -->
                     <Text text="📅" styleClass="metric-icon"/>
+                    <!-- 
+                        METRIC LABEL - "My Events" Text
+                        This text clearly identifies what the metric represents.
+                        Think of it like a label that tells you exactly what
+                        you're counting.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="My Events": The metric label text
+                        - styleClass="metric-label": Applies label styling
+                        
+                        USER EXPERIENCE:
+                        - Clear metric identification
+                        - Professional appearance
+                        - Consistent with other metric labels
+                        - Easy to understand purpose
+                    -->
                     <Text text="My Events" styleClass="metric-label"/>
                 </HBox>
+                <!-- 
+                    METRIC VALUE - Actual count display
+                    This text shows the actual number of events the administrator
+                    has created. Think of it like a digital counter that displays
+                    the current count.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="myEventsText": Unique identifier for the controller
+                    - text="0": Default value that displays
+                    - styleClass="metric-value": Applies value styling
+                    
+                    USER EXPERIENCE:
+                    - Clear value display
+                    - Professional appearance
+                    - Easy-to-read numbers
+                    - Consistent with other metric values
+                -->
                 <Text fx:id="myEventsText" text="0" styleClass="metric-value"/>
+                <!-- 
+                    METRIC DESCRIPTION - Additional context
+                    This text provides additional context about what the metric
+                    represents. Think of it like an explanation that clarifies
+                    what the number means.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Events I Created": Description text
+                    - styleClass="metric-description": Applies description styling
+                    
+                    USER EXPERIENCE:
+                    - Clear context explanation
+                    - Professional appearance
+                    - Consistent with other descriptions
+                    - Easy to understand meaning
+                -->
                 <Text text="Events I Created" styleClass="metric-description"/>
             </VBox>
             
-            <!-- Total Registrations Card -->
+            <!-- 
+                TOTAL REGISTRATIONS METRIC CARD - System-wide registration count
+                This card shows the total number of event registrations across
+                the entire system. Think of it like a system-wide counter that
+                shows overall user engagement.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges card content vertically
+                - alignment="CENTER" centers content horizontally
+                - spacing="10" adds 10 pixels between card elements
+                - GridPane.columnIndex="1" places it in the second column
+                - GridPane.rowIndex="0" places it in the first row
+                - styleClass="metric-card" applies metric card styling
+                
+                USER EXPERIENCE:
+                - Clear metric display
+                - Professional card appearance
+                - Easy-to-read information
+                - Consistent with other metric cards
+            -->
             <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <!-- 
+                    METRIC HEADER - Icon and label
+                    This section displays the metric icon and label at the top
+                    of the card. Think of it like the header of a report card
+                    that identifies what the metric represents.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox arranges icon and label horizontally
+                    - alignment="CENTER" centers content
+                    - spacing="10" adds 10 pixels between icon and label
+                    - styleClass="metric-header" applies header styling
+                    
+                    USER EXPERIENCE:
+                    - Clear metric identification
+                    - Professional appearance
+                    - Easy-to-understand icons
+                    - Consistent with other metric headers
+                -->
                 <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <!-- 
+                        METRIC ICON - Visual representation
+                        This emoji icon provides a visual representation of the metric.
+                        Think of it like a symbol that quickly identifies what
+                        the metric is about.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="📊": Chart emoji representing data and statistics
+                        - styleClass="metric-icon": Applies icon styling
+                        
+                        USER EXPERIENCE:
+                        - Quick visual identification
+                        - Professional appearance
+                        - Easy-to-understand symbolism
+                        - Consistent with other metric icons
+                    -->
                     <Text text="📊" styleClass="metric-icon"/>
+                    <!-- 
+                        METRIC LABEL - "Registrations" Text
+                        This text clearly identifies what the metric represents.
+                        Think of it like a label that tells you exactly what
+                        you're counting.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Registrations": The metric label text
+                        - styleClass="metric-label": Applies label styling
+                        
+                        USER EXPERIENCE:
+                        - Clear metric identification
+                        - Professional appearance
+                        - Consistent with other metric labels
+                        - Easy to understand purpose
+                    -->
                     <Text text="Registrations" styleClass="metric-label"/>
                 </HBox>
+                <!-- 
+                    METRIC VALUE - Actual count display
+                    This text shows the actual total number of event registrations
+                    across the system. Think of it like a digital counter that
+                    displays the current count.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="totalRegistrationsText": Unique identifier for the controller
+                    - text="0": Default value that displays
+                    - styleClass="metric-value": Applies value styling
+                    
+                    USER EXPERIENCE:
+                    - Clear value display
+                    - Professional appearance
+                    - Easy-to-read numbers
+                    - Consistent with other metric values
+                -->
                 <Text fx:id="totalRegistrationsText" text="0" styleClass="metric-value"/>
+                <!-- 
+                    METRIC DESCRIPTION - Additional context
+                    This text provides additional context about what the metric
+                    represents. Think of it like an explanation that clarifies
+                    what the number means.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Total Registrations": Description text
+                    - styleClass="metric-description": Applies description styling
+                    
+                    USER EXPERIENCE:
+                    - Clear context explanation
+                    - Professional appearance
+                    - Consistent with other descriptions
+                    - Easy to understand meaning
+                -->
                 <Text text="Total Registrations" styleClass="metric-description"/>
             </VBox>
             
-            <!-- Active Events Card -->
+            <!-- 
+                ACTIVE EVENTS METRIC CARD - Currently running events
+                This card shows how many events are currently active and running.
+                Think of it like a status indicator that shows what's happening
+                right now in the system.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges card content vertically
+                - alignment="CENTER" centers content horizontally
+                - spacing="10" adds 10 pixels between card elements
+                - GridPane.columnIndex="2" places it in the third column
+                - GridPane.rowIndex="0" places it in the first row
+                - styleClass="metric-card" applies metric card styling
+                
+                USER EXPERIENCE:
+                - Clear metric display
+                - Professional card appearance
+                - Easy-to-read information
+                - Consistent with other metric cards
+            -->
             <VBox styleClass="metric-card" alignment="CENTER" spacing="10" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <!-- 
+                    METRIC HEADER - Icon and label
+                    This section displays the metric icon and label at the top
+                    of the card. Think of it like the header of a report card
+                    that identifies what the metric represents.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox arranges icon and label horizontally
+                    - alignment="CENTER" centers content
+                    - spacing="10" adds 10 pixels between icon and label
+                    - styleClass="metric-header" applies header styling
+                    
+                    USER EXPERIENCE:
+                    - Clear metric identification
+                    - Professional appearance
+                    - Easy-to-understand icons
+                    - Consistent with other metric headers
+                -->
                 <HBox alignment="CENTER" spacing="10" styleClass="metric-header">
+                    <!-- 
+                        METRIC ICON - Visual representation
+                        This emoji icon provides a visual representation of the metric.
+                        Think of it like a symbol that quickly identifies what
+                        the metric is about.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="🚀": Rocket emoji representing active and running events
+                        - styleClass="metric-icon": Applies icon styling
+                        
+                        USER EXPERIENCE:
+                        - Quick visual identification
+                        - Professional appearance
+                        - Easy-to-understand symbolism
+                        - Consistent with other metric icons
+                    -->
                     <Text text="🚀" styleClass="metric-icon"/>
+                    <!-- 
+                        METRIC LABEL - "Active Events" Text
+                        This text clearly identifies what the metric represents.
+                        Think of it like a label that tells you exactly what
+                        you're counting.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Active Events": The metric label text
+                        - styleClass="metric-label": Applies label styling
+                        
+                        USER EXPERIENCE:
+                        - Clear metric identification
+                        - Professional appearance
+                        - Consistent with other metric labels
+                        - Easy to understand purpose
+                    -->
                     <Text text="Active Events" styleClass="metric-label"/>
                 </HBox>
+                <!-- 
+                    METRIC VALUE - Actual count display
+                    This text shows the actual number of events currently running.
+                    Think of it like a digital counter that displays the current
+                    count of active events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="activeEventsText": Unique identifier for the controller
+                    - text="0": Default value that displays
+                    - styleClass="metric-value": Applies value styling
+                    
+                    USER EXPERIENCE:
+                    - Clear value display
+                    - Professional appearance
+                    - Easy-to-read numbers
+                    - Consistent with other metric values
+                -->
                 <Text fx:id="activeEventsText" text="0" styleClass="metric-value"/>
+                <!-- 
+                    METRIC DESCRIPTION - Additional context
+                    This text provides additional context about what the metric
+                    represents. Think of it like an explanation that clarifies
+                    what the number means.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Currently Running": Description text
+                    - styleClass="metric-description": Applies description styling
+                    
+                    USER EXPERIENCE:
+                    - Clear context explanation
+                    - Professional appearance
+                    - Consistent with other descriptions
+                    - Easy to understand meaning
+                -->
                 <Text text="Currently Running" styleClass="metric-description"/>
             </VBox>
             
         </GridPane>
         
-        <!-- Quick Actions Section -->
+        <!-- 
+            QUICK ACTIONS SECTION - Common administrative tasks
+            This section provides quick access to common administrative tasks
+            and functions. Think of it like a shortcut menu that gives you
+            quick access to the things you do most often.
+            
+            LAYOUT EXPLANATION:
+            - VBox arranges action items vertically
+            - spacing="15" adds 15 pixels between action items
+            - styleClass="quick-actions-section" applies section styling
+            
+            USER EXPERIENCE:
+            - Quick access to common tasks
+            - Organized action layout
+            - Professional appearance
+            - Easy task completion
+        -->
         <VBox styleClass="quick-actions-section" spacing="15">
             <Text text="Quick Actions" styleClass="section-title"/>
             

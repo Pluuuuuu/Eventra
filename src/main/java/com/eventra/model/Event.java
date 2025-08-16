@@ -197,11 +197,23 @@ public class Event {
      * This method is useful when you only need the date (not the time) for display purposes.
      * For example, showing "March 15, 2024" instead of "March 15, 2024 at 9:00 AM"
      * 
+     * BUSINESS USE CASES:
+     * - Calendar views that only show dates
+     * - Event listings that group by date
+     * - Date-based filtering and sorting
+     * - Displaying event dates without time complexity
+     * 
+     * TECHNICAL DETAILS:
+     * - Uses LocalDateTime.toLocalDate() to extract date component
+     * - Returns null if startDateTime is not set (defensive programming)
+     * - Uses ternary operator for concise null checking
+     * 
      * @return LocalDate - The date when the event starts, or null if start time is not set
      */
     public LocalDate getEventDate() {
         // Check if startDateTime exists, then convert it to just a date
         // This is a ternary operator: condition ? valueIfTrue : valueIfFalse
+        // It's equivalent to: if (startDateTime != null) return startDateTime.toLocalDate(); else return null;
         return startDateTime != null ? startDateTime.toLocalDate() : null;
     }
 
@@ -210,6 +222,18 @@ public class Event {
      * 
      * This method implements the business rule: "Published events are coming soon"
      * It's used to determine which events to show in the "Coming Soon" section.
+     * 
+     * EVENT STATUS WORKFLOW:
+     * - Status 1: Draft (not visible to attendees)
+     * - Status 2: Published (visible and accepting registrations) ← This is "coming soon"
+     * - Status 3: Cancelled (event will not take place)
+     * - Status 4: Completed (event has finished)
+     * - Status 5: Postponed (event delayed to later date)
+     * 
+     * UI INTEGRATION:
+     * - Used in event listings to show "Coming Soon" badges
+     * - Filters events for the upcoming events section
+     * - Determines if registration buttons should be enabled
      * 
      * @return boolean - true if event is published (status = 2), false otherwise
      */
@@ -223,11 +247,22 @@ public class Event {
      * This method implements the business rule: "Events have available spots if they're unlimited
      * or if current attendance is below the maximum"
      * 
+     * CAPACITY LOGIC:
+     * - Unlimited events (maxAttendees = 0): Always have spots available
+     * - Limited events: Check if current attendance < maximum capacity
+     * - This prevents overbooking and ensures accurate registration status
+     * 
+     * USER EXPERIENCE:
+     * - Registration buttons are enabled/disabled based on this method
+     * - Shows "Event Full" messages when no spots remain
+     * - Prevents users from attempting to register for full events
+     * 
      * @return boolean - true if people can still register, false if event is full
      */
     public boolean hasAvailableSpots() {
-        // maxAttendees == 0 means unlimited capacity
+        // maxAttendees == 0 means unlimited capacity (always has spots)
         // currentAttendees < maxAttendees means there are still spots left
+        // This logic handles both unlimited and limited capacity scenarios
         return maxAttendees == 0 || currentAttendees < maxAttendees;
     }
 
@@ -237,14 +272,44 @@ public class Event {
      * This method provides the exact number of available spots for display purposes.
      * It's used to show "5 spots remaining" or "Unlimited capacity"
      * 
+     * DISPLAY FORMATTING:
+     * - Limited events: "15 spots remaining"
+     * - Unlimited events: "Unlimited capacity" or "∞ spots"
+     * - Full events: "0 spots remaining" or "Event Full"
+     * 
+     * BUSINESS RULES:
+     * - Returns Integer.MAX_VALUE for unlimited events (special case)
+     * - Calculates remaining spots: maxAttendees - currentAttendees
+     * - Used for capacity warnings and registration limits
+     * 
      * @return int - Number of available spots, or Integer.MAX_VALUE if unlimited
      */
     public int getAvailableSpots() {
         // If maxAttendees is 0 (unlimited), return the maximum possible integer
+        // This special value indicates unlimited capacity to calling code
         // Otherwise, calculate remaining spots: max - current
+        // Example: maxAttendees=100, currentAttendees=75 → returns 25
         return maxAttendees == 0 ? Integer.MAX_VALUE : maxAttendees - currentAttendees;
     }
 
+    /**
+     * toString() - Provides a string representation of the Event object
+     * 
+     * This method is automatically called when you print an Event object or use it in string operations.
+     * It's useful for debugging, logging, and displaying event information.
+     * 
+     * OUTPUT FORMAT:
+     * - Shows key event information in a readable format
+     * - Includes eventId, title, startDateTime, location, and organizerId
+     * - Useful for console output and debugging sessions
+     * 
+     * DEBUGGING BENEFITS:
+     * - Easy to identify events in log files
+     * - Helpful when troubleshooting event-related issues
+     * - Shows event state at a glance
+     * 
+     * @return String - Human-readable representation of the event
+     */
     @Override
     public String toString() {
         return "Event{" +

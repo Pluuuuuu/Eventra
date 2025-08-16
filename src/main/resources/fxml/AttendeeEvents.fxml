@@ -1,102 +1,692 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.Insets?>
-<?import java.time.format.DateTimeFormatter?>
+<!-- 
+    ATTENDEE EVENTS SCREEN (AttendeeEvents.fxml)
+    
+    This FXML file defines the user interface for the Attendee Events screen in the
+    Eventra application. Think of it like a "event catalog" or "event marketplace"
+    where attendees can discover, browse, and explore all available events.
+    
+    WHAT THIS SCREEN DOES:
+    - Shows all available events you can register for
+    - Lets you filter events by date (today, tomorrow, weekend, specific date)
+    - Displays "coming soon" events prominently for planning
+    - Shows featured event organizers and their events
+    - Provides search functionality to find specific events
+    - Offers event discovery and exploration tools
+    - Manages event browsing and registration workflows
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Event Discovery: Finding and exploring available events
+    - Date Filtering: Organizing events by time and availability
+    - Event Browsing: Navigating through event listings and details
+    - Search Functionality: Finding specific events or event types
+    - Featured Content: Highlighting important events and organizers
+    - User Experience: Intuitive interface for event exploration
+    
+    BUSINESS VALUE:
+    - Enables attendees to discover new events and opportunities
+    - Provides organized event browsing and filtering capabilities
+    - Supports event planning and scheduling decisions
+    - Creates engagement through event discovery and exploration
+    - Helps users find events that match their interests
+    - Facilitates better event participation and registration
+    
+    REAL-WORLD ANALOGY:
+    - Like a catalog that shows all available products
+    - Like a marketplace where you can browse different offerings
+    - Like a calendar that displays upcoming events
+    - Like a search engine for finding specific events
+    - Like a discovery platform for event opportunities
+-->
 
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our event browsing screen. Think of them like importing tools from
+    a toolbox that we'll use to build our event discovery interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for navigation and actions
+    - TextField: Text input fields for search functionality
+    - RadioButton: Selection controls for date filtering
+    - HBox/VBox: Layout containers that organize content
+    - Text: Text elements for headings, labels, and content
+    - ImageView: Container for displaying event images and logos
+    - Insets: Utilities for adding spacing and padding
+    - BorderPane: Main layout container with top, left, center, right sections
+    - DateTimeFormatter: Utilities for formatting and displaying dates
+-->
+<?import javafx.scene.control.*?>          <!-- Buttons, text fields, radio buttons, and other controls -->
+<?import javafx.scene.layout.*?>           <!-- Layout containers like HBox, VBox, FlowPane -->
+<?import javafx.scene.text.*?>             <!-- Text elements for headings and labels -->
+<?import javafx.scene.image.*?>            <!-- Image components for logos and pictures -->
+<?import javafx.geometry.Insets?>          <!-- Spacing and padding tools -->
+<?import java.time.format.DateTimeFormatter?>  <!-- Date formatting utilities -->
+
+<!-- 
+    MAIN CONTAINER - BorderPane Layout Structure
+    This BorderPane is like a picture frame with sections for top, bottom, left, right, and center.
+    We use it here to create a three-column layout: left sidebar for filtering, center content
+    for events, and right sidebar for featured content. Think of it like organizing a page with
+    navigation, main content, and additional information panels.
+    
+    LAYOUT EXPLANATION:
+    - BorderPane provides organized sections for different content areas
+    - Think of it like a document with a header, main content, and sidebars
+    - Top section contains navigation, left section contains filters
+    - Center section contains main event content, right section contains featured content
+    - Clean, organized structure that's easy to navigate and use
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the AttendeeEventsController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="main-container": Applies main-container-specific styling
+    
+    USER EXPERIENCE:
+    - Clear separation between navigation, filters, and content
+    - Consistent layout structure across the application
+    - Easy navigation between different sections
+    - Professional, organized appearance
+    - Intuitive three-column layout for event browsing
+-->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.eventra.controller.AttendeeEventsController"
             stylesheets="@../css/styles.css"
             styleClass="main-container">
 
-    <!-- Header -->
+    <!-- 
+        TOP SECTION - Navigation Bar
+        This is the top bar that stays visible while you browse events.
+        It's like the header of a website that always shows at the top and
+        provides navigation to other parts of the application.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges navigation elements horizontally (left to right)
+        - alignment="CENTER_LEFT" puts content on the left side
+        - spacing="20" adds 20 pixels between navigation elements
+        - styleClass="header" applies header-specific styling
+        
+        USER EXPERIENCE:
+        - Consistent navigation across all screens
+        - Easy access to main application features
+        - Clear branding and user orientation
+        - Professional, organized appearance
+        - Always-visible navigation for easy access
+    -->
     <top>
         <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <!-- 
+                PADDING - Space around the navigation bar
+                Padding adds breathing room around the navigation bar content.
+                Think of it like adding margins around text in a document.
+                
+                PROPERTIES EXPLAINED:
+                - top="15": 15 pixels of space above the content
+                - right="20": 20 pixels of space to the right
+                - bottom="15": 15 pixels of space below the content
+                - left="20": 20 pixels of space to the left
+                
+                USER EXPERIENCE:
+                - Content doesn't touch the screen edges
+                - Clean, professional appearance
+                - Better readability and visual comfort
+                - Consistent spacing throughout the interface
+                - Proper visual hierarchy and breathing room
+            -->
             <padding>
                 <Insets top="15" right="20" bottom="15" left="20"/>
             </padding>
             
-            <!-- Logo -->
+            <!-- 
+                LOGO - Eventra brand identity
+                Shows the Eventra logo/text so users know which app they're using.
+                It's like the company name at the top of a website that establishes
+                brand recognition and trust.
+                
+                PROPERTIES EXPLAINED:
+                - text="Eventra": The actual text that displays
+                - styleClass="logo-text": Applies logo-specific CSS styling
+                - style: Inline styling for font size and weight
+                - -fx-font-size: 24px: Makes text 24 pixels tall
+                - -fx-font-weight: bold: Makes text bold and prominent
+                
+                USER EXPERIENCE:
+                - Clear brand identification
+                - Professional, trustworthy appearance
+                - Consistent branding across the application
+                - Easy recognition of the platform
+                - Establishes credibility and trust
+            -->
             <Text text="Eventra" styleClass="logo-text" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             
-            <!-- Navigation -->
+            <!-- 
+                NAVIGATION MENU - Main menu buttons
+                
+                These buttons let users move between different parts of the app.
+                Think of them like the main menu of a website.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges buttons horizontally
+                - spacing="30" adds 30 pixels between buttons
+                - alignment="CENTER_LEFT" centers buttons vertically on the left
+                
+                BUTTON EXPLANATION:
+                - "My Schedule": Takes you to your personal event schedule
+                - "Browse Events": Current page (highlighted as active)
+            -->
             <HBox spacing="30" alignment="CENTER_LEFT">
+                <!-- 
+                    MY SCHEDULE BUTTON - Navigation to personal schedule
+                    
+                    This button takes you to see your personal event schedule.
+                    It's like going to your personal calendar page.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="My Schedule": Button text
+                    - styleClass: Applies attendee-nav-button styling
+                    - onAction="#handleMySchedule": Calls controller method when clicked
+                -->
                 <Button text="My Schedule" styleClass="attendee-nav-button" onAction="#handleMySchedule"/>
+                
+                <!-- 
+                    BROWSE EVENTS BUTTON - Current page indicator
+                    
+                    This button shows you're currently on the Browse Events page.
+                    The "active" style makes it look highlighted or selected.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Browse Events": Button text
+                    - styleClass: Applies attendee-nav-button styling plus active state
+                    - onAction="#handleBrowseEvents": Calls controller method when clicked
+                -->
                 <Button text="Browse Events" styleClass="attendee-nav-button active" onAction="#handleBrowseEvents"/>
             </HBox>
             
-            <!-- Search Bar -->
+            <!-- 
+                SEARCH SECTION - Event search functionality
+                
+                This area lets you search for specific events in the system.
+                It's like a search box that helps you find what you're looking for.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges search field and button horizontally
+                - alignment="CENTER_RIGHT" puts search on the right side
+                - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                
+                COMPONENTS:
+                - Search text field: Where you type what you're looking for
+                - Search button: Magnifying glass icon to start the search
+            -->
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <!-- 
+                    SEARCH FIELD - Text input for search terms
+                    
+                    This is where you type keywords to search for specific events.
+                    For example, type "conference" to find conference events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="searchField": Gives this field a name so the controller can access it
+                    - promptText="Search events...": Gray text that shows when the field is empty
+                    - styleClass: Applies search-field-specific styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can read what you type using: searchField.getText()
+                -->
                 <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                
+                <!-- 
+                    SEARCH BUTTON - Triggers the search
+                    
+                    Click this button to search for events using the text you typed.
+                    The 🔍 icon is a magnifying glass, which is the universal symbol for search.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="🔍": Magnifying glass emoji for the search icon
+                    - styleClass: Applies search-button-specific styling
+                    - onAction="#handleSearch": Calls the search method in the controller
+                    
+                    USER EXPERIENCE:
+                    - Click to search for events
+                    - Searches through all available events
+                    - Shows results based on what you typed
+                -->
                 <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
             </HBox>
             
-            <!-- Profile Button -->
+            <!-- 
+                PROFILE BUTTON - User profile access
+                
+                This button takes you to your personal profile page where you can
+                see your information, change settings, or log out.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="profileButton": Gives this button a name for controller access
+                - text="👤": Person emoji representing your profile
+                - styleClass: Applies profile-button-specific styling
+                - onAction="#handleProfile": Calls controller method when clicked
+                
+                FUNCTIONALITY:
+                - Takes you to your profile page
+                - Shows your personal information
+                - Provides account management options
+            -->
             <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
         </HBox>
     </top>
 
-    <!-- Main Content -->
+    <!-- 
+        CENTER SECTION - Main Event Browsing Content
+        
+        This is the main area where events are displayed in a three-column layout.
+        It's like a dashboard with filtering options, event listings, and organizer information.
+        
+        LAYOUT EXPLANATION:
+        - ScrollPane makes content scrollable if it's too long
+        - HBox creates three columns: left sidebar, center content, right sidebar
+        - Each column has specific content and functionality
+    -->
     <center>
+        <!-- 
+            SCROLLABLE CONTAINER - Handles long content gracefully
+            
+            This ScrollPane makes the content scrollable if there are many events.
+            Think of it like a web page that scrolls when content is too long.
+            
+            PROPERTIES EXPLAINED:
+            - fitToWidth="true": Makes content expand to fill available width
+            - fitToHeight="true": Makes content expand to fill available height
+            - style: Makes background transparent so content shows through
+        -->
         <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <!-- 
+                MAIN CONTENT LAYOUT - Three-column structure
+                
+                This HBox creates the three-column layout for the main content area.
+                Think of it like a newspaper with columns for different types of information.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges three columns horizontally
+                - spacing="20" adds 20 pixels between columns
+                - styleClass applies main-content styling
+                - padding adds space around the entire content area
+            -->
             <HBox spacing="20" styleClass="main-content">
+                <!-- 
+                    CONTENT PADDING - Space around the main content
+                    
+                    Adds comfortable spacing around all the content.
+                    This prevents content from touching the edges of the screen.
+                    
+                    PROPERTIES EXPLAINED:
+                    - top="20": 20 pixels above the content
+                    - right="20": 20 pixels to the right of content
+                    - bottom="20": 20 pixels below the content
+                    - left="20": 20 pixels to the left of content
+                -->
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
                 
-                <!-- Left Sidebar - Date Filter -->
+                <!-- 
+                    LEFT SIDEBAR - Date Filtering Options
+                    
+                    This sidebar lets you filter events by date to find what's happening
+                    when you want to attend. It's like a calendar filter for events.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges filter options vertically
+                    - styleClass applies sidebar-specific styling
+                    - spacing="15" adds 15 pixels between filter groups
+                    - minWidth/maxWidth="200" keeps sidebar consistent size
+                    
+                    FILTER OPTIONS:
+                    - Today: Shows events happening today
+                    - Tomorrow: Shows events happening tomorrow
+                    - This weekend: Shows events this weekend
+                    - Pick a date: Lets you choose a specific date
+                -->
                 <VBox styleClass="sidebar" spacing="15" minWidth="200" maxWidth="200">
+                    <!-- 
+                        SIDEBAR TITLE - Date filter section header
+                        
+                        Clearly identifies this sidebar as containing date filtering options.
+                        Uses sidebar-title CSS class for consistent styling.
+                    -->
                     <Text text="Date" styleClass="sidebar-title"/>
                     
+                    <!-- 
+                        DATE FILTER OPTIONS - Radio button selection
+                        
+                        These radio buttons let you choose how to filter events by date.
+                        Only one option can be selected at a time.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges radio buttons vertically
+                        - spacing="10" adds 10 pixels between each option
+                        
+                        RADIO BUTTON BEHAVIOR:
+                        - Only one can be selected at a time
+                        - Selecting one automatically deselects others
+                        - Each triggers different filtering logic
+                    -->
                     <VBox spacing="10">
+                        <!-- 
+                            TODAY RADIO BUTTON - Events happening today
+                            
+                            Select this to see only events happening today.
+                            It's selected by default when the page loads.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="todayRadio": Controller can access this button
+                            - text="Today": Button label text
+                            - selected="true": This option is selected by default
+                            - styleClass: Applies filter-radio CSS styling
+                            - onAction="#handleDateFilter": Calls controller method when clicked
+                        -->
                         <RadioButton fx:id="todayRadio" text="Today" selected="true" 
                                     styleClass="filter-radio" onAction="#handleDateFilter"/>
+                        
+                        <!-- 
+                            TOMORROW RADIO BUTTON - Events happening tomorrow
+                            
+                            Select this to see only events happening tomorrow.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="tomorrowRadio": Controller can access this button
+                            - text="Tomorrow": Button label text
+                            - styleClass: Applies filter-radio CSS styling
+                            - onAction="#handleTomorrowToggle": Calls controller method when clicked
+                        -->
                         <RadioButton fx:id="tomorrowRadio" text="Tomorrow" 
                                     styleClass="filter-radio" onAction="#handleTomorrowToggle"/>
+                        
+                        <!-- 
+                            WEEKEND RADIO BUTTON - Events this weekend
+                            
+                            Select this to see only events happening this weekend.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="weekendRadio": Controller can access this button
+                            - text="This weekend": Button label text
+                            - styleClass: Applies filter-radio CSS styling
+                            - onAction="#handleDateFilter": Calls controller method when clicked
+                        -->
                         <RadioButton fx:id="weekendRadio" text="This weekend" 
                                     styleClass="filter-radio" onAction="#handleDateFilter"/>
+                        
+                        <!-- 
+                            PICK DATE RADIO BUTTON - Custom date selection
+                            
+                            Select this to choose a specific date for event filtering.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="pickDateRadio": Controller can access this button
+                            - text="Pick a date...": Button label text
+                            - styleClass: Applies filter-radio CSS styling
+                            - onAction="#handlePickDate": Calls controller method when clicked
+                        -->
                         <RadioButton fx:id="pickDateRadio" text="Pick a date..." 
                                     styleClass="filter-radio" onAction="#handlePickDate"/>
                     </VBox>
                     
-                    <!-- Selected Date Display -->
+                    <!-- 
+                        SELECTED DATE DISPLAY - Shows chosen custom date
+                        
+                        This area shows the specific date you picked when using
+                        the "Pick a date..." option. It's hidden by default.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges date text and clear button vertically
+                        - fx:id="selectedDateContainer": Controller can show/hide this section
+                        - visible="false": Hidden by default (shows when date is picked)
+                        - spacing="5" adds 5 pixels between date text and clear button
+                        
+                        CONTENT:
+                        - Selected date text: Shows the date you picked
+                        - Clear button: Removes the custom date filter
+                    -->
                     <VBox fx:id="selectedDateContainer" spacing="5" visible="false">
+                        <!-- 
+                            SELECTED DATE TEXT - Displays chosen date
+                            
+                            Shows the specific date you picked for filtering.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="selectedDateText": Controller can update this text
+                            - style: Inline styling for emphasis
+                            - -fx-font-weight: bold: Makes text bold
+                            - -fx-fill: #007bff: Sets text color to blue
+                        -->
                         <Text fx:id="selectedDateText" style="-fx-font-weight: bold; -fx-fill: #007bff;"/>
+                        
+                        <!-- 
+                            CLEAR DATE BUTTON - Removes custom date filter
+                            
+                            Click this button to remove the custom date filter
+                            and return to the default filtering options.
+                            
+                            PROPERTIES EXPLAINED:
+                            - text="Clear Date": Button label text
+                            - styleClass: Applies link-button CSS styling
+                            - onAction="#handleClearDate": Calls controller method when clicked
+                        -->
                         <Button text="Clear Date" styleClass="link-button" onAction="#handleClearDate"/>
                     </VBox>
                 </VBox>
                 
-                <!-- Main Content Area -->
+                <!-- 
+                    CENTER CONTENT AREA - Main event display
+                    
+                    This is the main area where events are displayed based on your
+                    selected filters. It's like the main content area of a website.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges content sections vertically
+                    - styleClass applies content-area styling
+                    - spacing="30" adds 30 pixels between sections
+                    - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                    
+                    CONTENT SECTIONS:
+                    - Coming Soon Events: Prominently displayed upcoming events
+                    - All Events: Complete list of events matching your filters
+                -->
                 <VBox styleClass="content-area" spacing="30" HBox.hgrow="ALWAYS">
                     
-                    <!-- Coming Soon Events -->
+                    <!-- 
+                        COMING SOON EVENTS SECTION - Prominent event display
+                        
+                        This section shows events that are happening soon in a
+                        prominent way. Think of it like a "featured events" section.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges title and event grid vertically
+                        - spacing="15" adds 15 pixels between title and events
+                        
+                        CONTENT:
+                        - Section title: "Coming soon Events"
+                        - Event grid: Horizontal container for event cards
+                    -->
                     <VBox spacing="15">
+                        <!-- 
+                            SECTION TITLE - Coming soon events header
+                            
+                            Clearly identifies this section as showing events happening soon.
+                            Uses section-title CSS class for consistent styling.
+                        -->
                         <Text text="Coming soon Events" styleClass="section-title"/>
+                        
+                        <!-- 
+                            COMING SOON EVENTS CONTAINER - Horizontal event grid
+                            
+                            This container displays "coming soon" events in a horizontal row.
+                            Think of it like a carousel of featured events.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="comingSoonContainer": Controller can access this container
+                            - HBox arranges events horizontally (left to right)
+                            - spacing="20" adds 20 pixels between each event card
+                            - styleClass applies event-grid CSS styling
+                            
+                            CONTROLLER INTEGRATION:
+                            The controller will add event cards showing:
+                            - Event names and dates
+                            - Event images or icons
+                            - Quick registration buttons
+                        -->
                         <HBox fx:id="comingSoonContainer" spacing="20" styleClass="event-grid"/>
                     </VBox>
                     
-                    <!-- All Events -->
+                    <!-- 
+                        ALL EVENTS SECTION - Complete event listing
+                        
+                        This section shows all events that match your current filters.
+                        It's like the main catalog of available events.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox arranges title and event grid vertically
+                        - spacing="15" adds 15 pixels between title and events
+                        
+                        CONTENT:
+                        - Section header: Title with event count
+                        - Event grid: FlowPane for flexible event card arrangement
+                    -->
                     <VBox spacing="15">
+                        <!-- 
+                            SECTION HEADER - Title and event count
+                            
+                            Shows the section title along with how many events
+                            are currently displayed.
+                            
+                            LAYOUT EXPLANATION:
+                            - HBox arranges title and count horizontally
+                            - alignment="CENTER_LEFT" aligns content to the left
+                            - spacing="10" adds 10 pixels between title and count
+                        -->
                         <HBox alignment="CENTER_LEFT" spacing="10">
+                            <!-- 
+                                SECTION TITLE - All events header
+                                
+                                Clearly identifies this section as showing all available events.
+                                Uses section-title CSS class for consistent styling.
+                            -->
                             <Text text="All Events" styleClass="section-title"/>
+                            
+                            <!-- 
+                                EVENT COUNT TEXT - Shows number of events
+                                
+                                Displays how many events are currently shown.
+                                For example: "(12)" means 12 events are displayed.
+                                
+                                PROPERTIES EXPLAINED:
+                                - fx:id="eventCountText": Controller can update this count
+                                - text="(12)": Default text showing example count
+                                - styleClass: Applies event-count CSS styling
+                                
+                                CONTROLLER USAGE:
+                                The controller updates this when filters change:
+                                eventCountText.setText("(" + eventCount + ")");
+                            -->
                             <Text fx:id="eventCountText" text="(12)" styleClass="event-count"/>
                         </HBox>
+                        
+                        <!-- 
+                            ALL EVENTS CONTAINER - Flexible event grid
+                            
+                            This container displays all events in a flexible grid layout.
+                            Think of it like a photo gallery that automatically arranges
+                            pictures in rows and columns.
+                            
+                            PROPERTIES EXPLAINED:
+                            - fx:id="allEventsContainer": Controller can access this container
+                            - FlowPane automatically arranges event cards in rows and columns
+                            - hgap="20" adds 20 pixels between event cards horizontally
+                            - vgap="20" adds 20 pixels between event cards vertically
+                            - styleClass applies event-grid CSS styling
+                            
+                            CONTROLLER INTEGRATION:
+                            The controller will add event cards showing:
+                            - Event names, dates, and locations
+                            - Event images and descriptions
+                            - Registration buttons and status
+                            - Event categories and tags
+                        -->
                         <FlowPane fx:id="allEventsContainer" hgap="20" vgap="20" styleClass="event-grid"/>
                     </VBox>
                 </VBox>
                 
-                <!-- Right Sidebar - Featured Organizers -->
+                <!-- 
+                    RIGHT SIDEBAR - Featured Organizers
+                    
+                    This sidebar shows featured event organizers to help you discover
+                    new event sources. It's like a "recommended" or "trending" section.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox arranges organizer content vertically
+                    - styleClass applies sidebar-specific styling
+                    - spacing="15" adds 15 pixels between organizer items
+                    - minWidth/maxWidth="250" keeps sidebar consistent size
+                    
+                    CONTENT:
+                    - Section title: "Featured Organizers"
+                    - Organizer list: Dynamic list of featured organizers
+                    - Discover button: Link to see more organizers
+                -->
                 <VBox styleClass="sidebar" spacing="15" minWidth="250" maxWidth="250">
+                    <!-- 
+                        SIDEBAR TITLE - Featured organizers header
+                        
+                        Clearly identifies this sidebar as showing featured event organizers.
+                        Uses sidebar-title CSS class for consistent styling.
+                    -->
                     <Text text="Featured Organizers" styleClass="sidebar-title"/>
                     
+                    <!-- 
+                        ORGANIZERS CONTAINER - Dynamic organizer list
+                        
+                        This container will be filled with featured organizer information
+                        by the controller. Think of it like a list of recommended companies.
+                        
+                        PROPERTIES EXPLAINED:
+                        - fx:id="organizersContainer": Controller can access this container
+                        - VBox arranges organizer items vertically
+                        - spacing="15" adds 15 pixels between each organizer
+                        
+                        CONTROLLER INTEGRATION:
+                        The controller will add organizer cards showing:
+                        - Organizer names and logos
+                        - Event counts and descriptions
+                        - Quick action buttons
+                    -->
                     <VBox fx:id="organizersContainer" spacing="15">
-                        <!-- Organizers will be loaded dynamically -->
+                        <!-- 
+                            DYNAMIC CONTENT PLACEHOLDER
+                            
+                            This area is populated by the controller with featured
+                            organizer information. The content changes based on
+                            available organizers and user preferences.
+                        -->
                     </VBox>
                     
+                    <!-- 
+                        DISCOVER MORE BUTTON - Link to organizer discovery
+                        
+                        This button takes you to a page where you can discover
+                        more event organizers beyond the featured ones.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Discover more organizers": Button label text
+                        - styleClass: Applies link-button CSS styling
+                        - onAction="#handleDiscoverOrganizers": Calls controller method when clicked
+                        
+                        FUNCTIONALITY:
+                        - Takes you to organizer discovery page
+                        - Shows comprehensive list of all organizers
+                        - Provides search and filtering options
+                    -->
                     <Button text="Discover more organizers" styleClass="link-button" onAction="#handleDiscoverOrganizers"/>
                 </VBox>
             </HBox>

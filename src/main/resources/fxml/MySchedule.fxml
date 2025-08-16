@@ -1,65 +1,481 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
+<!-- 
+    MY SCHEDULE SCREEN (MySchedule.fxml)
+    
+    This FXML file defines the user interface for the My Schedule screen in the
+    Eventra application. Think of it like a "personal calendar" or "event planner"
+    where attendees can see all the events they've registered for and manage their schedule.
+    
+    WHAT THIS SCREEN DOES:
+    - Shows events you're registered for (like a personal calendar)
+    - Displays upcoming events you can look forward to
+    - Shows past events you've already attended
+    - Lets you search for specific events in your schedule
+    - Provides navigation to other parts of the application
+    - Manages event registrations and attendance tracking
+    - Offers a personalized view of your event participation
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Personal Schedule: Individual view of registered events
+    - Event Management: Viewing and managing your event commitments
+    - Navigation: Moving between different parts of the application
+    - Search Functionality: Finding specific events in your schedule
+    - Event History: Tracking past and upcoming event participation
+    - User Experience: Personalized interface for individual users
+    
+    BUSINESS VALUE:
+    - Enables attendees to manage their personal event schedules
+    - Provides clear visibility into upcoming commitments
+    - Supports event planning and time management
+    - Creates engagement through personalized event tracking
+    - Helps users stay organized with their event participation
+    - Facilitates better event attendance and planning
+    
+    REAL-WORLD ANALOGY:
+    - Like a personal calendar that shows your appointments
+    - Like a digital planner for managing your schedule
+    - Like a ticket wallet that holds all your event tickets
+    - Like a personal assistant that tracks your commitments
+    - Like a dashboard that shows your upcoming activities
+-->
 
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our schedule screen. Think of them like importing tools from
+    a toolbox that we'll use to build our personal schedule interface.
+    
+    COMPONENTS EXPLAINED:
+    - Button: Interactive buttons for navigation and actions
+    - TextField: Text input fields for search functionality
+    - HBox/VBox: Layout containers that organize content
+    - Text: Text elements for headings, labels, and content
+    - Insets: Utilities for adding spacing and padding
+    - BorderPane: Main layout container with top, center, bottom sections
+-->
+<?import javafx.scene.control.*?>      <!-- Buttons, text fields, and other controls -->
+<?import javafx.scene.layout.*?>       <!-- Layout containers like HBox and VBox -->
+<?import javafx.scene.text.*?>         <!-- Text elements for headings and labels -->
+<?import javafx.geometry.Insets?>      <!-- Spacing and padding tools -->
+
+<!-- 
+    MAIN CONTAINER - BorderPane Layout Structure
+    This BorderPane is like a picture frame with sections for top, bottom, left, right, and center.
+    We use it here to put the navigation bar at the top and the schedule content in the center.
+    Think of it like organizing a page with a header and main content area.
+    
+    LAYOUT EXPLANATION:
+    - BorderPane provides organized sections for different content areas
+    - Think of it like a document with a header, main content, and footer
+    - Top section contains navigation, center section contains schedule content
+    - Clean, organized structure that's easy to navigate
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the MyScheduleController Java class
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="main-container": Applies main-container-specific styling
+    
+    USER EXPERIENCE:
+    - Clear separation between navigation and content
+    - Consistent layout structure across the application
+    - Easy navigation between different sections
+    - Professional, organized appearance
+-->
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.eventra.controller.MyScheduleController"
             stylesheets="@../css/styles.css"
             styleClass="main-container">
 
-    <!-- Header -->
+    <!-- 
+        TOP SECTION - Navigation Bar
+        This is the top bar that stays visible while you browse your schedule.
+        It's like the header of a website that always shows at the top and
+        provides navigation to other parts of the application.
+        
+        LAYOUT EXPLANATION:
+        - HBox arranges navigation elements horizontally (left to right)
+        - alignment="CENTER_LEFT" puts content on the left side
+        - spacing="20" adds 20 pixels between navigation elements
+        - styleClass="header" applies header-specific styling
+        
+        USER EXPERIENCE:
+        - Consistent navigation across all screens
+        - Easy access to main application features
+        - Clear branding and user orientation
+        - Professional, organized appearance
+    -->
     <top>
         <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+            <!-- 
+                PADDING - Space around the navigation bar
+                Padding adds breathing room around the navigation bar content.
+                Think of it like adding margins around text in a document.
+                
+                PROPERTIES EXPLAINED:
+                - top="15": 15 pixels of space above the content
+                - right="20": 20 pixels of space to the right
+                - bottom="15": 15 pixels of space below the content
+                - left="20": 20 pixels of space to the left
+                
+                USER EXPERIENCE:
+                - Content doesn't touch the screen edges
+                - Clean, professional appearance
+                - Better readability and visual comfort
+                - Consistent spacing throughout the interface
+            -->
             <padding>
                 <Insets top="15" right="20" bottom="15" left="20"/>
             </padding>
             
-            <!-- Logo -->
+            <!-- 
+                LOGO - Eventra brand identity
+                Shows the Eventra logo/text so users know which app they're using.
+                It's like the company name at the top of a website that establishes
+                brand recognition and trust.
+                
+                PROPERTIES EXPLAINED:
+                - text="Eventra": The actual text that displays
+                - styleClass="logo-text": Applies logo-specific CSS styling
+                - style: Inline styling for font size and weight
+                - -fx-font-size: 24px: Makes text 24 pixels tall
+                - -fx-font-weight: bold: Makes text bold and prominent
+                
+                USER EXPERIENCE:
+                - Clear brand identification
+                - Professional, trustworthy appearance
+                - Consistent branding across the application
+                - Easy recognition of the platform
+            -->
             <Text text="Eventra" styleClass="logo-text" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             
-            <!-- Navigation -->
+            <!-- 
+                NAVIGATION MENU - Main menu buttons
+                These buttons let users move between different parts of the app.
+                Think of them like the main menu of a website that provides
+                access to all the major features.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges navigation buttons horizontally
+                - spacing="30" adds 30 pixels between buttons
+                - alignment="CENTER_LEFT" centers buttons vertically on the left
+                
+                USER EXPERIENCE:
+                - Easy access to main application features
+                - Clear navigation options
+                - Consistent button placement
+                - Intuitive user flow
+            -->
             <HBox spacing="30" alignment="CENTER_LEFT">
-                <Button text="My Schedule" styleClass="attendee-nav-button active" onAction="#handleMySchedule"/>
-                <Button text="Browse Events" styleClass="attendee-nav-button" onAction="#handleBrowseEvents"/>
+                <!-- 
+                    DASHBOARD BUTTON - Return to main dashboard
+                    This button takes you back to the main dashboard where you can
+                    access all the main features. Think of it like a "home" button
+                    that returns you to the main menu.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Dashboard": Button text that clearly indicates the action
+                    - styleClass="nav-button": Applies navigation button styling
+                    - onAction="#handleDashboard": Calls controller method when clicked
+                    
+                    USER EXPERIENCE:
+                    - Clear indication of where the button takes you
+                    - Easy return to main application area
+                    - Consistent with other navigation buttons
+                    - Intuitive navigation flow
+                -->
+                <Button text="Dashboard" styleClass="nav-button" onAction="#handleDashboard"/>
+                
+                <!-- 
+                    BROWSE EVENTS BUTTON - View all available events
+                    This button takes you to see all available events you can register for.
+                    Think of it like going to the main catalog or events page to discover
+                    new opportunities.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Browse Events": Button text that clearly indicates the action
+                    - styleClass="nav-button": Applies navigation button styling
+                    - onAction="#handleBrowseEvents": Calls controller method when clicked
+                    
+                    USER EXPERIENCE:
+                    - Easy discovery of new events
+                    - Clear path to event browsing
+                    - Consistent navigation experience
+                    - Encourages event exploration
+                -->
+                <Button text="Browse Events" styleClass="nav-button" onAction="#handleBrowseEvents"/>
+                
+                <!-- 
+                    PROFILE BUTTON - Access user profile
+                    This button takes you to your personal profile where you can
+                    see your information, change settings, or manage your account.
+                    Think of it like a "my account" button that gives you access
+                    to personal settings.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Profile": Button text that clearly indicates the action
+                    - styleClass="nav-button": Applies navigation button styling
+                    - onAction="#handleProfile": Calls controller method when clicked
+                    
+                    USER EXPERIENCE:
+                    - Easy access to personal settings
+                    - Clear path to account management
+                    - Consistent with other navigation buttons
+                    - Intuitive user flow
+                -->
+                <Button text="Profile" styleClass="nav-button" onAction="#handleProfile"/>
             </HBox>
             
-            <!-- Search Bar -->
+            <!-- 
+                SEARCH SECTION - Event search functionality
+                
+                This area lets you search for specific events in your schedule.
+                It's like a search box that helps you find what you're looking for.
+                
+                LAYOUT EXPLANATION:
+                - HBox arranges search field and button horizontally
+                - alignment="CENTER_RIGHT" puts search on the right side
+                - HBox.hgrow="ALWAYS" makes this section expand to fill available space
+                
+                COMPONENTS:
+                - Search text field: Where you type what you're looking for
+                - Search button: Magnifying glass icon to start the search
+            -->
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <!-- 
+                    SEARCH FIELD - Text input for search terms
+                    
+                    This is where you type keywords to search for specific events.
+                    For example, type "conference" to find conference events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="searchField": Gives this field a name so the controller can access it
+                    - promptText="Search events...": Gray text that shows when the field is empty
+                    - styleClass: Applies search-field-specific styling
+                    
+                    CONTROLLER USAGE:
+                    The controller can read what you type using: searchField.getText()
+                -->
                 <TextField fx:id="searchField" promptText="Search events..." styleClass="search-field"/>
+                
+                <!-- 
+                    SEARCH BUTTON - Triggers the search
+                    
+                    Click this button to search for events using the text you typed.
+                    The 🔍 icon is a magnifying glass, which is the universal symbol for search.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="🔍": Magnifying glass emoji for the search icon
+                    - styleClass: Applies search-button-specific styling
+                    - onAction="#handleSearch": Calls the search method in the controller
+                    
+                    USER EXPERIENCE:
+                    - Click to search for events
+                    - Searches through your registered events
+                    - Shows results based on what you typed
+                -->
                 <Button text="🔍" styleClass="search-button" onAction="#handleSearch"/>
             </HBox>
             
-            <!-- Profile Icon -->
+            <!-- 
+                PROFILE BUTTON - User profile access
+                
+                This button takes you to your personal profile page where you can
+                see your information, change settings, or log out.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="profileButton": Gives this button a name for controller access
+                - text="👤": Person emoji representing your profile
+                - styleClass: Applies profile-button-specific styling
+                - onAction="#handleProfile": Calls controller method when clicked
+                
+                FUNCTIONALITY:
+                - Takes you to your profile page
+                - Shows your personal information
+                - Provides account management options
+            -->
             <Button fx:id="profileButton" text="👤" styleClass="profile-button" onAction="#handleProfile"/>
         </HBox>
     </top>
 
-    <!-- Main Content -->
+    <!-- 
+        CENTER SECTION - Main Schedule Content
+        
+        This is the main area where your schedule is displayed.
+        It shows upcoming events and past events in organized sections.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges content vertically (top to bottom)
+        - styleClass applies schedule-container styling
+        - spacing="20" adds 20 pixels between sections
+        - padding adds space around the entire content area
+    -->
     <center>
         <VBox styleClass="schedule-container" spacing="20">
+            <!-- 
+                CONTENT PADDING - Space around the schedule
+                
+                Adds comfortable spacing around all the schedule content.
+                This prevents content from touching the edges of the screen.
+                
+                PROPERTIES EXPLAINED:
+                - top="40": 40 pixels above the content
+                - right="40": 40 pixels to the right of content
+                - bottom="40": 40 pixels below the content
+                - left="40": 40 pixels to the left of content
+            -->
             <padding>
                 <Insets top="40" right="40" bottom="40" left="40"/>
             </padding>
             
-            <!-- Page Title -->
+            <!-- 
+                PAGE TITLE SECTION - Screen identification
+                
+                This section clearly tells users what page they're on and what to expect.
+                It's like the title of a chapter in a book.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges title and subtitle vertically
+                - spacing="10" adds 10 pixels between title and subtitle
+            -->
             <VBox spacing="10">
+                <!-- 
+                    MAIN TITLE - Page name
+                    
+                    The big title that says "My Schedule" so users know where they are.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="My Schedule": The main page title
+                    - styleClass: Applies page-title CSS styling
+                    - style: Inline styling for emphasis
+                    - -fx-font-size: 32px: Makes text very large (32 pixels)
+                    - -fx-font-weight: bold: Makes text bold and prominent
+                -->
                 <Text text="My Schedule" styleClass="page-title" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                
+                <!-- 
+                    SUBTITLE - Page description
+                    
+                    A smaller description that explains what this page shows.
+                    It's like a subtitle that gives more context.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Events you've registered for": Explains what the page shows
+                    - styleClass: Applies page-subtitle CSS styling
+                    - style: Inline styling for appearance
+                    - -fx-font-size: 16px: Makes text medium size (16 pixels)
+                    - -fx-fill: #666: Sets text color to dark gray
+                -->
                 <Text text="Events you've registered for" styleClass="page-subtitle" style="-fx-font-size: 16px; -fx-fill: #666;"/>
             </VBox>
             
-            <!-- Registered Events -->
+            <!-- 
+                UPCOMING EVENTS SECTION - Future events display
+                
+                This section shows events you're registered for that haven't happened yet.
+                These are events you can look forward to attending.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges content vertically
+                - spacing="20" adds 20 pixels between the title and event list
+                - styleClass applies section-specific styling
+                
+                CONTENT:
+                - Section title: "Upcoming Events"
+                - Event list: Container that will be filled with your upcoming events
+            -->
             <VBox spacing="20">
+                <!-- 
+                    SECTION TITLE - Upcoming events header
+                    
+                    Clearly identifies this section as showing your future events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Upcoming Events": Section title text
+                    - styleClass: Applies section-title CSS styling
+                    - style: Inline styling for emphasis
+                    - -fx-font-size: 20px: Makes text large (20 pixels)
+                    - -fx-font-weight: bold: Makes text bold
+                -->
                 <Text text="Upcoming Events" styleClass="section-title" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                
+                <!-- 
+                    UPCOMING EVENTS CONTAINER - Dynamic event list
+                    
+                    This container will be filled with your upcoming events by the controller.
+                    Think of it like a folder that gets filled with event cards.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="registeredEventsContainer": Controller can access this container
+                    - spacing="15": Adds 15 pixels between each event card
+                    - styleClass: Applies events-list CSS styling
+                    
+                    CONTROLLER INTEGRATION:
+                    The controller will add event cards to this container showing:
+                    - Event names and dates
+                    - Event locations and times
+                    - Registration status
+                    - Quick action buttons
+                -->
                 <VBox fx:id="registeredEventsContainer" spacing="15" styleClass="events-list"/>
             </VBox>
             
-            <!-- Past Events -->
+            <!-- 
+                PAST EVENTS SECTION - Historical events display
+                
+                This section shows events you've already attended or that have passed.
+                It's like a history of your event participation.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges content vertically
+                - spacing="20" adds 20 pixels between the title and event list
+                - styleClass applies section-specific styling
+                
+                CONTENT:
+                - Section title: "Past Events"
+                - Event list: Container that will be filled with your past events
+                
+                BUSINESS VALUE:
+                - Shows your event history
+                - Helps track your participation
+                - Useful for personal records and planning
+            -->
             <VBox spacing="20">
+                <!-- 
+                    SECTION TITLE - Past events header
+                    
+                    Clearly identifies this section as showing your historical events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Past Events": Section title text
+                    - styleClass: Applies section-title CSS styling
+                    - style: Inline styling for emphasis
+                    - -fx-font-size: 20px: Makes text large (20 pixels)
+                    - -fx-font-weight: bold: Makes text bold
+                -->
                 <Text text="Past Events" styleClass="section-title" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                
+                <!-- 
+                    PAST EVENTS CONTAINER - Historical event list
+                    
+                    This container will be filled with events you've already attended.
+                    Think of it like a photo album of past events.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="pastEventsContainer": Controller can access this container
+                    - spacing="15": Adds 15 pixels between each event card
+                    - styleClass: Applies events-list CSS styling
+                    
+                    CONTROLLER INTEGRATION:
+                    The controller will add past event cards showing:
+                    - Event names and dates
+                    - Event locations and times
+                    - Attendance confirmation
+                    - Event outcomes or notes
+                -->
                 <VBox fx:id="pastEventsContainer" spacing="15" styleClass="events-list"/>
             </VBox>
         </VBox>

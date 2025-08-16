@@ -1,11 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
+<!-- 
+    CREATE EVENT SCREEN (CreateEvent.fxml)
+    
+    This FXML file defines the user interface for the Create Event screen in the
+    Eventra application. Think of it like a "event planning office" where
+    administrators and event organizers can create and set up new events.
+    
+    WHAT THIS SCREEN DOES:
+    - Provides a comprehensive event creation form with all necessary fields
+    - Handles event details, scheduling, venue information, and presenter management
+    - Manages event status (draft vs published) for flexible event planning
+    - Provides navigation and form submission options for different workflows
+    - Supports both draft saving (for later completion) and immediate publishing
+    - Manages complex event structures with multiple sessions and presenters
+    
+    KEY CONCEPTS TO UNDERSTAND:
+    - Scrollable Interface: Long form content with smooth scrolling for accessibility
+    - Two-Column Layout: Event details on left, additional options and settings on right
+    - Form Validation: Required field indicators and real-time validation feedback
+    - Status Management: Draft vs published event states for flexible planning
+    - Responsive Design: Adapts to different screen sizes and content amounts
+    - Session Management: Handles multiple event sessions with different presenters
+    - Presenter Management: Manages speaker information and scheduling
+    
+    BUSINESS VALUE:
+    - Enables event organizers to create professional events efficiently
+    - Supports complex event planning with multiple sessions and presenters
+    - Provides flexible workflow options (draft vs publish)
+    - Ensures data quality through comprehensive validation
+    - Creates professional event presentations for attendees
+    - Supports event management best practices and organization
+    
+    REAL-WORLD ANALOGY:
+    - Like an event planning office with comprehensive forms
+    - Like a conference management system for organizing speakers and sessions
+    - Like a wedding planner's workspace for organizing events
+    - Like a project management tool for event coordination
+    - Like a professional event setup wizard
+-->
 
+<!-- 
+    IMPORT STATEMENTS - JavaFX UI Components
+    These statements tell JavaFX which UI components we want to use
+    in our event creation screen. Think of them like importing tools from
+    a toolbox that we'll use to build our comprehensive event form.
+    
+    COMPONENTS EXPLAINED:
+    - TextField: Text input fields for event information
+    - DatePicker: Date selection components for scheduling
+    - Button: Interactive buttons for form actions
+    - Label: Text elements for displaying information and validation
+    - VBox/HBox: Layout containers that organize content
+    - Text: Text elements for headings and content
+    - Insets: Utilities for adding spacing and padding
+    - TableView: Data display components for sessions and presenters
+    - ScrollPane: Container that provides scrolling for long forms
+-->
+<?import javafx.scene.control.*?>          <!-- Form controls: TextField, DatePicker, Button, Label -->
+<?import javafx.scene.control.cell.*?>     <!-- Table cell components for data display -->
+<?import javafx.scene.layout.*?>           <!-- Layout containers: VBox, HBox, Region -->
+<?import javafx.scene.text.*?>             <!-- Text elements for headings and content -->
+<?import javafx.geometry.Insets?>          <!-- Spacing and padding utilities -->
+
+<!-- 
+    ROOT CONTAINER - Scrollable Event Creation Form
+    This ScrollPane provides scrollable access to the event creation form,
+    ensuring all form content is accessible even on smaller screens.
+    Think of it like a long form that you can scroll through to see all sections.
+    
+    LAYOUT EXPLANATION:
+    - ScrollPane provides scrolling capability for long content
+    - Think of it like a document viewer that can scroll up and down
+    - Content expands to fill available width for optimal viewing
+    
+    PROPERTIES EXPLAINED:
+    - xmlns: Standard XML namespace declaration for JavaFX
+    - xmlns:fx: JavaFX-specific namespace for special attributes
+    - fx:controller: Links this FXML to the CreateEventController Java class
+    - fitToWidth="true": Makes content expand to fill available width
+    - stylesheets: Links to the CSS file for visual styling
+    - styleClass="create-event-scroll": Applies create-event-specific styling
+    
+    SCROLLING BEHAVIOR:
+    - Vertical scrolling for long form content
+    - Horizontal scrolling disabled (fitToWidth="true")
+    - Smooth scrolling experience for users
+    - Ensures all form sections are accessible
+-->
 <ScrollPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.eventra.controller.CreateEventController"
@@ -13,40 +95,246 @@
            stylesheets="@../css/styles.css"
            styleClass="create-event-scroll">
 
+    <!-- 
+        MAIN CONTENT CONTAINER - Form Organization
+        This container holds all the form content in a vertical layout
+        with consistent spacing between sections. Think of it like
+        organizing a long document with clear sections and spacing.
+        
+        LAYOUT EXPLANATION:
+        - VBox arranges all form sections vertically (top to bottom)
+        - Think of it like stacking sections of a form on top of each other
+        - spacing="20" adds 20 pixels between each major section
+        - styleClass="create-event-container" applies container-specific styling
+        
+        USER EXPERIENCE:
+        - Clear separation between different form sections
+        - Consistent spacing creates professional appearance
+        - Easy to navigate between different parts of the form
+        - Logical flow from basic info to detailed settings
+    -->
     <VBox spacing="20" styleClass="create-event-container">
 
-        <!-- Header -->
+        <!-- 
+            HEADER SECTION - Page Title and Action Buttons
+            This section contains the page title, subtitle, and primary
+            action buttons for form management. Think of it like the
+            header of a document that shows what you're working on.
+            
+            LAYOUT EXPLANATION:
+            - HBox arranges header elements horizontally (left to right)
+            - alignment="CENTER_LEFT" aligns content to the left side
+            - spacing="20" provides separation between header elements
+            - styleClass="create-event-header" applies header-specific styling
+            
+            CONTENT ORGANIZATION:
+            - Left: Title and subtitle information
+            - Center: Flexible space that expands to fill available width
+            - Right: Action buttons (Cancel, Save Draft, Publish)
+            
+            USER EXPERIENCE:
+            - Clear page identification and purpose
+            - Easy access to main action buttons
+            - Professional, organized appearance
+            - Logical button placement for workflow
+        -->
         <HBox alignment="CENTER_LEFT" spacing="20" styleClass="create-event-header">
-            <VBox spacing="5">
-                <Text text="Create Event" styleClass="create-event-title"/>
-                <Text text="Fill in the details to create a new event" styleClass="create-event-subtitle"/>
+            <!-- 
+                HEADER LEFT SECTION - Title and Subtitle
+                This section displays the main page title and descriptive
+                subtitle. Think of it like a document header that tells
+                you what you're working on.
+                
+                LAYOUT EXPLANATION:
+                - VBox arranges title and subtitle vertically
+                - alignment="CENTER_LEFT" aligns text to the left
+                - spacing="5" adds 5 pixels between title and subtitle
+            -->
+            <VBox alignment="CENTER_LEFT" spacing="5">
+                <!-- 
+                    PAGE TITLE - Main heading
+                    This text clearly identifies this as the event creation page.
+                    Think of it like a page title that tells you what you're doing.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Create New Event": The main page title
+                    - styleClass="create-event-title": Applies title-specific styling
+                -->
+                <Text text="Create New Event" styleClass="create-event-title"/>
+                
+                <!-- 
+                    PAGE SUBTITLE - Descriptive text
+                    This text explains what the page is for and provides
+                    helpful context. Think of it like instructions that
+                    explain what you need to do.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Fill out the form below to create a new event": Descriptive subtitle
+                    - styleClass="create-event-subtitle": Applies subtitle-specific styling
+                -->
+                <Text text="Fill out the form below to create a new event" styleClass="create-event-subtitle"/>
             </VBox>
             
+            <!-- 
+                FLEXIBLE SPACE - Layout balancing
+                
+                This Region element expands to fill available space between
+                the title section and action buttons, ensuring proper spacing
+                and visual balance in the header.
+                
+                LAYOUT EXPLANATION:
+                - HBox.hgrow="ALWAYS" makes this region expand to fill space
+                - Pushes action buttons to the right side of the header
+                - Creates balanced, professional appearance
+            -->
             <Region HBox.hgrow="ALWAYS"/>
             
+            <!-- 
+                CANCEL BUTTON - Form abandonment control
+                
+                Allows users to cancel event creation and return to the
+                previous screen without saving any changes.
+                
+                PROPERTIES EXPLAINED:
+                - text="Cancel": Clear button text describing the action
+                - onAction="#handleCancel": Calls controller method when clicked
+                - styleClass: Applies cancel-specific CSS styling
+                
+                CONTROLLER INTEGRATION:
+                - handleCancel() method handles navigation back
+                - Confirms user intent before discarding changes
+                - Returns to event management screen
+            -->
             <Button text="Cancel" 
                     onAction="#handleCancel"
                     styleClass="cancel-button"/>
             
+            <!-- 
+                SAVE DRAFT BUTTON - Temporary event storage
+                
+                Allows users to save their event as a draft for later
+                completion and publishing.
+                
+                PROPERTIES EXPLAINED:
+                - text="Save as Draft": Clear button text describing the action
+                - onAction="#handleSaveDraft": Calls controller method when clicked
+                - styleClass: Applies draft-specific CSS styling
+                
+                CONTROLLER INTEGRATION:
+                - handleSaveDraft() method saves event with draft status
+                - Stores event in database with incomplete status
+                - Allows users to return and complete later
+                
+                BUSINESS LOGIC:
+                - Draft events are not visible to attendees
+                - Can be edited and published later
+                - Useful for complex event planning workflows
+            -->
             <Button text="Save as Draft" 
                     onAction="#handleSaveDraft"
                     styleClass="draft-button"/>
             
+            <!-- 
+                PUBLISH EVENT BUTTON - Final event submission
+                
+                Publishes the event immediately, making it visible to
+                attendees and accepting registrations.
+                
+                PROPERTIES EXPLAINED:
+                - text="Publish Event": Clear button text describing the action
+                - onAction="#handlePublishEvent": Calls controller method when clicked
+                - styleClass: Applies publish-specific CSS styling
+                
+                CONTROLLER INTEGRATION:
+                - handlePublishEvent() method validates and publishes event
+                - Performs form validation before submission
+                - Creates event with published status
+                
+                BUSINESS LOGIC:
+                - Published events are visible to attendees
+                - Accept registrations immediately
+                - Cannot be easily unpublished (requires admin action)
+            -->
             <Button text="Publish Event" 
                     onAction="#handlePublishEvent"
                     styleClass="publish-button"/>
         </HBox>
 
-        <!-- Main Content Area -->
+        <!-- 
+            MAIN CONTENT AREA - Two-Column Form Layout
+            
+            This section contains the main form content organized in two
+            columns for optimal space usage and user experience.
+            
+            LAYOUT EXPLANATION:
+            - HBox container for horizontal column arrangement
+            - spacing="30" provides separation between left and right columns
+            - VBox.vgrow="ALWAYS" makes content expand to fill available height
+            
+            COLUMN ORGANIZATION:
+            - Left Column: Core event details and information
+            - Right Column: Additional options and settings
+        -->
         <HBox spacing="30" VBox.vgrow="ALWAYS">
             
-            <!-- Left Side - Event Details -->
+            <!-- 
+                LEFT COLUMN - Event Details Section
+                
+                This column contains the core event information including
+                name, description, dates, times, and location.
+                
+                LAYOUT EXPLANATION:
+                - VBox container for vertical field organization
+                - spacing="20" provides comfortable separation between field groups
+                - styleClass applies section-specific styling
+                - prefWidth="400" sets consistent column width
+                
+                CONTENT ORGANIZATION:
+                - Event Details header
+                - Basic Information (name, description)
+                - Scheduling (start/end dates and times)
+                - Location and venue information
+            -->
             <VBox spacing="20" styleClass="event-details-section" prefWidth="400">
                 
+                <!-- 
+                    SECTION HEADER - Event Details title
+                    
+                    Clearly identifies this section as containing the main
+                    event information. Uses section-title CSS class.
+                -->
                 <Text text="Event Details" styleClass="section-title"/>
                 
+                <!-- 
+                    EVENT DETAILS CONTAINER - Field organization
+                    
+                    This container holds all the core event information fields
+                    organized in logical groups for optimal user experience.
+                    
+                    LAYOUT EXPLANATION:
+                    - VBox container for vertical field arrangement
+                    - spacing="15" provides comfortable separation between field groups
+                -->
                 <VBox spacing="15">
-                    <!-- Event Name -->
+                    <!-- 
+                        EVENT NAME FIELD - Event title input
+                        
+                        Collects the name or title of the event being created.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox container for field label and input
+                        - spacing="5" for consistent label-input spacing
+                        
+                        CONTROLLER INTEGRATION:
+                        - fx:id="eventNameField" allows controller access
+                        - text attribute provides default/example value
+                        - styleClass applies consistent input styling
+                        
+                        VALIDATION:
+                        - Required field (indicated by * in label)
+                        - Event name uniqueness checking
+                        - Length and format validation
+                    -->
                     <VBox spacing="5">
                         <Label text="Event Name *" styleClass="form-label"/>
                         <TextField fx:id="eventNameField" 
@@ -54,7 +342,31 @@
                                   styleClass="form-input"/>
                     </VBox>
                     
-                    <!-- Description -->
+                    <!-- 
+                        DESCRIPTION FIELD - Event details input
+                        
+                        Collects a detailed description of the event including
+                        what attendees can expect and key highlights.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox container for field label and input
+                        - spacing="5" for consistent label-input spacing
+                        
+                        CONTROLLER INTEGRATION:
+                        - fx:id="descriptionArea" allows controller access
+                        - text attribute provides default/example content
+                        - styleClass applies textarea-specific styling
+                        
+                        TEXTAREA PROPERTIES:
+                        - prefRowCount="4": Sets preferred height to 4 rows
+                        - wrapText="true": Enables automatic text wrapping
+                        - Scrollable content for long descriptions
+                        
+                        BUSINESS LOGIC:
+                        - Used for event marketing and attendee information
+                        - Supports rich text content and formatting
+                        - Important for event discovery and registration decisions
+                    -->
                     <VBox spacing="5">
                         <Label text="Description" styleClass="form-label"/>
                         <TextArea fx:id="descriptionArea" 
@@ -64,13 +376,65 @@
                                  wrapText="true"/>
                     </VBox>
                     
-                    <!-- Start Date & Time -->
+                    <!-- 
+                        START DATE & TIME ROW - Event beginning scheduling
+                        
+                        This row collects the start date and time for the event,
+                        allowing users to specify when the event begins.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox container for horizontal field arrangement
+                        - spacing="15" provides separation between date and time fields
+                        - Date field expands to fill available space (HBox.hgrow="ALWAYS")
+                        - Time field has fixed width for consistency
+                        
+                        VALIDATION:
+                        - Start date must be in the future
+                        - Start time must be valid time format
+                        - Required fields (indicated by * in labels)
+                    -->
                     <HBox spacing="15">
+                        <!-- 
+                            START DATE FIELD - Event start date selection
+                            
+                            Allows users to select the date when the event begins.
+                            
+                            LAYOUT EXPLAINED:
+                            - VBox container for field label and input
+                            - spacing="5" for consistent label-input spacing
+                            - HBox.hgrow="ALWAYS" makes field expand to fill available space
+                            
+                            CONTROLLER INTEGRATION:
+                            - fx:id="startDatePicker" allows controller access
+                            - DatePicker provides calendar interface for date selection
+                            - styleClass applies date-specific styling
+                        -->
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                             <Label text="Start Date *" styleClass="form-label"/>
                             <DatePicker fx:id="startDatePicker" 
                                        styleClass="form-date"/>
                         </VBox>
+                        
+                        <!-- 
+                            START TIME FIELD - Event start time input
+                            
+                            Allows users to specify the time when the event begins.
+                            
+                            LAYOUT EXPLAINED:
+                            - VBox container for field label and input
+                            - spacing="5" for consistent label-input spacing
+                            - Fixed width (prefWidth="100") for time input consistency
+                            
+                            CONTROLLER INTEGRATION:
+                            - fx:id="startTimeField" allows controller access
+                            - text attribute provides default/example value
+                            - styleClass applies time-specific styling
+                            
+                            TIME FORMAT:
+                            - Accepts various time formats (09:00 AM, 9:00, etc.)
+                            - Controller validates and standardizes time format
+                            - Used for event scheduling and calendar integration
+                        -->
                         <VBox spacing="5">
                             <Label text="Start Time *" styleClass="form-label"/>
                             <TextField fx:id="startTimeField" 
@@ -80,13 +444,70 @@
                         </VBox>
                     </HBox>
                     
-                    <!-- End Date & Time -->
+                    <!-- 
+                        END DATE & TIME ROW - Event ending scheduling
+                        
+                        This row collects the end date and time for the event,
+                        allowing users to specify when the event concludes.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox container for horizontal field arrangement
+                        - spacing="15" provides separation between date and time fields
+                        - Date field expands to fill available space (HBox.hgrow="ALWAYS")
+                        - Time field has fixed width for consistency
+                        
+                        VALIDATION:
+                        - End date must be after start date
+                        - End time must be after start time (if same date)
+                        - Required fields (indicated by * in labels)
+                        
+                        BUSINESS LOGIC:
+                        - Used for event duration calculation
+                        - Important for venue booking and scheduling
+                        - Affects attendee availability and planning
+                    -->
                     <HBox spacing="15">
+                        <!-- 
+                            END DATE FIELD - Event end date selection
+                            
+                            Allows users to select the date when the event concludes.
+                            
+                            LAYOUT EXPLAINED:
+                            - VBox container for field label and input
+                            - spacing="5" for consistent label-input spacing
+                            - HBox.hgrow="ALWAYS" makes field expand to fill available space
+                            
+                            CONTROLLER INTEGRATION:
+                            - fx:id="endDatePicker" allows controller access
+                            - DatePicker provides calendar interface for date selection
+                            - styleClass applies date-specific styling
+                        -->
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                             <Label text="End Date *" styleClass="form-label"/>
                             <DatePicker fx:id="endDatePicker" 
                                        styleClass="form-date"/>
                         </VBox>
+                        
+                        <!-- 
+                            END TIME FIELD - Event end time input
+                            
+                            Allows users to specify the time when the event concludes.
+                            
+                            LAYOUT EXPLAINED:
+                            - VBox container for field label and input
+                            - spacing="5" for consistent label-input spacing
+                            - Fixed width (prefWidth="100") for time input consistency
+                            
+                            CONTROLLER INTEGRATION:
+                            - fx:id="endTimeField" allows controller access
+                            - text attribute provides default/example value
+                            - styleClass applies time-specific styling
+                            
+                            VALIDATION LOGIC:
+                            - Must be after start time if same date
+                            - Used for event duration calculations
+                            - Important for venue and resource scheduling
+                        -->
                         <VBox spacing="5">
                             <Label text="End Time *" styleClass="form-label"/>
                             <TextField fx:id="endTimeField" 
@@ -96,7 +517,26 @@
                         </VBox>
                     </HBox>
                     
-                    <!-- Location -->
+                    <!-- 
+                        LOCATION FIELD - Event venue information
+                        
+                        Collects information about where the event will take place,
+                        including venue name, address, or location details.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox container for field label and input
+                        - spacing="5" for consistent label-input spacing
+                        - Full width layout for location input
+                        
+                        CONTROLLER INTEGRATION:
+                        - fx:id="locationField" allows controller access
+                        - styleClass applies consistent input styling
+                        
+                        BUSINESS LOGIC:
+                        - Used for attendee navigation and planning
+                        - Important for venue capacity and logistics
+                        - Affects event discoverability and registration
+                    -->
                     <VBox spacing="5">
                         <Label text="Location *" styleClass="form-label"/>
                         <TextField fx:id="locationField" 
@@ -104,7 +544,27 @@
                                   styleClass="form-input"/>
                     </VBox>
                     
-                    <!-- Capacity -->
+                    <!-- 
+                        CAPACITY FIELD - Event capacity information
+                        
+                        Collects the maximum number of attendees that can be
+                        accommodated at the event venue.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox container for field label and input
+                        - spacing="5" for consistent label-input spacing
+                        - Fixed width (prefWidth="150") for input consistency
+                        
+                        CONTROLLER INTEGRATION:
+                        - fx:id="capacityField" allows controller access
+                        - text attribute provides default/example value
+                        - styleClass applies input styling
+                        
+                        VALIDATION:
+                        - Must be a positive number
+                        - Used for venue capacity planning
+                        - Important for registration and admission control
+                    -->
                     <VBox spacing="5">
                         <Label text="Capacity" styleClass="form-label"/>
                         <TextField fx:id="capacityField" 
@@ -113,7 +573,27 @@
                                   prefWidth="150"/>
                     </VBox>
                     
-                    <!-- Tags -->
+                    <!-- 
+                        TAGS FIELD - Event topic and category information
+                        
+                        Collects keywords or tags that describe the event,
+                        helping users find and categorize it.
+                        
+                        LAYOUT EXPLANATION:
+                        - VBox container for field label and input
+                        - spacing="5" for consistent label-input spacing
+                        - Full width layout for tags input
+                        
+                        CONTROLLER INTEGRATION:
+                        - fx:id="tagsField" allows controller access
+                        - text attribute provides default/example value
+                        - styleClass applies input styling
+                        
+                        VALIDATION:
+                        - Tags should be comma-separated
+                        - No duplicate tags
+                        - Used for event filtering and discovery
+                    -->
                     <VBox spacing="5">
                         <Label text="Tags" styleClass="form-label"/>
                         <TextField fx:id="tagsField" 
@@ -124,18 +604,101 @@
                 </VBox>
             </VBox>
             
-            <!-- Right Side - Sessions -->
+            <!-- 
+                RIGHT COLUMN - Sessions Section
+                
+                This column contains the Sessions table and the "Add Session" button.
+                It allows users to manage and add sessions to the event.
+                
+                LAYOUT EXPLANATION:
+                - VBox container for vertical organization
+                - spacing="20" provides separation between sections
+                - HBox.hgrow="ALWAYS" makes content expand to fill available height
+                
+                CONTENT ORGANIZATION:
+                - Sessions header (title and "Add Session" button)
+                - Sessions table (displays existing sessions)
+                - Table placeholder for no sessions
+            -->
             <VBox spacing="20" styleClass="sessions-section" HBox.hgrow="ALWAYS">
                 
+                <!-- 
+                    SECTION HEADER - Sessions title and "Add Session" button
+                    
+                    This header contains the title and the "Add Session" button
+                    for managing sessions.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox container for horizontal arrangement
+                    - alignment="CENTER_LEFT" aligns content to the left
+                    - spacing="15" provides separation between title and button
+                -->
                 <HBox alignment="CENTER_LEFT" spacing="15">
+                    <!-- 
+                        SECTION TITLE - Sessions header
+                        
+                        Clearly identifies this section as containing the session
+                        management options. Uses section-title CSS class.
+                    -->
                     <Text text="Sessions" styleClass="section-title"/>
+                    <!-- 
+                        FLEXIBLE SPACE - Layout balancing
+                        
+                        This Region element expands to fill available space between
+                        the title and the "Add Session" button, ensuring proper
+                        spacing and visual balance.
+                        
+                        LAYOUT EXPLANATION:
+                        - HBox.hgrow="ALWAYS" makes this region expand to fill space
+                        - Pushes the "Add Session" button to the right side
+                        - Creates balanced, professional appearance
+                    -->
                     <Region HBox.hgrow="ALWAYS"/>
+                    <!-- 
+                        ADD SESSION BUTTON - Session management
+                        
+                        Allows users to add new sessions to the event.
+                        
+                        PROPERTIES EXPLAINED:
+                        - text="Add Session": Clear button text describing the action
+                        - onAction="#handleAddSession": Calls controller method when clicked
+                        - styleClass: Applies add-session-specific CSS styling
+                        
+                        CONTROLLER INTEGRATION:
+                        - handleAddSession() method opens a dialog for session creation
+                        - Updates the sessions table with new session data
+                        - Maintains session data integrity
+                    -->
                     <Button text="+ Add Session" 
                             onAction="#handleAddSession"
                             styleClass="add-session-button"/>
                 </HBox>
                 
-                <!-- Sessions Table -->
+                <!-- 
+                    SESSIONS TABLE - TableView for session management
+                    
+                    This table displays all sessions associated with the event.
+                    It allows users to view, edit, and delete sessions.
+                    
+                    PROPERTIES EXPLAINED:
+                    - fx:id="sessionsTable": Links to the JavaFX TableView
+                    - styleClass="sessions-table": Applies table-specific CSS styling
+                    - VBox.vgrow="ALWAYS": Makes table expand to fill available height
+                    
+                    TABLE COLUMNS:
+                    - Session Name (prefWidth="150")
+                    - Date (prefWidth="100")
+                    - Day (prefWidth="80")
+                    - Time (prefWidth="100")
+                    - Location (prefWidth="120")
+                    - Presenter (prefWidth="120")
+                    - Status (prefWidth="100")
+                    - Actions (prefWidth="80", sortable="false")
+                    
+                    PLACEHOLDER:
+                    - Displays a placeholder message when no sessions are added
+                    - Provides guidance on how to add sessions
+                -->
                 <TableView fx:id="sessionsTable" styleClass="sessions-table" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="sessionColumn" text="Session" prefWidth="150">
@@ -195,18 +758,110 @@
             </VBox>
         </HBox>
 
-        <!-- Presenters Section -->
+        <!-- 
+            PRESENTERS SECTION - Presenter Management
+            
+            This section allows users to manage presenters associated with
+            the event. It displays a grid of presenter cards.
+            
+            LAYOUT EXPLANATION:
+            - VBox container for vertical organization
+            - spacing="15" provides separation between sections
+            - styleClass applies section-specific styling
+            
+            CONTENT ORGANIZATION:
+            - Presenters header (title and "Add Presenter" button)
+            - Presenters grid (displays existing presenter cards)
+            - Sample presenter cards (for demonstration)
+        -->
         <VBox spacing="15" styleClass="presenters-section">
             
+            <!-- 
+                SECTION HEADER - Presenters title and "Add Presenter" button
+                
+                This header contains the title and the "Add Presenter" button
+                for managing presenters.
+                
+                LAYOUT EXPLANATION:
+                - HBox container for horizontal arrangement
+                - alignment="CENTER_LEFT" aligns content to the left
+                - spacing="15" provides separation between title and button
+            -->
             <HBox alignment="CENTER_LEFT" spacing="15">
+                <!-- 
+                    SECTION TITLE - Presenters header
+                    
+                    Clearly identifies this section as containing the presenter
+                    management options. Uses section-title CSS class.
+                -->
                 <Text text="Presenters" styleClass="section-title"/>
+                <!-- 
+                    FLEXIBLE SPACE - Layout balancing
+                    
+                    This Region element expands to fill available space between
+                    the title and the "Add Presenter" button, ensuring proper
+                    spacing and visual balance.
+                    
+                    LAYOUT EXPLANATION:
+                    - HBox.hgrow="ALWAYS" makes this region expand to fill space
+                    - Pushes the "Add Presenter" button to the right side
+                    - Creates balanced, professional appearance
+                -->
                 <Region HBox.hgrow="ALWAYS"/>
+                <!-- 
+                    ADD PRESENTER BUTTON - Presenter management
+                    
+                    Allows users to add new presenters to the event.
+                    
+                    PROPERTIES EXPLAINED:
+                    - text="Add Presenter": Clear button text describing the action
+                    - onAction="#handleAddPresenter": Calls controller method when clicked
+                    - styleClass: Applies add-presenter-specific CSS styling
+                    
+                    CONTROLLER INTEGRATION:
+                    - handleAddPresenter() method opens a dialog for presenter creation
+                    - Updates the presenters grid with new presenter data
+                    - Maintains presenter data integrity
+                -->
                 <Button text="+ Add Presenter" 
                         onAction="#handleAddPresenter"
                         styleClass="add-presenter-button"/>
             </HBox>
             
-            <!-- Presenters Grid -->
+            <!-- 
+                PRESENTERS GRID - GridPane for presenter cards
+                
+                This grid displays the list of presenters associated with the
+                event. Each presenter is represented by a card.
+                
+                PROPERTIES EXPLAINED:
+                - fx:id="presentersGrid": Links to the JavaFX GridPane
+                - hgap="20": Horizontal gap between cards
+                - vgap="15": Vertical gap between cards
+                - styleClass="presenters-grid": Applies grid-specific CSS styling
+                
+                CARD LAYOUT:
+                - VBox container for each presenter card
+                - spacing="10": Spacing between card content and buttons
+                - styleClass="presenter-card": Applies card-specific styling
+                
+                CARD CONTENT:
+                - Avatar (👤)
+                - Name (presenter-name)
+                - Title (presenter-title)
+                - Bio (presenter-bio)
+                - Edit button (✎)
+                
+                SAMPLE CARDS:
+                - Sample presenter 1: John Smith (CEO of TechCorp)
+                - Sample presenter 2: Mike Johnson (Senior Director at InnovateLab)
+                - Sample presenter 3: Carol Williams (VP of Engineering at NextGen)
+                
+                CONTROLLER INTEGRATION:
+                - handleEditPresenter() method opens a dialog for presenter editing
+                - Updates the presenters grid with new presenter data
+                - Maintains presenter data integrity
+            -->
             <GridPane fx:id="presentersGrid" hgap="20" vgap="15" styleClass="presenters-grid">
                 
                 <!-- Sample Presenter Cards (will be dynamically generated) -->
