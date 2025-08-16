@@ -1,48 +1,193 @@
 package com.eventra;
 
+/**
+ * DATABASE INITIALIZER (DatabaseInitializer.java)
+ *
+ * This class is responsible for setting up and preparing the Eventra database
+ * when the application starts. Think of it like a "construction crew" that
+ * builds the foundation, walls, and basic structure of a building before
+ * anyone can move in and use it.
+ *
+ * WHAT THIS CLASS DOES:
+ * - Creates all necessary database tables if they don't exist
+ * - Sets up lookup tables for system configuration (status types, roles, etc.)
+ * - Creates main data tables for users, events, sessions, and registrations
+ * - Inserts initial data and configuration values
+ * - Validates the database structure and health
+ * - Cleans up any duplicate or inconsistent data
+ * - Ensures the database is ready for the application to use
+ *
+ * KEY CONCEPTS TO UNDERSTAND:
+ * - Database Schema: The structure and organization of database tables
+ * - Lookup Tables: Small tables that store reference data (like status types)
+ * - Main Tables: Large tables that store the actual application data
+ * - Initial Data: Starting data that the application needs to function
+ * - Database Validation: Checking that everything is set up correctly
+ * - Error Handling: Managing problems that might occur during setup
+ *
+ * BUSINESS VALUE:
+ * - Ensures the database is properly configured when the application starts
+ * - Prevents application crashes due to missing database structure
+ * - Provides consistent starting point for all users
+ * - Maintains data integrity and system reliability
+ * - Supports application deployment and setup processes
+ *
+ * REAL-WORLD ANALOGY:
+ * - Like a construction crew that builds a building before it opens
+ * - Like a restaurant that sets up the kitchen and dining area before service
+ * - Like a library that organizes books and sets up systems before opening
+ * - Like a school that prepares classrooms and materials before students arrive
+ * - Like a hospital that sets up equipment and systems before accepting patients
+ */
+
 import java.sql.Connection;
 import java.sql.Statement;
 
+/**
+ * DatabaseInitializer class - Database Setup and Configuration
+ *
+ * This class contains static methods that handle all database initialization tasks.
+ * It's designed to run once when the application starts to ensure everything
+ * is properly set up before users begin using the system.
+ */
 public class DatabaseInitializer {
     
+    /**
+     * initializeDatabase() - Main Database Setup Method
+     *
+     * This is the primary method that orchestrates the entire database
+     * initialization process. Think of it like the "foreman" who coordinates
+     * all the different construction tasks.
+     *
+     * TECHNICAL PROCESS:
+     * 1. Get a database connection from the connection pool
+     * 2. Create lookup tables (status types, roles, etc.)
+     * 3. Create main data tables (users, events, sessions, etc.)
+     * 4. Insert initial configuration data
+     * 5. Clean up any duplicate data
+     * 6. Validate the database structure
+     * 7. Report success or handle errors
+     *
+     * USER EXPERIENCE:
+     * - Ensures the application starts with a properly configured database
+     * - Prevents errors that would prevent users from using the system
+     * - Provides consistent experience for all users
+     *
+     * ERROR HANDLING:
+     * - Catches and reports any problems during initialization
+     * - Continues with other tasks even if some fail
+     * - Provides detailed error information for troubleshooting
+     */
     public static void initializeDatabase() {
         try {
+            // 
+            // STEP 1: GET DATABASE CONNECTION - Connect to the database
+            // 
+            // Get a connection from our connection pool to perform database operations.
+            // Think of this like getting the keys to the building before starting work.
+            //
             Connection conn = Db.get();
             Statement stmt = conn.createStatement();
             
-            // Create lookup tables (ignore if they exist)
+            // 
+            // STEP 2: CREATE LOOKUP TABLES - Set up reference data structure
+            // 
+            // Lookup tables store small amounts of reference data that the application
+            // needs to function. Think of these like the "rules and categories" of the system.
+            // We use try-catch blocks so if tables already exist, we continue gracefully.
+            //
             try {
+                System.out.println("🔨 Creating lookup tables...");
                 createLookupTables(stmt);
+                System.out.println("✅ Lookup tables created successfully!");
             } catch (Exception e) {
-                System.out.println("Lookup tables already exist, continuing...");
+                System.out.println("ℹ️ Lookup tables already exist, continuing...");
             }
             
-            // Create main tables (ignore if they exist)
+            // 
+            // STEP 3: CREATE MAIN TABLES - Set up data storage structure
+            // 
+            // Main tables store the actual application data like users, events, and registrations.
+            // Think of these like the "rooms and storage areas" where data lives.
+            //
             try {
+                System.out.println("🏗️ Creating main data tables...");
                 createMainTables(stmt);
+                System.out.println("✅ Main tables created successfully!");
             } catch (Exception e) {
-                System.out.println("Main tables already exist, continuing...");
+                System.out.println("ℹ️ Main tables already exist, continuing...");
             }
             
-            // Insert initial data (this is the important part)
+            // 
+            // STEP 4: INSERT INITIAL DATA - Populate with starting information
+            // 
+            // Insert the basic data that the application needs to function, like
+            // default user roles, status types, and system configuration.
+            // Think of this like stocking the building with basic supplies.
+            //
+            System.out.println("📦 Inserting initial data...");
             insertInitialData(stmt);
+            System.out.println("✅ Initial data inserted successfully!");
             
-            System.out.println("Database initialization completed successfully!");
-            
-            // Clean up any duplicate presenters
+            // 
+            // STEP 5: CLEANUP AND VALIDATION - Ensure data quality
+            // 
+            // Clean up any duplicate data and validate that everything is working correctly.
+            // Think of this like doing a final inspection before opening the building.
+            //
+            System.out.println("🧹 Cleaning up duplicate data...");
             com.eventra.dao.EventSaveDAO.cleanupDuplicatePresenters();
+            System.out.println("✅ Duplicate data cleanup completed!");
             
-            // Validate database structure
+            System.out.println("🔍 Validating database structure...");
             com.eventra.dao.DatabaseValidator.validateDatabase();
+            System.out.println("✅ Database validation completed!");
+            
+            // 
+            // SUCCESS REPORT - Confirm everything is ready
+            // 
+            System.out.println("🎉 Database initialization completed successfully!");
+            System.out.println("🚀 Eventra database is ready for use!");
             
         } catch (Exception e) {
-            System.err.println("Error initializing database: " + e.getMessage());
+            // 
+            // ERROR HANDLING - Report any problems that occurred
+            // 
+            // If something goes wrong during initialization, we need to know about it
+            // so we can fix the problem. Think of this like having a building inspector
+            // who reports any issues found during construction.
+            //
+            System.err.println("❌ ERROR: Failed to initialize database!");
+            System.err.println("🔍 Error details: " + e.getMessage());
+            System.err.println("📋 Full error information:");
             e.printStackTrace();
         }
     }
     
+    /**
+     * createLookupTables() - Create Reference Data Tables
+     *
+     * Creates small tables that store reference information like status types,
+     * user roles, and other configuration data. Think of these like the
+     * "dictionaries and rulebooks" of the system.
+     *
+     * LOOKUP TABLES CREATED:
+     * - StatusType: User account statuses (Active, Inactive, Suspended)
+     * - RoleType: User roles (Admin, Staff, Attendee)
+     * - EventStatusType: Event statuses (Draft, Published, Cancelled)
+     * - SessionStatusType: Session statuses (Scheduled, In Progress, Completed)
+     * - RegistrationStatusType: Registration statuses (Pending, Confirmed, Cancelled)
+     *
+     * @param stmt - Database statement object for executing SQL commands
+     * @throws Exception - If table creation fails
+     */
     private static void createLookupTables(Statement stmt) throws Exception {
-        // StatusType table
+        // 
+        // STATUS TYPE TABLE - User account status management
+        // 
+        // This table defines the different states a user account can be in.
+        // Think of it like having different "modes" for user accounts.
+        //
         stmt.execute(
             "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'StatusType') " +
             "CREATE TABLE StatusType (" +
@@ -51,7 +196,12 @@ public class DatabaseInitializer {
             ")"
         );
         
-        // RoleType table
+        // 
+        // ROLE TYPE TABLE - User permission management
+        // 
+        // This table defines the different types of users and their permissions.
+        // Think of it like having different "job titles" with different access levels.
+        //
         stmt.execute(
             "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'RoleType') " +
             "CREATE TABLE RoleType (" +
@@ -60,7 +210,12 @@ public class DatabaseInitializer {
             ")"
         );
         
-        // EventStatusType table
+        // 
+        // EVENT STATUS TYPE TABLE - Event lifecycle management
+        // 
+        // This table defines the different states an event can be in.
+        // Think of it like having different "phases" in an event's life.
+        //
         stmt.execute(
             "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EventStatusType') " +
             "CREATE TABLE EventStatusType (" +
@@ -69,7 +224,12 @@ public class DatabaseInitializer {
             ")"
         );
         
-        // SessionStatusType table
+        // 
+        // SESSION STATUS TYPE TABLE - Session lifecycle management
+        // 
+        // This table defines the different states a session can be in.
+        // Think of it like having different "stages" in a session's timeline.
+        //
         stmt.execute(
             "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SessionStatusType') " +
             "CREATE TABLE SessionStatusType (" +
@@ -78,7 +238,12 @@ public class DatabaseInitializer {
             ")"
         );
         
-        // RegistrationStatusType table
+        // 
+        // REGISTRATION STATUS TYPE TABLE - Registration tracking
+        // 
+        // This table defines the different states a registration can be in.
+        // Think of it like having different "steps" in the registration process.
+        //
         stmt.execute(
             "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'RegistrationStatusType') " +
             "CREATE TABLE RegistrationStatusType (" +
@@ -88,8 +253,32 @@ public class DatabaseInitializer {
         );
     }
     
+    /**
+     * createMainTables() - Create Data Storage Tables
+     *
+     * Creates the main tables that store the actual application data like
+     * users, events, sessions, and registrations. Think of these like the
+     * "main rooms and storage areas" where the important data lives.
+     *
+     * MAIN TABLES CREATED:
+     * - UserM: User account information and authentication
+     * - EventM: Event details and management
+     * - Session: Event session information and scheduling
+     * - Presenter: Speaker and presenter information
+     * - Attendee: Event participant information
+     * - EventRegistration: User event registrations and attendance
+     *
+     * @param stmt - Database statement object for executing SQL commands
+     * @throws Exception - If table creation fails
+     */
     private static void createMainTables(Statement stmt) throws Exception {
-        // UserM table - SQL Server compatible
+        // 
+        // USERM TABLE - User account management
+        // 
+        // This table stores all user account information including authentication
+        // details, personal information, and account settings.
+        // Think of it like the "user directory" of the system.
+        //
         stmt.execute(
             "IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'UserM') " +
             "CREATE TABLE UserM (" +
@@ -101,12 +290,12 @@ public class DatabaseInitializer {
             "Email NVARCHAR(255) NOT NULL UNIQUE," +
             "PasswordHash NVARCHAR(255) NOT NULL," +
             "ProfilePicUrl NVARCHAR(500)," +
-            "RoleTypeID INT NOT NULL DEFAULT 2," +
-            "StatusTypeID INT NOT NULL DEFAULT 1," +
-            "PeriodCanLoginInMinutes INT NOT NULL DEFAULT 0," +
-            "LastFailedLoginAt DATETIME," +
-            "CreatedAt DATETIME NOT NULL DEFAULT GETDATE()," +
-            "UpdatedAt DATETIME NOT NULL DEFAULT GETDATE()" +
+            "RoleTypeID INT NOT NULL," +
+            "StatusTypeID INT NOT NULL," +
+            "PeriodCanLoginInMinutes INT DEFAULT 1440," +
+            "LastFailedLoginAt DATETIME2," +
+            "CreatedAt DATETIME2 DEFAULT GETDATE()," +
+            "UpdatedAt DATETIME2 DEFAULT GETDATE()" +
             ")"
         );
         

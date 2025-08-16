@@ -1,11 +1,18 @@
 -- =====================================================
--- Eventra Database Views
--- Useful views for common queries and reporting
+-- EVENTRA DATABASE VIEWS (database_views.sql)
 -- =====================================================
 --
 -- This file contains 20 comprehensive database views that provide optimized
 -- data access patterns for the Eventra application. These views simplify
 -- complex queries and provide consistent data structures for the application.
+--
+-- WHAT THIS FILE DOES:
+-- - Defines optimized database views for common data access patterns
+-- - Simplifies complex database queries for the application
+-- - Provides consistent data structures across different parts of the system
+-- - Improves query performance through pre-optimized data access
+-- - Enables easier reporting and analytics capabilities
+-- - Supports business intelligence and data analysis
 --
 -- VIEW CATEGORIES:
 -- 1. User Management Views - User information and permissions
@@ -18,17 +25,40 @@
 -- 8. Search and Filter Views - Data discovery and filtering
 --
 -- BENEFITS OF USING VIEWS:
--- - Simplified application queries
--- - Consistent data structures
--- - Performance optimization
--- - Easier maintenance
--- - Security through abstraction
+-- - Simplified application queries (easier to write and maintain)
+-- - Consistent data structures (same format across different screens)
+-- - Performance optimization (pre-optimized data access patterns)
+-- - Easier maintenance (changes in one place affect everywhere)
+-- - Security through abstraction (hide sensitive data structures)
+-- - Better data organization and readability
 --
 -- USAGE IN APPLICATION:
--- - Controllers use these views for data retrieval
--- - Reports and dashboards display view data
--- - Search functionality leverages view structures
--- - Analytics use aggregated view data
+-- - Controllers use these views for data retrieval and display
+-- - Reports and dashboards display view data for analytics
+-- - Search functionality leverages view structures for discovery
+-- - Analytics use aggregated view data for business intelligence
+-- - User interfaces consume view data for consistent display
+--
+-- TECHNICAL IMPLEMENTATION:
+-- - Views are created using CREATE OR ALTER VIEW statements
+-- - Each view joins multiple tables to provide comprehensive information
+-- - Views include business logic and data transformations
+-- - Performance is optimized through proper indexing and query design
+-- - Views are designed to be read-only for application use
+--
+-- BUSINESS VALUE:
+-- - Faster application development through simplified data access
+-- - Improved user experience with consistent data presentation
+-- - Better performance for complex data operations
+-- - Easier maintenance and system updates
+-- - Enhanced reporting and analytics capabilities
+--
+-- REAL-WORLD ANALOGY:
+-- - Like having a well-organized filing system where you can quickly find information
+-- - Like having a dashboard that shows all the important metrics at a glance
+-- - Like having a library catalog that helps you find books efficiently
+-- - Like having a restaurant menu that organizes dishes by category
+-- - Like having a map that shows you the best routes to your destination
 
 USE EventPlannerDB;
 GO
@@ -40,6 +70,19 @@ GO
 -- These views provide comprehensive user information with role-based
 -- access control and status management. They're used throughout the
 -- application for user authentication, authorization, and display.
+--
+-- BUSINESS PURPOSE:
+-- - Support user authentication and login processes
+-- - Enable role-based access control and permissions
+-- - Provide user profile information for display and editing
+-- - Support user management and administrative functions
+-- - Enable user search and filtering capabilities
+--
+-- TECHNICAL FEATURES:
+-- - Join user data with role and status information
+-- - Include security and authentication details
+-- - Support user lifecycle management
+-- - Enable efficient user data retrieval
 
 -- View for complete user information with roles and status
 -- 
@@ -48,23 +91,36 @@ GO
 -- It's the primary view for user management and authentication.
 --
 -- USAGE SCENARIOS:
--- - User login and authentication
--- - User profile displays
--- - Admin user management
--- - Role-based access control
+-- - User login and authentication processes
+-- - User profile displays and editing
+-- - Admin user management and oversight
+-- - Role-based access control implementation
+-- - User search and filtering operations
+--
+-- BUSINESS LOGIC:
+-- - Combines user personal information with system roles and status
+-- - Provides human-readable role and status names
+-- - Includes security and session management details
+-- - Supports user lifecycle tracking and management
+--
+-- TECHNICAL DETAILS:
+-- - Uses INNER JOINs to ensure data integrity
+-- - Includes all essential user information fields
+-- - Optimized for frequent user data access
+-- - Supports efficient user authentication queries
 CREATE OR ALTER VIEW vw_UserComplete AS
 SELECT 
     u.UserID,                    -- Unique user identifier
-    u.Username,                  -- Login username
+    u.Username,                  -- Login username (unique)
     u.FirstName,                 -- User's first name
     u.MiddleName,                -- User's middle name (optional)
     u.LastName,                  -- User's last name
-    u.Email,                     -- User's email address
+    u.Email,                     -- User's email address (unique)
     u.ProfilePicUrl,             -- Path to profile picture
     rt.Name AS RoleName,         -- Human-readable role name
     st.Name AS StatusName,       -- Account status description
     u.PeriodCanLoginInMinutes,   -- Session timeout setting
-    u.LastFailedLoginAt,         -- Security tracking
+    u.LastFailedLoginAt,         -- Security tracking (failed login attempts)
     u.CreatedAt,                 -- Account creation timestamp
     u.UpdatedAt                  -- Last modification timestamp
 FROM UserM u
@@ -81,8 +137,22 @@ GO
 -- BUSINESS LOGIC:
 -- - Links attendees to user accounts when applicable
 -- - Provides organization and contact information
--- - Shows attendee type and status
+-- - Shows attendee type and status for management
 -- - Enables attendee-user relationship tracking
+-- - Supports attendee search and filtering
+--
+-- USAGE SCENARIOS:
+-- - Attendee registration and management
+-- - Event attendance tracking and reporting
+-- - Attendee profile display and editing
+-- - Attendee search and filtering operations
+-- - Event capacity and attendance analytics
+--
+-- TECHNICAL FEATURES:
+-- - LEFT JOIN to include attendees without user accounts
+-- - Comprehensive attendee information display
+-- - Support for both registered and guest attendees
+-- - Efficient attendee data retrieval
 CREATE OR ALTER VIEW vw_AttendeeComplete AS
 SELECT 
     a.AttendeeID,                -- Unique attendee identifier
